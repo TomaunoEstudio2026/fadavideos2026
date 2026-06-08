@@ -385,6 +385,7 @@ async function ghGet(){
     for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
     const jsonStr=new TextDecoder("utf-8").decode(bytes);
     DB=JSON.parse(jsonStr);
+    console.log("DB cargado OK - eventos:", DB.eventos.length, "videos:", DB.eventos[0]?.videos?.length);
     dot("ok");return true;
   }catch(e){dot("err");return false;}
 }
