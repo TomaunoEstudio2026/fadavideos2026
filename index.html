@@ -25,7 +25,6 @@
     border-bottom: 1px solid var(--border);
     padding: 20px 20px 16px;
     text-align: center;
-    position: relative;
   }
   header .crown { font-size:28px; user-select:none; }
   header h1 {
@@ -41,17 +40,16 @@
   header .tagline { margin-top:10px; font-size:15px; color:#fff; line-height:1.5; }
   header .tagline span { color:var(--gold); font-weight:800; }
 
-  /* SOLD COUNTER BANNER */
+  /* SOLD BANNER */
   .sold-banner {
-    background: linear-gradient(90deg, #0d0007, #1a0010, #0d0007);
+    background: linear-gradient(90deg,#0d0007,#1a0010,#0d0007);
     border-bottom: 1px solid var(--border);
     padding: 10px 20px;
     text-align: center;
     font-size: 13px;
     color: var(--pink-light);
   }
-  .sold-banner strong { color: var(--gold); font-size: 16px; }
-  .sold-banner .fire { font-size: 16px; }
+  .sold-banner strong { color:var(--gold); font-size:16px; }
 
   /* SEARCH */
   .search-bar { padding:14px 16px; background:var(--bg2); border-bottom:1px solid var(--border); }
@@ -64,81 +62,85 @@
   .search-bar input::placeholder { color:#ffffff44; }
   .search-bar input:focus { border-color:var(--pink-light); }
 
-  /* GRID */
+  /* GRID — 4 col desktop, 2 tablet, 1 mobile */
   #video-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
-    padding: 16px;
+    padding: 20px;
   }
+  @media(max-width:1100px){ #video-grid{ grid-template-columns: repeat(3,1fr); } }
+  @media(max-width:700px) { #video-grid{ grid-template-columns: repeat(2,1fr); gap:10px; padding:12px; } }
+  @media(max-width:450px) { #video-grid{ grid-template-columns: 1fr; } }
 
   /* CARD */
   .video-card {
     background:var(--bg3); border:1px solid var(--border);
-    border-radius:16px; overflow:hidden;
+    border-radius:14px; overflow:hidden;
     transition:transform .2s, box-shadow .2s;
+    display:flex; flex-direction:column;
   }
-  .video-card:hover { transform:translateY(-3px); box-shadow:0 8px 32px #c8005b33; }
-  .video-card.sold  { border-color:var(--gold); }
+  .video-card:hover { transform:translateY(-4px); box-shadow:0 10px 36px #c8005b44; }
+  .video-card.sold  { border-color:var(--gold); box-shadow:0 0 16px #f5c84222; }
 
-  /* PREVIEW WRAPPER */
-  .preview-wrap { position:relative; background:#000; overflow:hidden; }
-  .preview-wrap iframe { width:100%; height:185px; border:none; display:block; }
+  /* PREVIEW */
+  .preview-wrap { position:relative; background:#000; flex-shrink:0; }
+  .preview-wrap iframe { width:100%; aspect-ratio:16/9; border:none; display:block; }
 
-  /* block right-click/interaction on locked videos */
-  .preview-shield {
+  /* Capa encima del iframe solo para bloquear clic derecho — no bloquea play */
+  .right-click-shield {
     position:absolute; inset:0; z-index:2;
     background: transparent;
+    pointer-events: none; /* deja pasar clics al iframe normalmente */
   }
-  .video-card.sold .preview-shield { display:none; }
+  /* Bloqueamos clic derecho via JS en el iframe container */
 
-  /* lock overlay */
   .lock-overlay {
     position:absolute; bottom:0; left:0; right:0; z-index:3;
-    background: linear-gradient(to top, #0d000799 0%, transparent 100%);
-    padding: 10px 12px 10px;
+    background: linear-gradient(to top,#0d000799 0%,transparent 100%);
+    padding: 8px 10px 8px;
     pointer-events: none;
   }
   .video-card.sold .lock-overlay { display:none; }
-  .progress-bar-wrap { background:#ffffff22; border-radius:4px; height:5px; margin-bottom:5px; }
-  .progress-bar-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--pink),var(--gold)); }
-  .progress-label { font-size:11px; color:#ffffffbb; }
 
-  /* SOLD BADGE */
+  .progress-bar-wrap { background:#ffffff22; border-radius:4px; height:4px; margin-bottom:4px; }
+  .progress-bar-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--pink),var(--gold)); }
+  .progress-label { font-size:10px; color:#ffffffbb; }
+
   .sold-badge {
-    position:absolute; top:10px; right:10px; z-index:4;
-    background:#4caf50; color:#fff; font-size:11px; font-weight:800;
-    padding:4px 10px; border-radius:20px; letter-spacing:.5px;
+    position:absolute; top:8px; right:8px; z-index:4;
+    background:var(--green); color:#fff; font-size:10px; font-weight:800;
+    padding:3px 8px; border-radius:20px;
     display:none;
   }
   .video-card.sold .sold-badge { display:block; }
 
   /* CARD BODY */
-  .card-body { padding:14px 14px 16px; }
-  .card-number { font-size:11px; font-weight:700; color:var(--pink-light); text-transform:uppercase; letter-spacing:1px; margin-bottom:3px; }
+  .card-body { padding:12px 12px 14px; flex:1; display:flex; flex-direction:column; }
+  .card-number { font-size:10px; font-weight:700; color:var(--pink-light); text-transform:uppercase; letter-spacing:1px; margin-bottom:2px; }
   .video-card.sold .card-number { color:var(--green); }
-  .card-title { font-size:15px; font-weight:800; color:#fff; line-height:1.3; margin-bottom:10px; }
+  .card-title { font-size:13px; font-weight:800; color:#fff; line-height:1.3; margin-bottom:6px; flex:1; }
   .dl-count { font-size:11px; color:#ffffff44; margin-bottom:8px; }
-  .card-footer { display:flex; align-items:center; justify-content:space-between; gap:8px; }
-  .price-tag { font-size:18px; font-weight:800; color:var(--gold); }
+  .card-footer { display:flex; align-items:center; justify-content:space-between; gap:6px; margin-top:auto; }
+  .price-tag { font-size:16px; font-weight:800; color:var(--gold); white-space:nowrap; }
 
   .btn-buy {
-    display:flex; align-items:center; gap:6px;
-    padding:9px 16px; background:var(--pink); color:#fff;
-    border:none; border-radius:9px; font-size:13px; font-weight:700;
+    display:flex; align-items:center; gap:5px;
+    padding:8px 12px; background:var(--pink); color:#fff;
+    border:none; border-radius:8px; font-size:12px; font-weight:700;
     cursor:pointer; font-family:'Nunito',sans-serif;
-    text-decoration:none; transition:background .2s;
+    text-decoration:none; transition:background .2s; white-space:nowrap;
   }
   .btn-buy:hover { background:#e0006a; }
   .btn-download {
-    display:flex; align-items:center; gap:6px;
-    padding:9px 16px; background:#1a3a00; color:var(--green);
-    border:1.5px solid #4caf5066; border-radius:9px; font-size:13px; font-weight:700;
-    cursor:pointer; font-family:'Nunito',sans-serif; transition:all .2s;
+    display:flex; align-items:center; gap:5px;
+    padding:8px 12px; background:#1a3a00; color:var(--green);
+    border:1.5px solid #4caf5066; border-radius:8px; font-size:12px; font-weight:700;
+    cursor:pointer; font-family:'Nunito',sans-serif; transition:all .2s; white-space:nowrap;
   }
   .btn-download:hover { background:#224d00; }
 
-  /* MODAL */
+  /* MODAL DESCARGA */
   .modal-bg {
     display:none; position:fixed; inset:0;
     background:#000000cc; z-index:200;
@@ -147,15 +149,15 @@
   .modal-bg.open { display:flex; }
   .modal {
     background:var(--bg2); border:1.5px solid var(--border);
-    border-radius:20px; padding:28px 24px; width:100%; max-width:360px; text-align:center;
+    border-radius:20px; padding:28px 24px; width:100%; max-width:340px; text-align:center;
   }
-  .modal h2 { font-family:'Cinzel',serif; color:var(--gold); font-size:20px; margin-bottom:8px; }
-  .modal p  { font-size:14px; color:var(--pink-light); margin-bottom:18px; line-height:1.5; }
+  .modal h2 { font-family:'Cinzel',serif; color:var(--gold); font-size:20px; margin-bottom:6px; }
+  .modal .video-name { font-size:13px; color:var(--pink-light); margin-bottom:16px; line-height:1.4; }
   .modal input {
-    width:100%; padding:14px 16px; background:var(--bg3);
+    width:100%; padding:14px; background:var(--bg3);
     border:1.5px solid var(--border); border-radius:10px; color:#fff;
-    font-size:28px; font-family:'Nunito',sans-serif; font-weight:800;
-    text-align:center; letter-spacing:8px; outline:none; margin-bottom:12px;
+    font-size:32px; font-family:'Nunito',sans-serif; font-weight:800;
+    text-align:center; letter-spacing:10px; outline:none; margin-bottom:12px;
   }
   .modal input:focus { border-color:var(--pink-light); }
   .modal-error { font-size:13px; color:#ff6b6b; margin-bottom:10px; min-height:18px; }
@@ -165,64 +167,64 @@
     cursor:pointer; font-family:'Nunito',sans-serif; margin-bottom:8px;
   }
   .btn-cancel {
-    width:100%; padding:10px; background:transparent; color:#ffffff66;
+    width:100%; padding:10px; background:transparent; color:#ffffff55;
     border:none; cursor:pointer; font-size:13px; font-family:'Nunito',sans-serif;
   }
+
+  /* MODAL GRACIAS */
+  .thanks-modal {
+    background:var(--bg2); border:2px solid var(--gold);
+    border-radius:20px; padding:32px 24px; width:100%; max-width:340px; text-align:center;
+  }
+  .thanks-modal .emoji { font-size:48px; margin-bottom:12px; }
+  .thanks-modal h2 { font-family:'Cinzel',serif; color:var(--gold); font-size:22px; margin-bottom:10px; }
+  .thanks-modal p { font-size:14px; color:#fff; line-height:1.6; margin-bottom:20px; }
+  .thanks-modal .dl-num { font-size:12px; color:#ffffff44; margin-bottom:20px; }
+  .btn-thanks { width:100%; padding:12px; background:var(--green); color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Nunito',sans-serif; }
 
   /* ADMIN MODAL */
   .admin-modal-bg {
     display:none; position:fixed; inset:0;
-    background:#000000dd; z-index:300;
-    align-items:center; justify-content:center; padding:16px;
+    background:#000000ee; z-index:300;
+    align-items:flex-start; justify-content:center; padding:16px;
+    overflow-y:auto;
   }
   .admin-modal-bg.open { display:flex; }
   .admin-modal {
     background:var(--bg2); border:1.5px solid var(--gold);
-    border-radius:20px; width:100%; max-width:700px;
-    max-height:90vh; overflow-y:auto; padding:24px;
+    border-radius:20px; width:100%; max-width:760px;
+    padding:24px; margin:auto;
   }
-  .admin-modal h2 { font-family:'Cinzel',serif; color:var(--gold); margin-bottom:16px; font-size:20px; }
-  .admin-close {
-    float:right; background:transparent; border:none; color:#fff;
-    font-size:22px; cursor:pointer; margin-top:-4px;
-  }
+  .admin-modal h2 { font-family:'Cinzel',serif; color:var(--gold); margin-bottom:4px; font-size:20px; }
+  .admin-modal .admin-sub { font-size:12px; color:#ffffff44; margin-bottom:16px; }
+  .admin-close { float:right; background:transparent; border:none; color:#fff; font-size:22px; cursor:pointer; }
   .admin-table { width:100%; border-collapse:collapse; font-size:13px; }
-  .admin-table th {
-    text-align:left; padding:10px 10px; color:var(--gold);
-    border-bottom:1px solid var(--border); font-size:11px;
-    text-transform:uppercase; letter-spacing:1px;
-  }
+  .admin-table th { text-align:left; padding:10px 10px; color:var(--gold); border-bottom:1px solid var(--border); font-size:11px; text-transform:uppercase; letter-spacing:1px; }
   .admin-table td { padding:9px 10px; border-bottom:1px solid var(--border); vertical-align:middle; }
   .status-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; }
   .status-dot.sold { background:var(--green); }
   .status-dot.free { background:#ff6b6b; }
-  .code-display {
-    font-size:20px; font-weight:800; letter-spacing:4px; color:var(--gold);
-    background:var(--bg3); padding:4px 10px; border-radius:6px;
-  }
-  .btn-toggle {
-    padding:6px 12px; border-radius:6px; border:none;
-    font-size:12px; font-weight:700; cursor:pointer; font-family:'Nunito',sans-serif;
-  }
+  .code-display { font-size:22px; font-weight:800; letter-spacing:6px; color:var(--gold); background:var(--bg3); padding:4px 10px; border-radius:6px; font-family:'Nunito',sans-serif; }
+  .drive-input { background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:#fff; padding:5px 8px; font-size:11px; width:140px; font-family:'Nunito',sans-serif; outline:none; }
+  .drive-input:focus { border-color:var(--pink-light); }
+  .btn-toggle { padding:7px 14px; border-radius:8px; border:none; font-size:12px; font-weight:700; cursor:pointer; font-family:'Nunito',sans-serif; }
   .btn-toggle.make-sold { background:#1a3a00; color:var(--green); }
   .btn-toggle.make-free { background:#3a0010; color:var(--pink-light); }
-  .drive-input {
-    background:var(--bg3); border:1px solid var(--border); border-radius:6px;
-    color:#fff; padding:5px 8px; font-size:11px; width:130px;
-    font-family:'Nunito',sans-serif;
+  .btn-wa-send {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:5px 10px; background:#25d36622; color:#25d366;
+    border:1px solid #25d36644; border-radius:6px;
+    font-size:11px; font-weight:700; cursor:pointer;
+    font-family:'Nunito',sans-serif; text-decoration:none;
   }
+  .admin-note { font-size:11px; color:#ffffff33; margin-top:12px; }
 
   /* FOOTER */
-  footer {
-    text-align:center; padding:20px 16px 30px;
-    border-top:1px solid var(--border); margin-top:8px;
-  }
-  footer .fada-credit { font-size:11px; color:#ffffff22; margin-bottom:6px; }
+  footer { text-align:center; padding:20px 16px 30px; border-top:1px solid var(--border); margin-top:8px; }
+  footer .fada-credit { font-size:11px; color:#ffffff22; margin-bottom:5px; }
   footer .dev-credit { font-size:12px; color:#ffffff44; }
-  footer .dev-credit a { color:#ffffff55; text-decoration:none; }
+  footer .dev-credit a { color:#ffffff55; text-decoration:none; transition:color .2s; }
   footer .dev-credit a:hover { color:var(--pink-light); }
-
-  @media(max-width:480px){ #video-grid{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -235,8 +237,7 @@
 </header>
 
 <div class="sold-banner">
-  <span class="fire">🔥</span>
-  <strong id="sold-count">0</strong> videos ya entregados · ¡Reservá el tuyo antes de que se agoten!
+  🔥 <strong id="sold-count">0</strong> videos ya entregados · ¡Reservá el tuyo!
 </div>
 
 <div class="search-bar">
@@ -248,22 +249,33 @@
 <footer>
   <div class="fada-credit">FADA Festival Oficial · @fadafestival · Sábado 6 de Junio 2026</div>
   <div class="dev-credit">
-    © <a href="https://wa.me/5493764354522" target="_blank">Javier Móttola</a> · 
+    © <a href="https://wa.me/5493764354522" target="_blank">Javier Móttola</a> ·
     <a href="https://instagram.com/tomaunomodels" target="_blank">@tomaunomodels</a>
   </div>
 </footer>
 
-<!-- DOWNLOAD MODAL -->
+<!-- MODAL CÓDIGO -->
 <div class="modal-bg" id="dl-modal">
   <div class="modal">
     <h2>🔐 Código de descarga</h2>
-    <p id="dl-modal-title">Ingresá tu código de 4 dígitos</p>
-    <input type="number" id="code-input" placeholder="0000" maxlength="4"
-           oninput="if(this.value.length>4)this.value=this.value.slice(0,4)"
+    <div class="video-name" id="dl-modal-title"></div>
+    <input type="tel" id="code-input" placeholder="0000" maxlength="4"
+           oninput="this.value=this.value.replace(/\D/g,'').slice(0,4)"
            onkeydown="if(event.key==='Enter')checkCode()">
     <div class="modal-error" id="code-error"></div>
     <button class="btn-confirm" onclick="checkCode()">⬇️ Descargar video</button>
     <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+  </div>
+</div>
+
+<!-- MODAL GRACIAS -->
+<div class="modal-bg" id="thanks-modal">
+  <div class="thanks-modal">
+    <div class="emoji">🎬✨</div>
+    <h2>¡Gracias por tu compra!</h2>
+    <p>Tu video ya se está descargando.<br>Esperamos que lo disfrutes mucho y que sea un hermoso recuerdo de este día especial.</p>
+    <div class="dl-num" id="thanks-dl-num"></div>
+    <button class="btn-thanks" onclick="closeThanks()">¡Gracias! 💃</button>
   </div>
 </div>
 
@@ -273,6 +285,7 @@
     <button class="admin-close" onclick="closeAdmin()">✕</button>
     <h2>🔑 Panel Admin</h2>
     <div id="admin-login">
+      <p style="font-size:13px;color:#ffffff55;margin-bottom:12px;">Ingresá la contraseña para administrar los videos</p>
       <input type="password" id="admin-pass" placeholder="Contraseña"
              style="width:100%;padding:12px 16px;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;color:#fff;font-size:15px;margin-bottom:10px;font-family:'Nunito',sans-serif;outline:none;"
              onkeydown="if(event.key==='Enter')adminLogin()">
@@ -280,115 +293,99 @@
       <p id="admin-err" style="color:#ff6b6b;font-size:13px;margin-top:8px;text-align:center;"></p>
     </div>
     <div id="admin-content" style="display:none;">
-      <p style="font-size:12px;color:#ffffff44;margin-bottom:12px;">
-        Los códigos son generados automáticamente. Marcá un video como <strong style="color:var(--green)">Vendido</strong> cuando recibas el pago, y compartile el código al cliente.
-      </p>
+      <p class="admin-sub">Cuando alguien pague → marcá el video como vendido → enviále el código por WhatsApp</p>
       <div style="overflow-x:auto;">
-        <table class="admin-table" id="admin-table">
+        <table class="admin-table">
           <thead>
             <tr>
-              <th>#</th><th>Título</th><th>Código</th><th>Estado</th><th>Descargas</th><th>Drive ID</th><th>Acción</th>
+              <th>#</th><th>Título</th><th>Código</th><th>Estado</th><th>⬇️</th><th>Drive ID</th><th>Acciones</th>
             </tr>
           </thead>
           <tbody id="admin-tbody"></tbody>
         </table>
       </div>
-      <p style="font-size:11px;color:#ffffff33;margin-top:10px;">Drive ID: el fragmento largo del link de Google Drive (entre /d/ y /view)</p>
+      <p class="admin-note">Drive ID: pegá el link completo de Drive, se extrae el ID solo · Los códigos están guardados en el archivo HTML</p>
     </div>
   </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════
-// CONFIGURACIÓN — editá solo estos valores
-// ═══════════════════════════════════════════════════
-const WA_NUMBER = "5493764354522";
-const PRICE     = "$15.000";
+// ═══════════════════════════════════════════
+// CONFIGURACIÓN
+// ═══════════════════════════════════════════
+const WA_NUMBER  = "5493764354522";
+const PRICE      = "$15.000";
 const ADMIN_PASS = "3233";
 
-// VIDEOS — agregá o quitá según necesites
-// previewStart: segundo donde arranca el preview (ej: 120 = 2min)
+// VIDEOS — los códigos están hardcodeados acá para que funcionen en cualquier navegador
+// previewStart = segundo donde arranca el preview
 const VIDEOS = [
-  { id:1, youtubeId:"QEtU84msvHo", title:"8va Clase – Shooting con Modelos",          previewStart:120,  totalMins:"45:00", driveId:"1FTTELQgaZLsho4GP_fL0X6RfubG3OoiX" },
-  { id:2, youtubeId:"dyq3iWZwhBE", title:"Modos de Enfoque y Punto de Enfoque",        previewStart:600,  totalMins:"38:00", driveId:"" },
-  { id:3, youtubeId:"AoUgMLrFhHU", title:"Presentación, Exposición y Velocidad",       previewStart:2400, totalMins:"52:00", driveId:"" },
-  { id:4, youtubeId:"QnpVW194IQQ", title:"4ta Clase – Fotografía Nivel 1",             previewStart:900,  totalMins:"41:00", driveId:"" },
-  { id:5, youtubeId:"IpvdxabWaLY", title:"3ra Clase – Fotografía Nivel 1",             previewStart:1200, totalMins:"44:00", driveId:"" },
+  { id:1, youtubeId:"QEtU84msvHo", title:"8va Clase – Shooting con Modelos",      previewStart:120,  totalMins:"45:00", code:"3847", driveId:"1FTTELQgaZLsho4GP_fL0X6RfubG3OoiX" },
+  { id:2, youtubeId:"dyq3iWZwhBE", title:"Modos de Enfoque y Punto de Enfoque",   previewStart:600,  totalMins:"38:00", code:"2193", driveId:"" },
+  { id:3, youtubeId:"AoUgMLrFhHU", title:"Presentación, Exposición y Velocidad",  previewStart:2400, totalMins:"52:00", code:"5621", driveId:"" },
+  { id:4, youtubeId:"QnpVW194IQQ", title:"4ta Clase – Fotografía Nivel 1",        previewStart:900,  totalMins:"41:00", code:"7034", driveId:"" },
+  { id:5, youtubeId:"IpvdxabWaLY", title:"3ra Clase – Fotografía Nivel 1",        previewStart:1200, totalMins:"44:00", code:"9412", driveId:"" },
 ];
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 
-// ── ESTADO (localStorage — persiste en el mismo navegador) ──
+// Estado de ventas/descargas en localStorage
 function loadState() {
-  const saved = localStorage.getItem('fada_v2_state');
+  const saved = localStorage.getItem('fada_v3');
   if (saved) return JSON.parse(saved);
-  // Primera vez: generar códigos automáticos de 4 dígitos únicos
-  const codes = new Set();
-  return VIDEOS.map(v => {
-    let code;
-    do { code = String(Math.floor(1000 + Math.random() * 9000)); } while (codes.has(code));
-    codes.add(code);
-    return { id: v.id, sold: false, code, downloads: 0, driveId: v.driveId || "" };
-  });
+  return VIDEOS.map(v => ({ id:v.id, sold:false, downloads:0, driveId:v.driveId||"" }));
 }
-
 let state = loadState();
+function saveState() { localStorage.setItem('fada_v3', JSON.stringify(state)); }
+function getS(id) { return state.find(s => s.id === id); }
 
-function saveState() { localStorage.setItem('fada_v2_state', JSON.stringify(state)); }
-function getS(id)    { return state.find(s => s.id === id); }
-
-// ── SOLD COUNTER ──
-function updateSoldBanner() {
-  const n = state.filter(s => s.sold).length;
-  document.getElementById('sold-count').textContent = n;
+function updateBanner() {
+  document.getElementById('sold-count').textContent = state.filter(s => s.sold).length;
 }
 
 // ── RENDER GRID ──
 function renderGrid(filter="") {
   const grid = document.getElementById('video-grid');
   const filtered = VIDEOS.filter(v =>
-    v.title.toLowerCase().includes(filter.toLowerCase()) ||
-    String(v.id).includes(filter)
+    v.title.toLowerCase().includes(filter.toLowerCase()) || String(v.id).includes(filter)
   );
 
   grid.innerHTML = filtered.map(v => {
     const s = getS(v.id);
-    const pct = Math.min(100, Math.round((30 / (parseMins(v.totalMins)*60)) * 100));
+    const pct = Math.min(100, Math.round((30 / (parseInt(v.totalMins)*60)) * 100));
 
     if (s.sold) {
-      // Video comprado — reproduce completo desde YT embed
-      const fullEmbed = `https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1`;
       return `
       <div class="video-card sold" id="card-${v.id}">
         <div class="preview-wrap">
-          <iframe src="${fullEmbed}" allow="fullscreen" allowfullscreen></iframe>
+          <iframe src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; fullscreen"
+            allowfullscreen></iframe>
           <div class="sold-badge">✅ ENTREGADO</div>
         </div>
         <div class="card-body">
           <div class="card-number">✅ Coreografía #${v.id} — ENTREGADA</div>
           <div class="card-title">${v.title}</div>
-          <div class="dl-count">⬇️ ${s.downloads} descarga${s.downloads !== 1 ? 's' : ''} realizadas</div>
+          <div class="dl-count">⬇️ ${s.downloads} descarga${s.downloads!==1?'s':''}</div>
           <div class="card-footer">
-            <span class="price-tag" style="color:var(--green);font-size:14px;">¡Video tuyo!</span>
+            <span class="price-tag" style="color:var(--green);font-size:13px;">¡Video tuyo!</span>
             <button class="btn-download" onclick="openModal(${v.id})">⬇️ Descargar</button>
           </div>
         </div>
       </div>`;
     }
 
-    // Video bloqueado — preview con JS timer
     return `
     <div class="video-card" id="card-${v.id}">
-      <div class="preview-wrap">
-        <div class="preview-shield" oncontextmenu="return false"></div>
-        <iframe id="iframe-${v.id}"
-          src="https://www.youtube.com/embed/${v.youtubeId}?start=${v.previewStart}&autoplay=0&controls=1&modestbranding=1&rel=0&fs=0"
-          allow="fullscreen" allowfullscreen></iframe>
+      <div class="preview-wrap" oncontextmenu="return false">
+        <iframe src="https://www.youtube.com/embed/${v.youtubeId}?start=${v.previewStart}&rel=0&modestbranding=1&fs=1"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; fullscreen"
+          allowfullscreen></iframe>
         <div class="sold-badge">✅ ENTREGADO</div>
         <div class="lock-overlay">
           <div class="progress-bar-wrap">
             <div class="progress-bar-fill" style="width:${pct}%"></div>
           </div>
-          <div class="progress-label">👁 Vista previa · 🔒 Video completo: ${v.totalMins} min</div>
+          <div class="progress-label">👁 Vista previa desde min ${Math.floor(v.previewStart/60)} · 🔒 Completo: ${v.totalMins} min</div>
         </div>
       </div>
       <div class="card-body">
@@ -396,16 +393,14 @@ function renderGrid(filter="") {
         <div class="card-title">${v.title}</div>
         <div class="card-footer">
           <span class="price-tag">${PRICE}</span>
-          <a class="btn-buy" href="${buildWA(v)}" target="_blank">🛒 Quiero este video</a>
+          <a class="btn-buy" href="${buildWA(v)}" target="_blank">🛒 Quiero este</a>
         </div>
       </div>
     </div>`;
   }).join('');
 
-  updateSoldBanner();
+  updateBanner();
 }
-
-function parseMins(str) { return parseInt(str.split(':')[0]); }
 
 function buildWA(v) {
   const msg = `Hola! Vi la web de FADA y quiero comprar el video:\n\n🎬 *${v.title}* (Coreografía #${v.id})\n💰 Precio: ${PRICE}\n\nMe confirmás cómo hacer el pago?`;
@@ -416,7 +411,6 @@ function filterVideos() { renderGrid(document.getElementById('search').value); }
 
 // ── MODAL DESCARGA ──
 let currentDlId = null;
-
 function openModal(id) {
   currentDlId = id;
   const v = VIDEOS.find(v => v.id === id);
@@ -426,67 +420,45 @@ function openModal(id) {
   document.getElementById('dl-modal').classList.add('open');
   setTimeout(() => document.getElementById('code-input').focus(), 100);
 }
-
 function closeModal() { document.getElementById('dl-modal').classList.remove('open'); currentDlId = null; }
 
 function checkCode() {
   const input = document.getElementById('code-input').value.trim();
-  const s = getS(currentDlId);
   const v = VIDEOS.find(v => v.id === currentDlId);
+  const s = getS(currentDlId);
 
-  if (input !== s.code) {
+  if (input !== v.code) {
     document.getElementById('code-error').textContent = '❌ Código incorrecto. Revisá el mensaje que recibiste.';
     return;
   }
 
-  // Código correcto
   const driveId = s.driveId || v.driveId;
   closeModal();
 
-  if (!driveId) {
-    showToast('✅ Código correcto! El video estará disponible pronto.', 'green');
-    return;
-  }
-
-  // Descarga sin mostrar link
-  const a = document.createElement('a');
-  a.href = `https://drive.google.com/uc?export=download&id=${driveId}`;
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-
-  // Registrar descarga
   s.downloads = (s.downloads || 0) + 1;
   saveState();
   renderGrid(document.getElementById('search').value);
-  showToast(`⬇️ Descarga iniciada... (descarga #${s.downloads})`, 'green');
+
+  if (driveId) {
+    const a = document.createElement('a');
+    a.href = `https://drive.google.com/uc?export=download&id=${driveId}`;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  document.getElementById('thanks-dl-num').textContent = `Descarga #${s.downloads}`;
+  document.getElementById('thanks-modal').classList.add('open');
 }
 
-// ── TOAST ──
-function showToast(msg, color='green') {
-  const t = document.createElement('div');
-  t.textContent = msg;
-  const bg = color === 'green' ? '#1a3a00' : '#3a0010';
-  const cl = color === 'green' ? '#4caf50' : '#e87aad';
-  t.style.cssText = `position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
-    background:${bg};color:${cl};padding:13px 26px;border-radius:14px;
-    font-weight:700;z-index:999;border:1px solid ${cl}55;font-size:14px;
-    font-family:'Nunito',sans-serif;white-space:nowrap;`;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 3500);
-}
+function closeThanks() { document.getElementById('thanks-modal').classList.remove('open'); }
 
-// ── ADMIN — doble clic en título FADA ──
+// ── ADMIN — doble clic en FADA ──
 let clickTimer = null;
 document.getElementById('fada-title').addEventListener('click', () => {
-  if (clickTimer) {
-    clearTimeout(clickTimer);
-    clickTimer = null;
-    openAdmin();
-  } else {
-    clickTimer = setTimeout(() => { clickTimer = null; }, 400);
-  }
+  if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; openAdmin(); }
+  else { clickTimer = setTimeout(() => { clickTimer = null; }, 400); }
 });
 
 function openAdmin() {
@@ -497,7 +469,6 @@ function openAdmin() {
   document.getElementById('admin-content').style.display = 'none';
   setTimeout(() => document.getElementById('admin-pass').focus(), 150);
 }
-
 function closeAdmin() { document.getElementById('admin-modal').classList.remove('open'); }
 
 function adminLogin() {
@@ -513,45 +484,35 @@ function adminLogin() {
 function renderAdminTable() {
   document.getElementById('admin-tbody').innerHTML = VIDEOS.map(v => {
     const s = getS(v.id);
+    const waMsg = encodeURIComponent(`Hola! Tu video de FADA está listo 🎬\n\n*${v.title}*\n\nTu código de descarga es: *${v.code}*\n\nIngresalo en la web para descargar tu video:\nhttps://fada-sand.vercel.app\n\n¡Que lo disfrutes! 💃`);
     return `
     <tr>
       <td style="color:var(--gold);font-weight:800;">#${v.id}</td>
-      <td style="font-size:12px;max-width:140px;">${v.title}</td>
-      <td><span class="code-display">${s.code}</span></td>
-      <td><span class="status-dot ${s.sold ? 'sold':'free'}"></span>${s.sold ? 'Vendido':'Libre'}</td>
-      <td style="text-align:center;color:${s.downloads>0?'var(--green)':'#fff'}">
-        ${s.downloads} ⬇️
-      </td>
-      <td>
-        <input class="drive-input" value="${s.driveId}" placeholder="ID de Drive"
-               onchange="updateDrive(${v.id}, this.value)">
-      </td>
-      <td>
-        <button class="btn-toggle ${s.sold ? 'make-free':'make-sold'}"
-                onclick="toggleSold(${v.id})">
-          ${s.sold ? '🔒 Desbloquear':'✅ Marcar vendido'}
+      <td style="font-size:12px;max-width:120px;">${v.title}</td>
+      <td><span class="code-display">${v.code}</span></td>
+      <td><span class="status-dot ${s.sold?'sold':'free'}"></span>${s.sold?'Vendido':'Libre'}</td>
+      <td style="text-align:center;color:${s.downloads>0?'var(--green)':'#fff'}">${s.downloads}</td>
+      <td><input class="drive-input" value="${s.driveId}" placeholder="ID o link Drive" onchange="updateDrive(${v.id},this.value)"></td>
+      <td style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+        <button class="btn-toggle ${s.sold?'make-free':'make-sold'}" onclick="toggleSold(${v.id})">
+          ${s.sold?'🔒 Desbloquear':'✅ Marcar vendido'}
         </button>
+        <a class="btn-wa-send" href="https://wa.me/?text=${waMsg}" target="_blank">📲 Enviar código</a>
       </td>
     </tr>`;
   }).join('');
 }
 
 function toggleSold(id) {
-  const s = getS(id);
-  s.sold = !s.sold;
-  saveState();
-  renderAdminTable();
-  renderGrid(document.getElementById('search').value);
+  getS(id).sold = !getS(id).sold;
+  saveState(); renderAdminTable(); renderGrid(document.getElementById('search').value);
 }
-
 function updateDrive(id, val) {
-  // Extraer ID si pegaron el link completo
   const match = val.match(/\/d\/([a-zA-Z0-9_-]+)/);
   getS(id).driveId = match ? match[1] : val.trim();
   saveState();
 }
 
-// INIT
 renderGrid();
 </script>
 </body>
