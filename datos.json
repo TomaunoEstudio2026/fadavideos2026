@@ -1,9 +1,12 @@
 {
   "eventos": [
     {
-      "id": "fada2026",
-      "titulo": "FADA 10 Años – Junio 2026",
-      "activo": true,
+      "id": "ev_fada2026",
+      "titulo": "FADA 10 Años",
+      "subtitulo": "Festival Argentino de Danzas Árabes · Sábado 6 de Junio 2026",
+      "imagen": "",
+      "visibilidad": "publico",
+      "password": "",
       "videos": []
     }
   ]

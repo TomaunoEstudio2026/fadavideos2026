@@ -3,517 +3,770 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FADA 10 Años – Tus Coreografías</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>Tomauno Videos</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --gold: #f5c842;
-    --pink: #c8005b;
-    --pink-light: #e87aad;
-    --bg: #0d0007;
-    --bg2: #12000b;
-    --bg3: #1e0015;
-    --border: #c8005b44;
-    --green: #4caf50;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); color:#fff; font-family:'Nunito',sans-serif; min-height:100vh; }
+:root{--red:#e00000;--red-d:#a00000;--w:#ffffff;--g1:#0a0a0a;--g2:#111111;--g3:#1a1a1a;--g4:#222222;--g5:#2a2a2a;--bd:#333;--bd2:#e0000033;--tm:#555;--td:#888}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{background:var(--g2);color:var(--w);font-family:"Nunito",sans-serif;min-height:100vh;overflow-x:hidden}
 
-  /* HEADER */
-  header {
-    background: linear-gradient(180deg,#1a0010 0%,var(--bg) 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 20px 20px 16px;
-    text-align: center;
-  }
-  header .crown { font-size:28px; user-select:none; }
-  header h1 {
-    font-family:'Cinzel',serif;
-    font-size: clamp(32px,8vw,60px);
-    color: var(--gold);
-    letter-spacing: 5px;
-    text-shadow: 0 0 40px #f5c84255;
-    cursor: default;
-    user-select: none;
-  }
-  header .sub { font-size:12px; color:var(--pink-light); letter-spacing:2px; text-transform:uppercase; margin-top:4px; }
-  header .tagline { margin-top:10px; font-size:15px; color:#fff; line-height:1.5; }
-  header .tagline span { color:var(--gold); font-weight:800; }
+/* NAV */
+.navbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);padding:0 20px;display:flex;align-items:center;gap:14px;height:56px}
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;flex-shrink:0}
+.nav-logo img{width:36px;height:36px;border-radius:50%}
+.brand{font-family:"Bebas Neue",sans-serif;font-size:22px;letter-spacing:2px}
+.brand em{color:var(--w);font-style:normal}.brand span{color:var(--red)}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.gh-dot{width:10px;height:10px;border-radius:50%;background:#444;transition:background .3s;flex-shrink:0}
+.gh-dot.ok{background:#4caf50;box-shadow:0 0 6px #4caf5077}
+.gh-dot.err{background:var(--red);box-shadow:0 0 6px #e0000077}
 
-  /* SOLD BANNER */
-  .sold-banner {
-    background: linear-gradient(90deg,#0d0007,#1a0010,#0d0007);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 20px;
-    text-align: center;
-    font-size: 13px;
-    color: var(--pink-light);
-  }
-  .sold-banner strong { color:var(--gold); font-size:16px; }
+/* GALLERY VIEW */
+.hero{padding:40px 20px 20px;text-align:center}
+.hero h1{font-family:"Bebas Neue",sans-serif;font-size:clamp(40px,10vw,80px);letter-spacing:4px;line-height:1}
+.hero h1 em{color:var(--red);font-style:normal}
+.hero p{font-size:13px;color:var(--td);margin-top:8px;letter-spacing:2px;text-transform:uppercase}
+.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:20px 24px 60px;max-width:1200px;margin:0 auto}
+.ev-card{background:var(--g3);border:1px solid var(--bd);border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative}
+.ev-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px #00000099}
+.ev-card .placa{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--g4)}
+.ev-card .placa-ph{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,var(--g4),var(--g3));display:flex;align-items:center;justify-content:center;font-family:"Bebas Neue",sans-serif;font-size:28px;color:var(--bd)}
+.ev-card .ci{padding:14px 16px}
+.ev-card .ci h3{font-size:16px;font-weight:800;margin-bottom:4px}
+.ev-card .ci p{font-size:12px;color:var(--td)}
+.ev-card .ci .vc{font-size:11px;color:var(--tm);margin-top:4px}
+.priv-badge{position:absolute;top:10px;right:10px;background:#000000cc;color:var(--w);font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;border:1px solid var(--bd)}
 
-  /* SEARCH */
-  .search-bar { padding:14px 16px; background:var(--bg2); border-bottom:1px solid var(--border); }
-  .search-bar input {
-    width:100%; padding:11px 16px;
-    background:var(--bg3); border:1.5px solid var(--border);
-    border-radius:10px; color:#fff; font-size:14px;
-    font-family:'Nunito',sans-serif; outline:none;
-  }
-  .search-bar input::placeholder { color:#ffffff44; }
-  .search-bar input:focus { border-color:var(--pink-light); }
+/* EVENT VIEW */
+#view-event{display:none}
+.ev-hdr{background:linear-gradient(180deg,#080808,var(--g2));padding:16px 20px 0;border-bottom:1px solid var(--bd)}
+.ev-hdr-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.btn-back{background:var(--g3);border:1px solid var(--bd);color:var(--w);padding:7px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:"Nunito",sans-serif}
+.btn-back:hover{background:var(--g4)}
+.ev-ttl-blk h2{font-family:"Bebas Neue",sans-serif;font-size:clamp(20px,5vw,34px);letter-spacing:2px;line-height:1}
+.ev-ttl-blk p{font-size:12px;color:var(--td);margin-top:2px}
+.pills{display:flex;gap:8px;padding:12px 20px 0;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
+.pills::-webkit-scrollbar{display:none}
+.pill{padding:6px 16px;border-radius:20px;border:1px solid var(--bd);background:var(--g3);color:var(--td);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.pill:hover{border-color:var(--red);color:var(--w)}
+.pill.active{background:var(--red);border-color:var(--red);color:var(--w)}
 
-  /* GRID — 4 col desktop, 2 tablet, 1 mobile */
-  #video-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    padding: 20px;
-  }
-  @media(max-width:1100px){ #video-grid{ grid-template-columns: repeat(3,1fr); } }
-  @media(max-width:700px) { #video-grid{ grid-template-columns: repeat(2,1fr); gap:10px; padding:12px; } }
-  @media(max-width:450px) { #video-grid{ grid-template-columns: 1fr; } }
+/* BANNER */
+.banner{background:linear-gradient(90deg,#080808,#180000,#080808);border-bottom:1px solid var(--bd2);padding:8px 20px;text-align:center;font-size:13px;color:var(--td)}
+.banner strong{color:var(--red);font-size:15px}
+.banner .bstats{margin-left:12px;font-size:12px}
 
-  /* CARD */
-  .video-card {
-    background:var(--bg3); border:1px solid var(--border);
-    border-radius:14px; overflow:hidden;
-    transition:transform .2s, box-shadow .2s;
-    display:flex; flex-direction:column;
-  }
-  .video-card:hover { transform:translateY(-4px); box-shadow:0 10px 36px #c8005b44; }
-  .video-card.sold  { border-color:var(--gold); box-shadow:0 0 16px #f5c84222; }
+/* SEARCH */
+.srch-wrap{padding:12px 20px;background:var(--g2);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px}
+.srch-wrap input{flex:1;padding:10px 16px;background:var(--g3);border:1px solid var(--bd);border-radius:10px;color:var(--w);font-size:14px;font-family:"Nunito",sans-serif;outline:none}
+.srch-wrap input::placeholder{color:var(--tm)}
+.srch-wrap input:focus{border-color:var(--red)}
+.rc{font-size:12px;color:var(--tm);white-space:nowrap}
 
-  /* PREVIEW */
-  .preview-wrap { position:relative; background:#000; flex-shrink:0; }
-  .preview-wrap iframe { width:100%; aspect-ratio:16/9; border:none; display:block; }
+/* VIDEO GRID */
+.vid-section{max-width:1400px;margin:0 auto;padding:16px 20px 60px}
+#video-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:1200px){#video-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:800px){#video-grid{grid-template-columns:repeat(2,1fr);gap:10px}}
+@media(max-width:480px){#video-grid{grid-template-columns:1fr}}
 
-  /* Capa encima del iframe solo para bloquear clic derecho — no bloquea play */
-  .right-click-shield {
-    position:absolute; inset:0; z-index:2;
-    background: transparent;
-    pointer-events: none; /* deja pasar clics al iframe normalmente */
-  }
-  /* Bloqueamos clic derecho via JS en el iframe container */
+/* VIDEO CARD */
+.vc{background:var(--g3);border:1px solid var(--bd);border-radius:12px;overflow:hidden;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
+.vc:hover{transform:translateY(-3px);box-shadow:0 8px 28px #00000066}
+.vc.sold{border-color:var(--red)}
+.vc.free{border-color:#444}
+.pw{position:relative;background:#000;flex-shrink:0}
+.pw iframe{width:100%;aspect-ratio:16/9;border:none;display:block}
+.sbadge{position:absolute;top:8px;left:8px;z-index:3;background:var(--red);color:var(--w);font-size:10px;font-weight:800;padding:3px 8px;border-radius:20px;display:none}
+.vc.sold .sbadge{display:block}
+.lbar{position:absolute;bottom:0;left:0;right:0;z-index:3;background:linear-gradient(to top,#000000bb,transparent);padding:8px 10px;pointer-events:none}
+.vc.sold .lbar,.vc.free .lbar{display:none}
+.pw-fill{height:3px;border-radius:3px;background:linear-gradient(90deg,var(--red),#ff5555)}
+.pw-bg{background:#ffffff22;border-radius:3px;height:3px;margin-bottom:4px}
+.pw-lbl{font-size:10px;color:#ffffffaa}
+.cb{padding:10px 12px 12px;flex:1;display:flex;flex-direction:column}
+.cn{font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.vc.sold .cn{color:var(--red)}
+.ct{font-size:13px;font-weight:800;line-height:1.3;margin-bottom:3px;flex:1}
+.cbail{font-size:11px;color:var(--td);margin-bottom:5px;font-style:italic}
+.cstats{display:flex;gap:10px;font-size:10px;color:var(--tm);margin-bottom:7px}
+.cf{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:auto}
+.pblock{display:flex;flex-direction:column}
+.pars{font-size:15px;font-weight:800}
+.pusd{font-size:11px;color:var(--tm)}
+.vc.sold .pars{color:var(--red);font-size:12px}
+.btn-buy{display:flex;align-items:center;gap:4px;padding:8px 12px;background:var(--red);color:var(--w);border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:"Nunito",sans-serif;text-decoration:none;transition:background .15s;white-space:nowrap;flex-shrink:0}
+.btn-buy:hover{background:var(--red-d)}
+.btn-dl{display:flex;align-items:center;gap:4px;padding:8px 12px;background:#162600;color:#6fcf00;border:1px solid #6fcf0033;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:"Nunito",sans-serif;white-space:nowrap;flex-shrink:0}
+.btn-dl:hover{background:#1e3300}
 
-  .lock-overlay {
-    position:absolute; bottom:0; left:0; right:0; z-index:3;
-    background: linear-gradient(to top,#0d000799 0%,transparent 100%);
-    padding: 8px 10px 8px;
-    pointer-events: none;
-  }
-  .video-card.sold .lock-overlay { display:none; }
+/* MODALS */
+.mb{display:none;position:fixed;inset:0;background:#000000cc;z-index:500;align-items:center;justify-content:center;padding:20px}
+.mb.open{display:flex}
+.mbox{background:var(--g3);border:1px solid var(--bd);border-radius:16px;width:100%;max-width:360px;text-align:center;padding:28px 24px}
+.mbox h2{font-family:"Bebas Neue",sans-serif;font-size:24px;letter-spacing:2px;margin-bottom:6px}
+.msub{font-size:13px;color:var(--td);margin-bottom:16px;line-height:1.5}
+.mbox input{width:100%;padding:14px;background:var(--g2);border:1px solid var(--bd);border-radius:10px;color:var(--w);font-size:28px;font-family:"Nunito",sans-serif;font-weight:800;text-align:center;letter-spacing:8px;outline:none;margin-bottom:10px}
+.mbox input:focus{border-color:var(--red)}
+.mbox input.pi{font-size:18px;letter-spacing:4px}
+.merr{font-size:13px;color:#ff6666;min-height:18px;margin-bottom:10px}
+.btn-mc{width:100%;padding:12px;background:var(--red);color:var(--w);border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:"Nunito",sans-serif;margin-bottom:8px}
+.btn-mx{width:100%;padding:8px;background:transparent;color:var(--tm);border:none;cursor:pointer;font-size:13px;font-family:"Nunito",sans-serif}
+.tbox{background:var(--g3);border:2px solid var(--red);border-radius:16px;width:100%;max-width:340px;text-align:center;padding:32px 24px}
+.tbox .emoji{font-size:48px;margin-bottom:12px}
+.tbox h2{font-family:"Bebas Neue",sans-serif;font-size:28px;letter-spacing:2px;color:var(--red);margin-bottom:10px}
+.tbox p{font-size:14px;line-height:1.7;color:#ccc;margin-bottom:16px}
+.tbox .dn{font-size:11px;color:var(--tm);margin-bottom:20px}
 
-  .progress-bar-wrap { background:#ffffff22; border-radius:4px; height:4px; margin-bottom:4px; }
-  .progress-bar-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--pink),var(--gold)); }
-  .progress-label { font-size:10px; color:#ffffffbb; }
+/* ADMIN */
+.adm-bg{display:none;position:fixed;inset:0;background:#000000ee;z-index:600;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
+.adm-bg.open{display:flex}
+.adm-panel{background:var(--g3);border:1px solid var(--red);border-radius:16px;width:100%;max-width:1140px;padding:24px;margin:auto}
+.adm-panel h2{font-family:"Bebas Neue",sans-serif;font-size:26px;letter-spacing:2px;color:var(--red);margin-bottom:4px}
+.adm-close{float:right;background:transparent;border:none;color:var(--w);font-size:24px;cursor:pointer}
+.adm-tabs{display:flex;gap:8px;margin:16px 0;border-bottom:1px solid var(--bd);padding-bottom:12px;flex-wrap:wrap}
+.adm-tab{padding:8px 18px;border-radius:8px;border:1px solid var(--bd);background:var(--g2);color:var(--td);font-size:13px;font-weight:700;cursor:pointer;font-family:"Nunito",sans-serif}
+.adm-tab.active{background:var(--red);border-color:var(--red);color:var(--w)}
+.adm-sec{display:none}.adm-sec.active{display:block}
+.adm-form{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:14px;padding:16px;background:var(--g2);border-radius:10px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:11px;color:var(--tm);text-transform:uppercase;letter-spacing:1px}
+.fg input,.fg select,.fg textarea{padding:9px 12px;background:var(--g4);border:1px solid var(--bd);border-radius:8px;color:var(--w);font-size:13px;font-family:"Nunito",sans-serif;outline:none}
+.fg input:focus,.fg select:focus{border-color:var(--red)}
+.fg select option{background:var(--g3)}
+.btn-add{padding:10px 20px;background:var(--red);color:var(--w);border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:"Nunito",sans-serif}
+.btn-add:hover{background:var(--red-d)}
+.atw{overflow-x:auto}
+.at{width:100%;border-collapse:collapse;font-size:12px}
+.at th{text-align:left;padding:10px;color:var(--red);border-bottom:1px solid var(--bd);font-size:11px;text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
+.at td{padding:9px 10px;border-bottom:1px solid var(--bd);vertical-align:middle}
+.at tr:hover td{background:#181818}
+.cc{font-size:18px;font-weight:800;letter-spacing:5px;color:var(--red);background:var(--g2);padding:3px 10px;border-radius:6px;font-family:"Nunito",sans-serif}
+.sd{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.sd.g{background:#4caf50}.sd.r{background:var(--tm)}.sd.o{background:#ff9800}
+.bs{padding:5px 10px;border-radius:6px;border:none;font-size:11px;font-weight:700;cursor:pointer;font-family:"Nunito",sans-serif;white-space:nowrap}
+.bs.green{background:#162600;color:#6fcf00}
+.bs.ro{background:transparent;color:var(--red);border:1px solid var(--red)}
+.bs.gray{background:var(--g4);color:var(--td);border:1px solid var(--bd)}
+.bs.wa{background:#0d1e0d;color:#25d366;border:1px solid #25d36633}
+.bs.cp{background:var(--g4);color:var(--td);border:1px solid var(--bd)}
+.bs.cp.ok{background:#0d1e0d;color:#6fcf00;border-color:#6fcf0033}
+.bs.danger{background:#1e0000;color:#ff6666;border:1px solid #ff666633}
+.tok-sec{padding:14px;background:var(--g2);border-radius:10px;margin-bottom:14px}
+.tok-sec label{font-size:11px;color:var(--tm);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px}
+.tok-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tok-inp{flex:1;min-width:180px;padding:9px 12px;background:var(--g4);border:1px solid var(--bd);border-radius:8px;color:var(--w);font-size:13px;font-family:"Nunito",sans-serif;outline:none}
+.tok-inp:focus{border-color:var(--red)}
 
-  .sold-badge {
-    position:absolute; top:8px; right:8px; z-index:4;
-    background:var(--green); color:#fff; font-size:10px; font-weight:800;
-    padding:3px 8px; border-radius:20px;
-    display:none;
-  }
-  .video-card.sold .sold-badge { display:block; }
+/* CHAT FAB */
+.fab{position:fixed;bottom:24px;right:24px;z-index:400;width:52px;height:52px;border-radius:50%;background:var(--red);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px #e0000066;transition:transform .2s,box-shadow .2s}
+.fab:hover{transform:scale(1.1);box-shadow:0 6px 28px #e0000099}
+.fab svg{width:24px;height:24px;fill:var(--w)}
 
-  /* CARD BODY */
-  .card-body { padding:12px 12px 14px; flex:1; display:flex; flex-direction:column; }
-  .card-number { font-size:10px; font-weight:700; color:var(--pink-light); text-transform:uppercase; letter-spacing:1px; margin-bottom:2px; }
-  .video-card.sold .card-number { color:var(--green); }
-  .card-title { font-size:13px; font-weight:800; color:#fff; line-height:1.3; margin-bottom:6px; flex:1; }
-  .dl-count { font-size:11px; color:#ffffff44; margin-bottom:8px; }
-  .card-footer { display:flex; align-items:center; justify-content:space-between; gap:6px; margin-top:auto; }
-  .price-tag { font-size:16px; font-weight:800; color:var(--gold); white-space:nowrap; }
-
-  .btn-buy {
-    display:flex; align-items:center; gap:5px;
-    padding:8px 12px; background:var(--pink); color:#fff;
-    border:none; border-radius:8px; font-size:12px; font-weight:700;
-    cursor:pointer; font-family:'Nunito',sans-serif;
-    text-decoration:none; transition:background .2s; white-space:nowrap;
-  }
-  .btn-buy:hover { background:#e0006a; }
-  .btn-download {
-    display:flex; align-items:center; gap:5px;
-    padding:8px 12px; background:#1a3a00; color:var(--green);
-    border:1.5px solid #4caf5066; border-radius:8px; font-size:12px; font-weight:700;
-    cursor:pointer; font-family:'Nunito',sans-serif; transition:all .2s; white-space:nowrap;
-  }
-  .btn-download:hover { background:#224d00; }
-
-  /* MODAL DESCARGA */
-  .modal-bg {
-    display:none; position:fixed; inset:0;
-    background:#000000cc; z-index:200;
-    align-items:center; justify-content:center; padding:20px;
-  }
-  .modal-bg.open { display:flex; }
-  .modal {
-    background:var(--bg2); border:1.5px solid var(--border);
-    border-radius:20px; padding:28px 24px; width:100%; max-width:340px; text-align:center;
-  }
-  .modal h2 { font-family:'Cinzel',serif; color:var(--gold); font-size:20px; margin-bottom:6px; }
-  .modal .video-name { font-size:13px; color:var(--pink-light); margin-bottom:16px; line-height:1.4; }
-  .modal input {
-    width:100%; padding:14px; background:var(--bg3);
-    border:1.5px solid var(--border); border-radius:10px; color:#fff;
-    font-size:32px; font-family:'Nunito',sans-serif; font-weight:800;
-    text-align:center; letter-spacing:10px; outline:none; margin-bottom:12px;
-  }
-  .modal input:focus { border-color:var(--pink-light); }
-  .modal-error { font-size:13px; color:#ff6b6b; margin-bottom:10px; min-height:18px; }
-  .btn-confirm {
-    width:100%; padding:12px; background:var(--pink); color:#fff;
-    border:none; border-radius:10px; font-size:15px; font-weight:700;
-    cursor:pointer; font-family:'Nunito',sans-serif; margin-bottom:8px;
-  }
-  .btn-cancel {
-    width:100%; padding:10px; background:transparent; color:#ffffff55;
-    border:none; cursor:pointer; font-size:13px; font-family:'Nunito',sans-serif;
-  }
-
-  /* MODAL GRACIAS */
-  .thanks-modal {
-    background:var(--bg2); border:2px solid var(--gold);
-    border-radius:20px; padding:32px 24px; width:100%; max-width:340px; text-align:center;
-  }
-  .thanks-modal .emoji { font-size:48px; margin-bottom:12px; }
-  .thanks-modal h2 { font-family:'Cinzel',serif; color:var(--gold); font-size:22px; margin-bottom:10px; }
-  .thanks-modal p { font-size:14px; color:#fff; line-height:1.6; margin-bottom:20px; }
-  .thanks-modal .dl-num { font-size:12px; color:#ffffff44; margin-bottom:20px; }
-  .btn-thanks { width:100%; padding:12px; background:var(--green); color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Nunito',sans-serif; }
-
-  /* ADMIN MODAL */
-  .admin-modal-bg {
-    display:none; position:fixed; inset:0;
-    background:#000000ee; z-index:300;
-    align-items:flex-start; justify-content:center; padding:16px;
-    overflow-y:auto;
-  }
-  .admin-modal-bg.open { display:flex; }
-  .admin-modal {
-    background:var(--bg2); border:1.5px solid var(--gold);
-    border-radius:20px; width:100%; max-width:760px;
-    padding:24px; margin:auto;
-  }
-  .admin-modal h2 { font-family:'Cinzel',serif; color:var(--gold); margin-bottom:4px; font-size:20px; }
-  .admin-modal .admin-sub { font-size:12px; color:#ffffff44; margin-bottom:16px; }
-  .admin-close { float:right; background:transparent; border:none; color:#fff; font-size:22px; cursor:pointer; }
-  .admin-table { width:100%; border-collapse:collapse; font-size:13px; }
-  .admin-table th { text-align:left; padding:10px 10px; color:var(--gold); border-bottom:1px solid var(--border); font-size:11px; text-transform:uppercase; letter-spacing:1px; }
-  .admin-table td { padding:9px 10px; border-bottom:1px solid var(--border); vertical-align:middle; }
-  .status-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; }
-  .status-dot.sold { background:var(--green); }
-  .status-dot.free { background:#ff6b6b; }
-  .code-display { font-size:22px; font-weight:800; letter-spacing:6px; color:var(--gold); background:var(--bg3); padding:4px 10px; border-radius:6px; font-family:'Nunito',sans-serif; }
-  .drive-input { background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:#fff; padding:5px 8px; font-size:11px; width:140px; font-family:'Nunito',sans-serif; outline:none; }
-  .drive-input:focus { border-color:var(--pink-light); }
-  .btn-toggle { padding:7px 14px; border-radius:8px; border:none; font-size:12px; font-weight:700; cursor:pointer; font-family:'Nunito',sans-serif; }
-  .btn-toggle.make-sold { background:#1a3a00; color:var(--green); }
-  .btn-toggle.make-free { background:#3a0010; color:var(--pink-light); }
-  .btn-wa-send {
-    display:inline-flex; align-items:center; gap:4px;
-    padding:5px 10px; background:#25d36622; color:#25d366;
-    border:1px solid #25d36644; border-radius:6px;
-    font-size:11px; font-weight:700; cursor:pointer;
-    font-family:'Nunito',sans-serif; text-decoration:none;
-  }
-  .admin-note { font-size:11px; color:#ffffff33; margin-top:12px; }
-
-  /* FOOTER */
-  footer { text-align:center; padding:20px 16px 30px; border-top:1px solid var(--border); margin-top:8px; }
-  footer .fada-credit { font-size:11px; color:#ffffff22; margin-bottom:5px; }
-  footer .dev-credit { font-size:12px; color:#ffffff44; }
-  footer .dev-credit a { color:#ffffff55; text-decoration:none; transition:color .2s; }
-  footer .dev-credit a:hover { color:var(--pink-light); }
+/* FOOTER */
+footer{text-align:center;padding:20px 16px 90px;border-top:1px solid var(--bd);font-size:12px;color:var(--tm)}
+footer a{color:#555;text-decoration:none}
+footer a:hover{color:var(--red)}
+.empty{text-align:center;padding:60px 20px;color:var(--tm)}
+.empty .ei{font-size:48px;margin-bottom:12px}
+@media(max-width:600px){.events-grid{grid-template-columns:1fr;padding:16px}.adm-form{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="crown">👑</div>
-  <h1 id="fada-title">FADA</h1>
-  <div class="sub">10 Años · Festival Argentino de Danzas Árabes</div>
-  <p class="tagline">¿Aparecés en alguna coreografía? <span>¡Encontrá tu video!</span><br>Vista previa gratuita · Comprá el video completo en HD</p>
-</header>
+<nav class="navbar">
+  <div class="nav-logo" id="nav-logo" title="Doble clic = Admin">
+    <img src="data:image/png;base64,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" alt="Tomauno">
+    <div class="brand"><em>TOMA</em><span>UNO</span></div>
+  </div>
+  <div class="nav-right">
+    <div class="gh-dot" id="gh-dot" title="GitHub"></div>
+  </div>
+</nav>
 
-<div class="sold-banner">
-  🔥 <strong id="sold-count">0</strong> videos ya entregados · ¡Reservá el tuyo!
+<!-- GALLERY -->
+<div id="view-gallery">
+  <div class="hero">
+    <h1><em>TOMA</em>UNO <span style="color:var(--red)">VIDEOS</span></h1>
+    <p>Seleccioná un evento para ver los videos</p>
+  </div>
+  <div class="events-grid" id="events-grid"></div>
 </div>
 
-<div class="search-bar">
-  <input type="text" id="search" placeholder="🔍 Buscar por nombre o número de coreografía..." oninput="filterVideos()">
+<!-- EVENT -->
+<div id="view-event">
+  <div class="ev-hdr">
+    <div class="ev-hdr-top">
+      <button class="btn-back" onclick="goGallery()">&#8592; Eventos</button>
+      <div class="ev-ttl-blk">
+        <h2 id="ev-title">EVENTO</h2>
+        <p id="ev-sub"></p>
+      </div>
+    </div>
+    <div class="pills" id="ev-pills"></div>
+  </div>
+  <div class="banner">
+    &#x1F525; <strong id="sold-count">0</strong> videos entregados
+    <span class="bstats">&#xB7; &#x1F441; <span id="visit-count">0</span> visitas &#xB7; &#x25B6; <span id="total-plays">0</span> reproducciones</span>
+  </div>
+  <div class="srch-wrap">
+    <input type="text" id="search" placeholder="&#x1F50D; Buscar por t&#237;tulo o nombre de bailarina..." oninput="filterVideos()">
+    <span class="rc" id="rc"></span>
+  </div>
+  <div class="vid-section"><div id="video-grid"></div></div>
 </div>
-
-<div id="video-grid"></div>
 
 <footer>
-  <div class="fada-credit">FADA Festival Oficial · @fadafestival · Sábado 6 de Junio 2026</div>
-  <div class="dev-credit">
-    © <a href="https://wa.me/5493764354522" target="_blank">Javier Móttola</a> ·
-    <a href="https://instagram.com/tomaunomodels" target="_blank">@tomaunomodels</a>
-  </div>
+  <div style="margin-bottom:4px">&#169; <a href="https://wa.me/5493764354522" target="_blank">Javier M&#243;ttola</a> &#xB7; <a href="https://instagram.com/tomaunomodels" target="_blank">@tomaunomodels</a></div>
+  <div>Tomauno Estudio Fotogr&#225;fico</div>
 </footer>
 
-<!-- MODAL CÓDIGO -->
-<div class="modal-bg" id="dl-modal">
-  <div class="modal">
-    <h2>🔐 Código de descarga</h2>
-    <div class="video-name" id="dl-modal-title"></div>
-    <input type="tel" id="code-input" placeholder="0000" maxlength="4"
-           oninput="this.value=this.value.replace(/\D/g,'').slice(0,4)"
-           onkeydown="if(event.key==='Enter')checkCode()">
-    <div class="modal-error" id="code-error"></div>
-    <button class="btn-confirm" onclick="checkCode()">⬇️ Descargar video</button>
-    <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+<button class="fab" onclick="window.open('https://cursostomauno.vercel.app/#chat','_blank')" title="Consultas">
+  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+</button>
+
+<!-- MODALS -->
+<div class="mb" id="m-dl">
+  <div class="mbox">
+    <h2>&#x1F510; C&#211;DIGO</h2>
+    <div class="msub" id="m-dl-title">Ingres&#225; tu c&#243;digo de 4 d&#237;gitos</div>
+    <input type="tel" id="code-input" placeholder="0000" maxlength="4" oninput="this.value=this.value.replace(/\D/g,'').slice(0,4)" onkeydown="if(event.key==='Enter')checkCode()">
+    <div class="merr" id="code-err"></div>
+    <button class="btn-mc" onclick="checkCode()">&#x2B07; Descargar</button>
+    <button class="btn-mx" onclick="closeM('m-dl')">Cancelar</button>
   </div>
 </div>
 
-<!-- MODAL GRACIAS -->
-<div class="modal-bg" id="thanks-modal">
-  <div class="thanks-modal">
-    <div class="emoji">🎬✨</div>
-    <h2>¡Gracias por tu compra!</h2>
-    <p>Tu video ya se está descargando.<br>Esperamos que lo disfrutes mucho y que sea un hermoso recuerdo de este día especial.</p>
-    <div class="dl-num" id="thanks-dl-num"></div>
-    <button class="btn-thanks" onclick="closeThanks()">¡Gracias! 💃</button>
+<div class="mb" id="m-thanks">
+  <div class="tbox">
+    <div class="emoji">&#x1F3AC;&#x2728;</div>
+    <h2>&#xA1;GRACIAS!</h2>
+    <p>Tu video ya se est&#225; descargando.<br>Esperamos que sea un hermoso recuerdo de este d&#237;a especial. &#xA1;Disfrutalo!</p>
+    <div class="dn" id="thanks-num"></div>
+    <button class="btn-mc" onclick="closeM('m-thanks')">&#xA1;Gracias! &#x1F483;</button>
   </div>
 </div>
 
-<!-- ADMIN MODAL -->
-<div class="admin-modal-bg" id="admin-modal">
-  <div class="admin-modal">
-    <button class="admin-close" onclick="closeAdmin()">✕</button>
-    <h2>🔑 Panel Admin</h2>
-    <div id="admin-login">
-      <p style="font-size:13px;color:#ffffff55;margin-bottom:12px;">Ingresá la contraseña para administrar los videos</p>
-      <input type="password" id="admin-pass" placeholder="Contraseña"
-             style="width:100%;padding:12px 16px;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;color:#fff;font-size:15px;margin-bottom:10px;font-family:'Nunito',sans-serif;outline:none;"
-             onkeydown="if(event.key==='Enter')adminLogin()">
-      <button onclick="adminLogin()" style="width:100%;padding:12px;background:var(--pink);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;">Ingresar</button>
-      <p id="admin-err" style="color:#ff6b6b;font-size:13px;margin-top:8px;text-align:center;"></p>
+<div class="mb" id="m-priv">
+  <div class="mbox">
+    <h2>&#x1F512; PRIVADO</h2>
+    <div class="msub" id="m-priv-sub">Ingres&#225; la contrase&#241;a del evento</div>
+    <input type="password" id="priv-input" class="pi" placeholder="Contrase&#241;a" onkeydown="if(event.key==='Enter')checkPrivate()">
+    <div class="merr" id="priv-err"></div>
+    <button class="btn-mc" onclick="checkPrivate()">Ingresar</button>
+    <button class="btn-mx" onclick="closeM('m-priv')">Cancelar</button>
+  </div>
+</div>
+
+<div class="mb" id="m-adm-login">
+  <div class="mbox">
+    <h2>&#x1F511; ADMIN</h2>
+    <div class="msub">Contrase&#241;a de administrador</div>
+    <input type="password" id="adm-pass" class="pi" placeholder="Contrase&#241;a" onkeydown="if(event.key==='Enter')chkAdmPass()">
+    <div class="merr" id="adm-pass-err"></div>
+    <button class="btn-mc" onclick="chkAdmPass()">Ingresar</button>
+    <button class="btn-mx" onclick="closeM('m-adm-login')">Cancelar</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="adm-bg" id="adm-panel">
+<div class="adm-panel">
+  <button class="adm-close" onclick="closeAdm()">&#x2715;</button>
+  <h2>PANEL ADMIN</h2>
+  <p style="font-size:12px;color:var(--td);margin-bottom:12px">Doble clic en el logo para abrir</p>
+
+  <div class="tok-sec">
+    <label>&#x1F517; GitHub Token <span id="gh-st" style="color:var(--td);font-size:10px;text-transform:none;letter-spacing:0;margin-left:8px"></span></label>
+    <div class="tok-row">
+      <input type="password" class="tok-inp" id="tok-inp" placeholder="ghp_xxxxxxxxxxxx">
+      <button class="bs gray" onclick="saveToken()">Guardar</button>
+      <button class="bs gray" onclick="testGH()">Probar</button>
+      <button class="bs gray" id="btn-show-tok" onclick="toggleTok()">Mostrar</button>
     </div>
-    <div id="admin-content" style="display:none;">
-      <p class="admin-sub">Cuando alguien pague → marcá el video como vendido → enviále el código por WhatsApp</p>
-      <div style="overflow-x:auto;">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>#</th><th>Título</th><th>Código</th><th>Estado</th><th>⬇️</th><th>Drive ID</th><th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="admin-tbody"></tbody>
-        </table>
+  </div>
+
+  <div class="adm-tabs">
+    <button class="adm-tab active" onclick="admTab('ev')">Eventos</button>
+    <button class="adm-tab" onclick="admTab('vid')">Videos</button>
+    <button class="adm-tab" onclick="admTab('ven')">Ventas</button>
+  </div>
+
+  <!-- EVENTOS -->
+  <div class="adm-sec active" id="adm-ev">
+    <h3 style="font-size:13px;color:var(--td);margin-bottom:10px;font-weight:700">AGREGAR / EDITAR EVENTO</h3>
+    <div class="adm-form">
+      <div class="fg"><label>T&#237;tulo</label><input id="ef-titulo" placeholder="FADA 10 A&#241;os"></div>
+      <div class="fg"><label>Subt&#237;tulo</label><input id="ef-sub" placeholder="Festival Argentino..."></div>
+      <div class="fg"><label>URL Imagen (placa)</label><input id="ef-img" placeholder="https://..."></div>
+      <div class="fg"><label>Visibilidad</label><select id="ef-vis"><option value="publico">P&#250;blico</option><option value="privado">Privado (contrase&#241;a)</option><option value="oculto">Oculto</option></select></div>
+      <div class="fg"><label>Contrase&#241;a (si es privado)</label><input id="ef-pass" placeholder="solo para privados"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+      <button class="btn-add" id="btn-add-ev" onclick="addEvento()">+ Agregar evento</button>
+      <button class="bs gray" id="btn-cancel-ev" style="display:none" onclick="cancelEditEv()">Cancelar</button>
+    </div>
+    <div class="atw">
+      <table class="at"><thead><tr><th>#</th><th>T&#237;tulo</th><th>Sub</th><th>Link</th><th>Visib.</th><th>Videos</th><th>Acciones</th></tr></thead>
+      <tbody id="tb-ev"></tbody></table>
+    </div>
+  </div>
+
+  <!-- VIDEOS -->
+  <div class="adm-sec" id="adm-vid">
+    <h3 style="font-size:13px;color:var(--td);margin-bottom:10px;font-weight:700">AGREGAR / EDITAR VIDEO</h3>
+    <div class="adm-form">
+      <div class="fg"><label>Evento</label><select id="vf-ev"></select></div>
+      <div class="fg"><label>T&#237;tulo del video</label><input id="vf-titulo" placeholder="Coreograf&#237;a 1"></div>
+      <div class="fg"><label>Bailarina (opcional)</label><input id="vf-bail" placeholder="Nombre"></div>
+      <div class="fg"><label>YouTube ID o URL</label><input id="vf-yt" placeholder="ID o URL completa"></div>
+      <div class="fg"><label>Inicio preview (seg) &#8212; vac&#237;o=completo</label><input type="number" id="vf-ini" placeholder="120 = desde min 2"></div>
+      <div class="fg"><label>Duraci&#243;n preview (seg)</label><input type="number" id="vf-dur" placeholder="30"></div>
+      <div class="fg"><label>Precio ARS</label><input type="number" id="vf-ars" placeholder="15000"></div>
+      <div class="fg"><label>Precio USD (opcional)</label><input type="number" id="vf-usd" placeholder="15"></div>
+      <div class="fg"><label>Drive ID o URL</label><input id="vf-drive" placeholder="ID o link Drive"></div>
+      <div class="fg"><label>C&#243;digo descarga (4 d&#237;g.)</label>
+        <div style="display:flex;gap:6px">
+          <input id="vf-code" placeholder="auto" maxlength="4" style="flex:1">
+          <button class="bs gray" onclick="genCode()" style="flex-shrink:0">&#x1F3B2;</button>
+        </div>
       </div>
-      <p class="admin-note">Drive ID: pegá el link completo de Drive, se extrae el ID solo · Los códigos están guardados en el archivo HTML</p>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <button class="btn-add" id="btn-add-vid" onclick="addVideo()">+ Agregar video</button>
+      <button class="bs gray" id="btn-cancel-vid" style="display:none" onclick="cancelEditVid()">Cancelar</button>
+    </div>
+    <div style="margin-bottom:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <label style="font-size:12px;color:var(--td)">Filtrar:</label>
+      <select id="filt-ev-vid" onchange="renderAdmVid()" style="padding:6px 10px;background:var(--g4);border:1px solid var(--bd);border-radius:6px;color:var(--w);font-family:Nunito,sans-serif;font-size:12px;outline:none"></select>
+    </div>
+    <div class="atw">
+      <table class="at"><thead><tr><th>#</th><th>Evento</th><th>T&#237;tulo</th><th>Bailarina</th><th>YT</th><th>Preview</th><th>Precio</th><th>C&#243;digo</th><th>Acciones</th></tr></thead>
+      <tbody id="tb-vid"></tbody></table>
     </div>
   </div>
+
+  <!-- VENTAS -->
+  <div class="adm-sec" id="adm-ven">
+    <p style="font-size:12px;color:var(--td);margin-bottom:12px">Marc&#225; vendido al recibir el pago &#8594; envi&#225; el c&#243;digo al cliente.</p>
+    <div style="margin-bottom:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <label style="font-size:12px;color:var(--td)">Filtrar:</label>
+      <select id="filt-ven" onchange="renderAdmVen()" style="padding:6px 10px;background:var(--g4);border:1px solid var(--bd);border-radius:6px;color:var(--w);font-family:Nunito,sans-serif;font-size:12px;outline:none">
+        <option value="todos">Todos</option><option value="vendidos">Vendidos</option><option value="libres">Sin vender</option>
+      </select>
+    </div>
+    <div class="atw">
+      <table class="at"><thead><tr><th>#</th><th>Evento</th><th>T&#237;tulo</th><th>Bailarina</th><th>C&#243;digo</th><th>Estado</th><th>&#x2B07;</th><th>&#x25B6;</th><th>Acciones</th></tr></thead>
+      <tbody id="tb-ven"></tbody></table>
+    </div>
+  </div>
+</div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════
-// CONFIGURACIÓN
-// ═══════════════════════════════════════════
-const WA_NUMBER  = "5493764354522";
-const PRICE      = "$15.000";
-const ADMIN_PASS = "3233";
+const GH_USER="TomaunoEstudio2026",GH_REPO="fadavideos2026",GH_FILE="datos.json";
+const ADMIN_PASS="3233",WA_NUM="5493764354522",SITE_URL="https://tomaunovideos.vercel.app";
+let DB={eventos:[]},stats={},curEv=null,pendPriv=null,editEvId=null,editVidId=null;
+let ghToken=localStorage.getItem("gh_token")||"",ghSha="";
+let admLogged=false,admClickT=null;
 
-// VIDEOS — los códigos están hardcodeados acá para que funcionen en cualquier navegador
-// previewStart = segundo donde arranca el preview
-const VIDEOS = [
-  { id:1, youtubeId:"QEtU84msvHo", title:"8va Clase – Shooting con Modelos",      previewStart:120,  totalMins:"45:00", code:"3847", driveId:"1FTTELQgaZLsho4GP_fL0X6RfubG3OoiX" },
-  { id:2, youtubeId:"dyq3iWZwhBE", title:"Modos de Enfoque y Punto de Enfoque",   previewStart:600,  totalMins:"38:00", code:"2193", driveId:"" },
-  { id:3, youtubeId:"AoUgMLrFhHU", title:"Presentación, Exposición y Velocidad",  previewStart:2400, totalMins:"52:00", code:"5621", driveId:"" },
-  { id:4, youtubeId:"QnpVW194IQQ", title:"4ta Clase – Fotografía Nivel 1",        previewStart:900,  totalMins:"41:00", code:"7034", driveId:"" },
-  { id:5, youtubeId:"IpvdxabWaLY", title:"3ra Clase – Fotografía Nivel 1",        previewStart:1200, totalMins:"44:00", code:"9412", driveId:"" },
-];
-// ═══════════════════════════════════════════
-
-// Estado de ventas/descargas en localStorage
-function loadState() {
-  const saved = localStorage.getItem('fada_v3');
-  if (saved) return JSON.parse(saved);
-  return VIDEOS.map(v => ({ id:v.id, sold:false, downloads:0, driveId:v.driveId||"" }));
+// GITHUB
+async function ghGet(){
+  try{
+    const r=await fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`,
+      {headers:{Authorization:`token ${ghToken}`,Accept:"application/vnd.github.v3+json"}});
+    if(!r.ok)throw new Error(r.status);
+    const d=await r.json();
+    ghSha=d.sha;
+    DB=JSON.parse(atob(d.content.replace(/\n/g,"")));
+    dot("ok");return true;
+  }catch(e){dot("err");return false;}
 }
-let state = loadState();
-function saveState() { localStorage.setItem('fada_v3', JSON.stringify(state)); }
-function getS(id) { return state.find(s => s.id === id); }
-
-function updateBanner() {
-  document.getElementById('sold-count').textContent = state.filter(s => s.sold).length;
+async function ghSave(){
+  if(!ghToken){alert("Configurá el token en admin.");return false;}
+  try{
+    const c=btoa(unescape(encodeURIComponent(JSON.stringify(DB,null,2))));
+    const r=await fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`,
+      {method:"PUT",headers:{Authorization:`token ${ghToken}`,Accept:"application/vnd.github.v3+json","Content-Type":"application/json"},
+       body:JSON.stringify({message:"Update datos.json",content:c,sha:ghSha})});
+    if(!r.ok)throw new Error(r.status);
+    ghSha=(await r.json()).content.sha;
+    dot("ok");return true;
+  }catch(e){dot("err");alert("Error guardando. Verificá el token.");return false;}
+}
+function dot(s){
+  const d=document.getElementById("gh-dot");d.className="gh-dot "+(s==="ok"?"ok":s==="err"?"err":"");
+  const t=document.getElementById("gh-st");if(t)t.textContent=s==="ok"?"✓ Conectado":s==="err"?"✗ Error":"...";
 }
 
-// ── RENDER GRID ──
-function renderGrid(filter="") {
-  const grid = document.getElementById('video-grid');
-  const filtered = VIDEOS.filter(v =>
-    v.title.toLowerCase().includes(filter.toLowerCase()) || String(v.id).includes(filter)
-  );
+// STATS (localStorage)
+function loadStats(){stats=JSON.parse(localStorage.getItem("fada_stats")||"{}");}
+function saveStats(){localStorage.setItem("fada_stats",JSON.stringify(stats));}
+function incVisit(id){if(!stats[id])stats[id]={v:0,p:{}};stats[id].v=(stats[id].v||0)+1;saveStats();}
+function incPlay(eid,vid){if(!stats[eid])stats[eid]={v:0,p:{}};stats[eid].p[vid]=(stats[eid].p[vid]||0)+1;saveStats();}
+function gV(eid){return stats[eid]?.v||0;}
+function gP(eid,vid){return stats[eid]?.p[vid]||0;}
 
-  grid.innerHTML = filtered.map(v => {
-    const s = getS(v.id);
-    const pct = Math.min(100, Math.round((30 / (parseInt(v.totalMins)*60)) * 100));
+// HELPERS
+function fARS(n){return"$"+Number(n).toLocaleString("es-AR");}
+function fUSD(n){return"USD "+Number(n).toLocaleString("en-US");}
+function parseYT(v){if(!v)return"";const m=v.match(/(?:youtu\.be\/|v=|embed\/)([a-zA-Z0-9_-]{11})/);return m?m[1]:v.trim();}
+function parseDr(v){if(!v)return"";const m=v.match(/\/d\/([a-zA-Z0-9_-]+)/);return m?m[1]:v.trim();}
+function genCodeRandom(){const used=DB.eventos.flatMap(e=>e.videos||[]).map(v=>v.codigo).filter(Boolean);let c;do{c=String(Math.floor(1000+Math.random()*9000));}while(used.includes(c));return c;}
+function getEv(id){return DB.eventos.find(e=>e.id===id);}
+function getVid(eid,vid){return(getEv(eid)?.videos||[]).find(v=>v.id===vid);}
 
-    if (s.sold) {
-      return `
-      <div class="video-card sold" id="card-${v.id}">
-        <div class="preview-wrap">
-          <iframe src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; fullscreen"
-            allowfullscreen></iframe>
-          <div class="sold-badge">✅ ENTREGADO</div>
-        </div>
-        <div class="card-body">
-          <div class="card-number">✅ Coreografía #${v.id} — ENTREGADA</div>
-          <div class="card-title">${v.title}</div>
-          <div class="dl-count">⬇️ ${s.downloads} descarga${s.downloads!==1?'s':''}</div>
-          <div class="card-footer">
-            <span class="price-tag" style="color:var(--green);font-size:13px;">¡Video tuyo!</span>
-            <button class="btn-download" onclick="openModal(${v.id})">⬇️ Descargar</button>
-          </div>
-        </div>
-      </div>`;
+// INIT
+function init(){
+  loadStats();
+  if(ghToken)document.getElementById("tok-inp").value=ghToken;
+  ghGet().then(()=>{
+    const hash=window.location.hash.replace("#","");
+    if(hash){
+      const num=parseInt(hash);
+      const pub=DB.eventos.filter(e=>e.visibilidad!=="oculto");
+      const ev=!isNaN(num)?pub[num-1]:DB.eventos.find(e=>e.id===hash&&e.visibilidad!=="oculto");
+      if(ev){tryOpen(ev.id);return;}
     }
+    const pub=DB.eventos.filter(e=>e.visibilidad!=="oculto");
+    if(pub.length===0){showGallery();}
+    else{tryOpen([...pub].reverse()[0].id);}
+  });
+}
 
-    return `
-    <div class="video-card" id="card-${v.id}">
-      <div class="preview-wrap" oncontextmenu="return false">
-        <iframe src="https://www.youtube.com/embed/${v.youtubeId}?start=${v.previewStart}&rel=0&modestbranding=1&fs=1"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; fullscreen"
-          allowfullscreen></iframe>
-        <div class="sold-badge">✅ ENTREGADO</div>
-        <div class="lock-overlay">
-          <div class="progress-bar-wrap">
-            <div class="progress-bar-fill" style="width:${pct}%"></div>
-          </div>
-          <div class="progress-label">👁 Vista previa desde min ${Math.floor(v.previewStart/60)} · 🔒 Completo: ${v.totalMins} min</div>
-        </div>
+function showGallery(){
+  document.getElementById("view-gallery").style.display="";
+  document.getElementById("view-event").style.display="none";
+  renderGallery();window.location.hash="";
+}
+function goGallery(){showGallery();}
+
+function tryOpen(id){
+  const ev=getEv(id);if(!ev)return showGallery();
+  if(ev.visibilidad==="privado"){
+    pendPriv=id;
+    document.getElementById("m-priv-sub").textContent=ev.titulo+" — Ingresá la contraseña";
+    document.getElementById("priv-input").value="";
+    document.getElementById("priv-err").textContent="";
+    openM("m-priv");
+  }else{openEv(id);}
+}
+function checkPrivate(){
+  const ev=getEv(pendPriv);if(!ev)return;
+  if(document.getElementById("priv-input").value===ev.password){closeM("m-priv");openEv(pendPriv);}
+  else document.getElementById("priv-err").textContent="❌ Contraseña incorrecta";
+}
+function openEv(id){
+  curEv=id;const ev=getEv(id);
+  document.getElementById("view-gallery").style.display="none";
+  document.getElementById("view-event").style.display="";
+  document.getElementById("ev-title").textContent=ev.titulo||"EVENTO";
+  document.getElementById("ev-sub").textContent=ev.subtitulo||"";
+  const pub=DB.eventos.filter(e=>e.visibilidad!=="oculto");
+  window.location.hash=pub.indexOf(ev)+1;
+  incVisit(id);renderPills();renderVideos();updateBanner();window.scrollTo(0,0);
+}
+
+// GALLERY
+function renderGallery(){
+  const g=document.getElementById("events-grid");
+  const pub=DB.eventos.filter(e=>e.visibilidad!=="oculto");
+  if(!pub.length){g.innerHTML="<div class='empty'><div class='ei'>📹</div><p>No hay eventos disponibles aún.</p></div>";return;}
+  g.innerHTML=pub.map(ev=>{
+    const n=(ev.videos||[]).length;
+    const img=ev.imagen?`<img class="placa" src="${ev.imagen}" alt="${ev.titulo}">`:`<div class="placa-ph">${(ev.titulo||"EVENTO").toUpperCase()}</div>`;
+    const priv=ev.visibilidad==="privado"?`<span class="priv-badge">🔒 Privado</span>`:"";
+    return`<div class="ev-card" onclick="tryOpen('${ev.id}')">${img}${priv}<div class="ci"><h3>${ev.titulo}</h3><p>${ev.subtitulo||""}</p><div class="vc">${n} video${n!==1?"s":""}</div></div></div>`;
+  }).join("");
+}
+
+// PILLS
+function renderPills(){
+  const pub=DB.eventos.filter(e=>e.visibilidad!=="oculto");
+  const el=document.getElementById("ev-pills");
+  if(pub.length<=1){el.style.display="none";return;}
+  el.style.display="flex";
+  el.innerHTML=pub.map(ev=>`<div class="pill ${ev.id===curEv?"active":""}" onclick="tryOpen('${ev.id}')">${ev.visibilidad==="privado"?"🔒 ":""}${ev.titulo}</div>`).join("");
+}
+
+// VIDEOS
+function renderVideos(filter=""){
+  const ev=getEv(curEv);if(!ev)return;
+  const vids=(ev.videos||[]).filter(v=>
+    (v.titulo||"").toLowerCase().includes(filter.toLowerCase())||
+    (v.bailarina||"").toLowerCase().includes(filter.toLowerCase())
+  );
+  document.getElementById("rc").textContent=`${vids.length} video${vids.length!==1?"s":""}`;
+  const g=document.getElementById("video-grid");
+  if(!vids.length){g.innerHTML="<div class='empty' style='grid-column:1/-1'><div class='ei'>🔍</div><p>Sin resultados.</p></div>";return;}
+  g.innerHTML=vids.map(v=>renderVCard(v)).join("");
+}
+function filterVideos(){renderVideos(document.getElementById("search").value);}
+
+function renderVCard(v){
+  const free=v.previewInicio===null||v.previewInicio===undefined||v.previewInicio==="";
+  const plays=gP(curEv,v.id);
+  const pars=v.precio?fARS(v.precio):"";
+  const pusd=v.precioUSD?fUSD(v.precioUSD):"";
+  const pct=free?100:Math.min(100,Math.round(((v.previewSegundos||30)/240)*100));
+  if(v.vendido){
+    return`<div class="vc sold" id="vc-${v.id}">
+      <div class="pw" oncontextmenu="return false">
+        <div class="sbadge">✅ ENTREGADO</div>
+        <iframe src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;fullscreen" allowfullscreen></iframe>
       </div>
-      <div class="card-body">
-        <div class="card-number">Coreografía #${v.id}</div>
-        <div class="card-title">${v.title}</div>
-        <div class="card-footer">
-          <span class="price-tag">${PRICE}</span>
-          <a class="btn-buy" href="${buildWA(v)}" target="_blank">🛒 Quiero este</a>
-        </div>
+      <div class="cb"><div class="cn">✅ #${v.id} — VENDIDO</div><div class="ct">${v.titulo}</div>${v.bailarina?`<div class="cbail">💃 ${v.bailarina}</div>`:""}
+      <div class="cstats">⬇️ ${v.descargas||0} desc. · ▶ ${plays} repr.</div>
+      <div class="cf"><span class="pars" style="color:var(--red);font-size:12px">¡Tuyo!</span><button class="btn-dl" onclick="openDl('${curEv}','${v.id}')">⬇️ Descargar</button></div></div></div>`;
+  }
+  if(free){
+    return`<div class="vc free" id="vc-${v.id}">
+      <div class="pw" oncontextmenu="return false">
+        <iframe src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;fullscreen" allowfullscreen></iframe>
       </div>
-    </div>`;
-  }).join('');
-
-  updateBanner();
-}
-
-function buildWA(v) {
-  const msg = `Hola! Vi la web de FADA y quiero comprar el video:\n\n🎬 *${v.title}* (Coreografía #${v.id})\n💰 Precio: ${PRICE}\n\nMe confirmás cómo hacer el pago?`;
-  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
-}
-
-function filterVideos() { renderGrid(document.getElementById('search').value); }
-
-// ── MODAL DESCARGA ──
-let currentDlId = null;
-function openModal(id) {
-  currentDlId = id;
-  const v = VIDEOS.find(v => v.id === id);
-  document.getElementById('code-input').value = '';
-  document.getElementById('code-error').textContent = '';
-  document.getElementById('dl-modal-title').textContent = `"${v.title}"`;
-  document.getElementById('dl-modal').classList.add('open');
-  setTimeout(() => document.getElementById('code-input').focus(), 100);
-}
-function closeModal() { document.getElementById('dl-modal').classList.remove('open'); currentDlId = null; }
-
-function checkCode() {
-  const input = document.getElementById('code-input').value.trim();
-  const v = VIDEOS.find(v => v.id === currentDlId);
-  const s = getS(currentDlId);
-
-  if (input !== v.code) {
-    document.getElementById('code-error').textContent = '❌ Código incorrecto. Revisá el mensaje que recibiste.';
-    return;
+      <div class="cb"><div class="cn">▶ #${v.id} — LIBRE</div><div class="ct">${v.titulo}</div>${v.bailarina?`<div class="cbail">💃 ${v.bailarina}</div>`:""}
+      <div class="cstats">▶ ${plays} reproducciones</div>
+      <div class="cf"><span class="pars" style="color:var(--td);font-size:12px">Gratuito</span></div></div></div>`;
   }
-
-  const driveId = s.driveId || v.driveId;
-  closeModal();
-
-  s.downloads = (s.downloads || 0) + 1;
-  saveState();
-  renderGrid(document.getElementById('search').value);
-
-  if (driveId) {
-    const a = document.createElement('a');
-    a.href = `https://drive.google.com/uc?export=download&id=${driveId}`;
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }
-
-  document.getElementById('thanks-dl-num').textContent = `Descarga #${s.downloads}`;
-  document.getElementById('thanks-modal').classList.add('open');
+  return`<div class="vc" id="vc-${v.id}">
+    <div class="pw" oncontextmenu="return false">
+      <iframe src="https://www.youtube.com/embed/${v.youtubeId}?start=${v.previewInicio}&rel=0&modestbranding=1&fs=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;fullscreen" allowfullscreen></iframe>
+      <div class="lbar"><div class="pw-bg"><div class="pw-fill" style="width:${pct}%"></div></div><div class="pw-lbl">👁 Preview · 🔒 Completo al comprar</div></div>
+    </div>
+    <div class="cb"><div class="cn">#${v.id}</div><div class="ct">${v.titulo}</div>${v.bailarina?`<div class="cbail">💃 ${v.bailarina}</div>`:""}
+    <div class="cstats">▶ ${plays} repr.</div>
+    <div class="cf">
+      <div class="pblock">${pars?`<span class="pars">${pars}</span>`:""}${pusd?`<span class="pusd">${pusd}</span>`:""}</div>
+      <a class="btn-buy" href="${buildWA(v)}" target="_blank">🛒 Quiero este</a>
+    </div></div></div>`;
 }
 
-function closeThanks() { document.getElementById('thanks-modal').classList.remove('open'); }
+function buildWA(v){
+  const ev=getEv(curEv);
+  const p=v.precio?fARS(v.precio):"";const u=v.precioUSD?" / "+fUSD(v.precioUSD):"";
+  const msg=`Hola! Vi los videos de *${ev?.titulo||"FADA"}* y quiero comprar:\n\n🎬 *${v.titulo}*${v.bailarina?" — "+v.bailarina:""}\n💰 ${p}${u}\n\nMe confirmás cómo pagar?`;
+  return`https://wa.me/${WA_NUM}?text=${encodeURIComponent(msg)}`;
+}
 
-// ── ADMIN — doble clic en FADA ──
-let clickTimer = null;
-document.getElementById('fada-title').addEventListener('click', () => {
-  if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; openAdmin(); }
-  else { clickTimer = setTimeout(() => { clickTimer = null; }, 400); }
+function updateBanner(){
+  const ev=getEv(curEv);if(!ev)return;
+  document.getElementById("sold-count").textContent=(ev.videos||[]).filter(v=>v.vendido).length;
+  document.getElementById("visit-count").textContent=gV(curEv);
+  document.getElementById("total-plays").textContent=Object.values(stats[curEv]?.p||{}).reduce((a,b)=>a+b,0);
+}
+
+// DL MODAL
+let dlEv=null,dlVid=null;
+function openDl(eid,vid){
+  dlEv=eid;dlVid=vid;
+  const v=getVid(eid,vid);
+  document.getElementById("code-input").value="";document.getElementById("code-err").textContent="";
+  document.getElementById("m-dl-title").textContent=`"${v?.titulo}"`;
+  openM("m-dl");setTimeout(()=>document.getElementById("code-input").focus(),100);
+}
+function checkCode(){
+  const inp=document.getElementById("code-input").value.trim();
+  const v=getVid(dlEv,dlVid);if(!v)return;
+  if(inp!==v.codigo){document.getElementById("code-err").textContent="❌ Código incorrecto.";return;}
+  closeM("m-dl");
+  if(v.driveId){const a=document.createElement("a");a.href=`https://drive.google.com/uc?export=download&id=${v.driveId}`;a.style.display="none";document.body.appendChild(a);a.click();document.body.removeChild(a);}
+  v.descargas=(v.descargas||0)+1;ghSave();
+  document.getElementById("thanks-num").textContent=`Descarga #${v.descargas}`;
+  openM("m-thanks");renderVideos(document.getElementById("search").value);updateBanner();
+}
+
+// MODALS
+function openM(id){document.getElementById(id).classList.add("open");}
+function closeM(id){document.getElementById(id).classList.remove("open");}
+
+// ADMIN
+document.getElementById("nav-logo").addEventListener("click",()=>{
+  if(admClickT){clearTimeout(admClickT);admClickT=null;openAdmFlow();}
+  else{admClickT=setTimeout(()=>{admClickT=null;},400);}
 });
-
-function openAdmin() {
-  document.getElementById('admin-modal').classList.add('open');
-  document.getElementById('admin-pass').value = '';
-  document.getElementById('admin-err').textContent = '';
-  document.getElementById('admin-login').style.display = '';
-  document.getElementById('admin-content').style.display = 'none';
-  setTimeout(() => document.getElementById('admin-pass').focus(), 150);
+function openAdmFlow(){
+  if(admLogged){openAdm();}
+  else{document.getElementById("adm-pass").value="";document.getElementById("adm-pass-err").textContent="";openM("m-adm-login");setTimeout(()=>document.getElementById("adm-pass").focus(),100);}
 }
-function closeAdmin() { document.getElementById('admin-modal').classList.remove('open'); }
+function chkAdmPass(){
+  if(document.getElementById("adm-pass").value===ADMIN_PASS){admLogged=true;closeM("m-adm-login");openAdm();}
+  else document.getElementById("adm-pass-err").textContent="❌ Contraseña incorrecta";
+}
+function openAdm(){
+  document.getElementById("adm-panel").classList.add("open");
+  if(ghToken)document.getElementById("tok-inp").value=ghToken;
+  popSelects();renderAdmEv();renderAdmVid();renderAdmVen();
+}
+function closeAdm(){document.getElementById("adm-panel").classList.remove("open");}
 
-function adminLogin() {
-  if (document.getElementById('admin-pass').value === ADMIN_PASS) {
-    document.getElementById('admin-login').style.display = 'none';
-    document.getElementById('admin-content').style.display = '';
-    renderAdminTable();
-  } else {
-    document.getElementById('admin-err').textContent = '❌ Contraseña incorrecta';
+function admTab(t){
+  document.querySelectorAll(".adm-tab").forEach((el,i)=>el.classList.toggle("active",["ev","vid","ven"][i]===t));
+  document.querySelectorAll(".adm-sec").forEach(s=>s.classList.remove("active"));
+  document.getElementById("adm-"+t).classList.add("active");
+}
+
+// TOKEN
+function saveToken(){ghToken=document.getElementById("tok-inp").value.trim();localStorage.setItem("gh_token",ghToken);testGH();}
+async function testGH(){dot("");document.getElementById("gh-st").textContent="...";await ghGet();popSelects();renderAdmEv();renderAdmVid();renderAdmVen();}
+function toggleTok(){const i=document.getElementById("tok-inp"),b=document.getElementById("btn-show-tok");i.type=i.type==="password"?"text":"password";b.textContent=i.type==="password"?"Mostrar":"Ocultar";}
+
+// SELECTS
+function popSelects(){
+  const evs=DB.eventos;
+  const vfev=document.getElementById("vf-ev");
+  const fev=document.getElementById("filt-ev-vid");
+  if(vfev)vfev.innerHTML=evs.map(e=>`<option value="${e.id}">${e.titulo}</option>`).join("");
+  if(fev)fev.innerHTML=`<option value="">Todos</option>`+evs.map(e=>`<option value="${e.id}">${e.titulo}</option>`).join("");
+}
+
+// EVENTOS ADMIN
+function renderAdmEv(){
+  document.getElementById("tb-ev").innerHTML=DB.eventos.map((ev,i)=>{
+    const vc=ev.visibilidad;
+    return`<tr>
+      <td style="color:var(--red);font-weight:800">${i+1}</td>
+      <td style="font-weight:700">${ev.titulo}</td>
+      <td style="color:var(--td);font-size:11px">${ev.subtitulo||""}</td>
+      <td><code style="color:var(--td);font-size:11px">/#${i+1}</code></td>
+      <td><span class="sd ${vc==="publico"?"g":vc==="privado"?"o":"r"}"></span>${vc}</td>
+      <td style="text-align:center">${(ev.videos||[]).length}</td>
+      <td style="display:flex;gap:4px;flex-wrap:wrap">
+        <button class="bs gray" onclick="editEv('${ev.id}')">✏️ Editar</button>
+        <button class="bs danger" onclick="delEv('${ev.id}')">🗑</button>
+      </td></tr>`;
+  }).join("")||`<tr><td colspan="7" style="color:var(--td);text-align:center;padding:20px">Sin eventos</td></tr>`;
+}
+function addEvento(){
+  const titulo=document.getElementById("ef-titulo").value.trim();
+  if(!titulo){alert("El título es obligatorio.");return;}
+  const base={titulo,subtitulo:document.getElementById("ef-sub").value.trim(),imagen:document.getElementById("ef-img").value.trim(),visibilidad:document.getElementById("ef-vis").value,password:document.getElementById("ef-pass").value.trim()};
+  if(editEvId){
+    const idx=DB.eventos.findIndex(e=>e.id===editEvId);
+    if(idx>=0)DB.eventos[idx]={...DB.eventos[idx],...base};
+    cancelEditEv();
+  }else{
+    DB.eventos.push({id:"ev_"+Date.now(),videos:[],...base});
   }
+  ghSave().then(()=>{renderAdmEv();popSelects();renderGallery();});clearEvForm();
 }
+function editEv(id){
+  const ev=getEv(id);if(!ev)return;editEvId=id;
+  document.getElementById("ef-titulo").value=ev.titulo||"";
+  document.getElementById("ef-sub").value=ev.subtitulo||"";
+  document.getElementById("ef-img").value=ev.imagen||"";
+  document.getElementById("ef-vis").value=ev.visibilidad||"publico";
+  document.getElementById("ef-pass").value=ev.password||"";
+  document.getElementById("btn-cancel-ev").style.display="";
+  document.getElementById("btn-add-ev").textContent="💾 Guardar";
+  document.getElementById("ef-titulo").scrollIntoView({behavior:"smooth",block:"center"});
+}
+function cancelEditEv(){editEvId=null;clearEvForm();document.getElementById("btn-cancel-ev").style.display="none";document.getElementById("btn-add-ev").textContent="+ Agregar evento";}
+function clearEvForm(){["ef-titulo","ef-sub","ef-img","ef-pass"].forEach(id=>document.getElementById(id).value="");document.getElementById("ef-vis").value="publico";}
+async function delEv(id){if(!confirm("¿Eliminar evento y todos sus videos?"))return;DB.eventos=DB.eventos.filter(e=>e.id!==id);await ghSave();renderAdmEv();renderAdmVid();renderAdmVen();popSelects();if(curEv===id)goGallery();}
 
-function renderAdminTable() {
-  document.getElementById('admin-tbody').innerHTML = VIDEOS.map(v => {
-    const s = getS(v.id);
-    const waMsg = encodeURIComponent(`Hola! Tu video de FADA está listo 🎬\n\n*${v.title}*\n\nTu código de descarga es: *${v.code}*\n\nIngresalo en la web para descargar tu video:\nhttps://fada-sand.vercel.app\n\n¡Que lo disfrutes! 💃`);
-    return `
-    <tr>
-      <td style="color:var(--gold);font-weight:800;">#${v.id}</td>
-      <td style="font-size:12px;max-width:120px;">${v.title}</td>
-      <td><span class="code-display">${v.code}</span></td>
-      <td><span class="status-dot ${s.sold?'sold':'free'}"></span>${s.sold?'Vendido':'Libre'}</td>
-      <td style="text-align:center;color:${s.downloads>0?'var(--green)':'#fff'}">${s.downloads}</td>
-      <td><input class="drive-input" value="${s.driveId}" placeholder="ID o link Drive" onchange="updateDrive(${v.id},this.value)"></td>
-      <td style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
-        <button class="btn-toggle ${s.sold?'make-free':'make-sold'}" onclick="toggleSold(${v.id})">
-          ${s.sold?'🔒 Desbloquear':'✅ Marcar vendido'}
-        </button>
-        <a class="btn-wa-send" href="https://wa.me/?text=${waMsg}" target="_blank">📲 Enviar código</a>
-      </td>
-    </tr>`;
-  }).join('');
+// VIDEOS ADMIN
+function renderAdmVid(){
+  const fev=document.getElementById("filt-ev-vid")?.value||"";
+  const rows=[];
+  DB.eventos.forEach(ev=>{
+    if(fev&&ev.id!==fev)return;
+    (ev.videos||[]).forEach(v=>{
+      rows.push(`<tr>
+        <td style="color:var(--red)">#${v.id}</td>
+        <td style="font-size:11px;color:var(--td)">${ev.titulo}</td>
+        <td style="font-size:12px;max-width:130px">${v.titulo}</td>
+        <td style="font-size:11px;color:var(--td)">${v.bailarina||"—"}</td>
+        <td><a href="https://youtu.be/${v.youtubeId}" target="_blank" style="color:var(--red);font-size:11px">▶</a></td>
+        <td style="font-size:11px;color:var(--td)">${v.previewInicio!=null&&v.previewInicio!==""?"Desde "+Math.floor(v.previewInicio/60)+"min":"Completo"}</td>
+        <td style="font-size:12px">${v.precio?fARS(v.precio):"—"}</td>
+        <td><span class="cc">${v.codigo||"—"}</span></td>
+        <td style="display:flex;gap:4px;flex-wrap:wrap">
+          <button class="bs gray" onclick="editVid('${ev.id}','${v.id}')">✏️</button>
+          <button class="bs danger" onclick="delVid('${ev.id}','${v.id}')">🗑</button>
+        </td></tr>`);
+    });
+  });
+  document.getElementById("tb-vid").innerHTML=rows.join("")||`<tr><td colspan="9" style="color:var(--td);text-align:center;padding:20px">Sin videos</td></tr>`;
 }
+function genCode(){document.getElementById("vf-code").value=genCodeRandom();}
+function addVideo(){
+  const eid=document.getElementById("vf-ev").value;
+  const titulo=document.getElementById("vf-titulo").value.trim();
+  const ytRaw=document.getElementById("vf-yt").value.trim();
+  if(!eid||!titulo||!ytRaw){alert("Evento, título y YouTube son obligatorios.");return;}
+  const ev=getEv(eid);if(!ev)return;
+  const ini=document.getElementById("vf-ini").value.trim();
+  const dur=document.getElementById("vf-dur").value.trim();
+  const cod=document.getElementById("vf-code").value.trim();
+  const vid={
+    id:editVidId||String(Date.now()),titulo,
+    bailarina:document.getElementById("vf-bail").value.trim(),
+    youtubeId:parseYT(ytRaw),
+    previewInicio:ini!==""?parseInt(ini):null,
+    previewSegundos:dur!==""?parseInt(dur):30,
+    precio:document.getElementById("vf-ars").value?Number(document.getElementById("vf-ars").value):null,
+    precioUSD:document.getElementById("vf-usd").value?Number(document.getElementById("vf-usd").value):null,
+    driveId:parseDr(document.getElementById("vf-drive").value.trim()),
+    codigo:cod||genCodeRandom(),vendido:false,descargas:0
+  };
+  if(editVidId){
+    const idx=(ev.videos||[]).findIndex(v=>v.id===editVidId);
+    if(idx>=0){vid.vendido=ev.videos[idx].vendido;vid.descargas=ev.videos[idx].descargas;ev.videos[idx]=vid;}
+    cancelEditVid();
+  }else{if(!ev.videos)ev.videos=[];ev.videos.push(vid);}
+  ghSave().then(()=>{renderAdmVid();renderAdmVen();if(curEv===eid)renderVideos(document.getElementById("search").value);updateBanner();});
+  clearVidForm();
+}
+function editVid(eid,vid){
+  const v=getVid(eid,vid);if(!v)return;editVidId=vid;
+  document.getElementById("vf-ev").value=eid;
+  document.getElementById("vf-titulo").value=v.titulo||"";
+  document.getElementById("vf-bail").value=v.bailarina||"";
+  document.getElementById("vf-yt").value=v.youtubeId||"";
+  document.getElementById("vf-ini").value=v.previewInicio!=null?v.previewInicio:"";
+  document.getElementById("vf-dur").value=v.previewSegundos||30;
+  document.getElementById("vf-ars").value=v.precio||"";
+  document.getElementById("vf-usd").value=v.precioUSD||"";
+  document.getElementById("vf-drive").value=v.driveId||"";
+  document.getElementById("vf-code").value=v.codigo||"";
+  document.getElementById("btn-cancel-vid").style.display="";
+  document.getElementById("btn-add-vid").textContent="💾 Guardar";
+  document.getElementById("vf-titulo").scrollIntoView({behavior:"smooth",block:"center"});
+}
+function cancelEditVid(){editVidId=null;clearVidForm();document.getElementById("btn-cancel-vid").style.display="none";document.getElementById("btn-add-vid").textContent="+ Agregar video";}
+function clearVidForm(){["vf-titulo","vf-bail","vf-yt","vf-ini","vf-dur","vf-ars","vf-usd","vf-drive","vf-code"].forEach(id=>document.getElementById(id).value="");}
+async function delVid(eid,vid){if(!confirm("¿Eliminar este video?"))return;const ev=getEv(eid);if(ev)ev.videos=(ev.videos||[]).filter(v=>v.id!==vid);await ghSave();renderAdmVid();renderAdmVen();if(curEv===eid)renderVideos(document.getElementById("search").value);}
 
-function toggleSold(id) {
-  getS(id).sold = !getS(id).sold;
-  saveState(); renderAdminTable(); renderGrid(document.getElementById('search').value);
+// VENTAS ADMIN
+function renderAdmVen(){
+  const f=document.getElementById("filt-ven")?.value||"todos";
+  const rows=[];
+  DB.eventos.forEach(ev=>{
+    (ev.videos||[]).forEach(v=>{
+      if(f==="vendidos"&&!v.vendido)return;
+      if(f==="libres"&&v.vendido)return;
+      const waMsg=encodeURIComponent(`Hola! Tu video de *${ev.titulo}* está listo 🎬\n\n*${v.titulo}*${v.bailarina?" — "+v.bailarina:""}\n\nTu código de descarga es: *${v.codigo}*\n\nIngresalo en ${SITE_URL} para descargarlo.\n\n¡Disfrutalo! 💃`);
+      rows.push(`<tr>
+        <td style="color:var(--red)">#${v.id}</td>
+        <td style="font-size:11px;color:var(--td)">${ev.titulo}</td>
+        <td style="font-size:12px">${v.titulo}</td>
+        <td style="font-size:11px;color:var(--td)">${v.bailarina||"—"}</td>
+        <td><span class="cc">${v.codigo||"—"}</span></td>
+        <td><span class="sd ${v.vendido?"g":"r"}"></span>${v.vendido?"Vendido":"Libre"}</td>
+        <td style="text-align:center;color:${(v.descargas||0)>0?"#6fcf00":"var(--tm)"}">${v.descargas||0}</td>
+        <td style="text-align:center;color:var(--td)">${gP(ev.id,v.id)}</td>
+        <td style="display:flex;gap:4px;flex-wrap:wrap">
+          <button class="bs ${v.vendido?"ro":"green"}" onclick="togVen('${ev.id}','${v.id}')">${v.vendido?"🔒 Liberar":"✅ Vendido"}</button>
+          ${v.vendido?`<a class="bs wa" href="https://wa.me/?text=${waMsg}" target="_blank">📲</a><button class="bs cp" onclick="cpCode('${v.codigo}',this)">📋</button>`:""}
+        </td></tr>`);
+    });
+  });
+  document.getElementById("tb-ven").innerHTML=rows.join("")||`<tr><td colspan="9" style="color:var(--td);text-align:center;padding:20px">Sin videos</td></tr>`;
 }
-function updateDrive(id, val) {
-  const match = val.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  getS(id).driveId = match ? match[1] : val.trim();
-  saveState();
-}
+async function togVen(eid,vid){const v=getVid(eid,vid);if(!v)return;v.vendido=!v.vendido;await ghSave();renderAdmVen();renderAdmVid();if(curEv===eid){renderVideos(document.getElementById("search").value);updateBanner();}}
+function cpCode(code,btn){navigator.clipboard.writeText(code).then(()=>{btn.classList.add("ok");btn.textContent="✓";setTimeout(()=>{btn.classList.remove("ok");btn.textContent="📋";},2000);});}
 
-renderGrid();
+init();
 </script>
 </body>
 </html>
