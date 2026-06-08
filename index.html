@@ -523,7 +523,12 @@ function renderVCard(v){
     return`<div class="vc sold" id="vc-${v.id}">
       <div class="pw" oncontextmenu="return false">
         <div class="sbadge">✅ ENTREGADO</div>
-        <iframe src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;fullscreen" allowfullscreen></iframe>
+        <div class="yt-thumb" id="thumb-${v.id}" onclick="loadIframe('${v.id}','${v.youtubeId}','sold')" style="cursor:pointer;position:relative;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;">
+          <img src="https://img.youtube.com/vi/${v.youtubeId}/mqdefault.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#111'">
+          <div style="position:absolute;width:60px;height:60px;background:rgba(0,180,0,.8);border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid #fff;">
+            <div style="width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:22px solid #fff;margin-left:5px;"></div>
+          </div>
+        </div>
       </div>
       <div class="cb"><div class="cn">✅ #${v.id} — VENDIDO</div><div class="ct">${v.titulo}</div>${v.bailarina?`<div class="cbail">💃 ${v.bailarina}</div>`:""}
       <div class="cstats">⬇️ ${v.descargas||0} desc. · ▶ ${plays} repr.</div>
@@ -532,7 +537,12 @@ function renderVCard(v){
   if(free){
     return`<div class="vc free" id="vc-${v.id}">
       <div class="pw" oncontextmenu="return false">
-        <iframe src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;fullscreen" allowfullscreen></iframe>
+        <div class="yt-thumb" id="thumb-${v.id}" onclick="loadIframe('${v.id}','${v.youtubeId}','free')" style="cursor:pointer;position:relative;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;">
+          <img src="https://img.youtube.com/vi/${v.youtubeId}/mqdefault.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#111'">
+          <div style="position:absolute;width:60px;height:60px;background:rgba(0,0,0,.7);border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid #fff;">
+            <div style="width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:22px solid #fff;margin-left:5px;"></div>
+          </div>
+        </div>
       </div>
       <div class="cb"><div class="cn">▶ #${v.id} — LIBRE</div><div class="ct">${v.titulo}</div>${v.bailarina?`<div class="cbail">💃 ${v.bailarina}</div>`:""}
       <div class="cstats">▶ ${plays} reproducciones</div>
@@ -540,8 +550,16 @@ function renderVCard(v){
   }
   return`<div class="vc" id="vc-${v.id}">
     <div class="pw" oncontextmenu="return false">
-      <iframe src="https://www.youtube.com/embed/${v.youtubeId}?start=${v.previewInicio}&rel=0&modestbranding=1&fs=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;fullscreen" allowfullscreen></iframe>
-      <div class="lbar"><div class="pw-bg"><div class="pw-fill" style="width:${pct}%"></div></div><div class="pw-lbl">👁 Preview · 🔒 Completo al comprar</div></div>
+      <div class="yt-thumb" id="thumb-${v.id}" onclick="loadIframe('${v.id}','${v.youtubeId}','locked',${v.previewInicio||0})" style="cursor:pointer;position:relative;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;">
+        <img src="https://img.youtube.com/vi/${v.youtubeId}/mqdefault.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#111'">
+        <div style="position:absolute;width:60px;height:60px;background:rgba(200,0,91,.8);border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid #fff;">
+          <div style="width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:22px solid #fff;margin-left:5px;"></div>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,#000b,transparent);padding:8px 10px;">
+          <div style="background:#ffffff22;border-radius:3px;height:3px;margin-bottom:4px;"><div style="width:${pct}%;height:100%;border-radius:3px;background:linear-gradient(90deg,#e00000,#ff5555);"></div></div>
+          <div style="font-size:10px;color:#ffffffaa;">👁 Click para ver preview · 🔒 Completo al comprar</div>
+        </div>
+      </div>
     </div>
     <div class="cb"><div class="cn">#${v.id}</div><div class="ct">${v.titulo}</div>${v.bailarina?`<div class="cbail">💃 ${v.bailarina}</div>`:""}
     <div class="cstats">▶ ${plays} repr.</div>
@@ -775,6 +793,23 @@ function renderAdmVen(){
 }
 async function togVen(eid,vid){const v=getVid(eid,vid);if(!v)return;v.vendido=!v.vendido;await ghSave();renderAdmVen();renderAdmVid();if(curEv===eid){renderVideos(document.getElementById("search").value);updateBanner();}}
 function cpCode(code,btn){navigator.clipboard.writeText(code).then(()=>{btn.classList.add("ok");btn.textContent="✓";setTimeout(()=>{btn.classList.remove("ok");btn.textContent="📋";},2000);});}
+
+
+function loadIframe(vidId, ytId, type, start) {
+  const thumb = document.getElementById("thumb-" + vidId);
+  if (!thumb) return;
+  let src = "https://www.youtube.com/embed/" + ytId + "?autoplay=1&rel=0&modestbranding=1&fs=1";
+  if (type === "locked" && start) src += "&start=" + start;
+  const iframe = document.createElement("iframe");
+  iframe.src = src;
+  iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; fullscreen";
+  iframe.allowFullscreen = true;
+  iframe.style.cssText = "width:100%;aspect-ratio:16/9;border:none;display:block;";
+  thumb.parentNode.replaceChild(iframe, thumb);
+  // Count play
+  incPlay(curEv, vidId);
+  updateBanner();
+}
 
 init();
 </script>
