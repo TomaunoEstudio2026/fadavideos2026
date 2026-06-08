@@ -372,6 +372,7 @@ let admLogged=false,admClickT=null;
 
 // GITHUB
 async function ghGet(){
+  if(!ghToken){dot("err");return false;}
   try{
     const r=await fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`,
       {headers:{Authorization:`token ${ghToken}`,Accept:"application/vnd.github.v3+json"}});
@@ -430,7 +431,15 @@ function getVid(eid,vid){return(getEv(eid)?.videos||[]).find(v=>v.id===vid);}
 function init(){
   loadStats();
   if(ghToken)document.getElementById("tok-inp").value=ghToken;
-  ghGet().then(()=>{
+  // Show loading state
+  document.getElementById("view-gallery").style.display="";
+  document.getElementById("events-grid").innerHTML="<div class='empty'><div class='ei'>⏳</div><p>Cargando eventos...</p></div>";
+  ghGet().then((ok)=>{
+    if(!ok){
+      // No token or error - show message
+      document.getElementById("events-grid").innerHTML="<div class='empty'><div class='ei'>⚙️</div><p style='color:#e00000;font-weight:700'>No se pudo cargar el contenido.<br><span style='font-size:13px;color:#888;font-weight:400'>Verificá la conexión a GitHub en el panel admin (doble clic en el logo).</span></p></div>";
+      return;
+    }
     const hash=window.location.hash.replace("#","");
     if(hash){
       const num=parseInt(hash);
