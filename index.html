@@ -113,7 +113,27 @@ function cleanDriveId(value){
 }
 function driveDownloadUrl(id){var clean=cleanDriveId(id);return 'https://drive.google.com/uc?export=download&id='+encodeURIComponent(clean);}
 function driveViewUrl(id){var clean=cleanDriveId(id);return 'https://drive.google.com/file/d/'+encodeURIComponent(clean)+'/view';}
-function downloadVideo(id){let e=state.currentEvent;let v=findVideo(id);if(!v)return;if(!v.driveId){toast('Descarga pendiente','Todavía no está cargado el archivo final.');return;}openModal('Acceso privado','<p>Ingresá el código que recibiste después del pago.</p><div class="field"><input id="downCode" placeholder="Ej: MARTA24"></div><div class="modal-actions" style="padding-top:14px"><button class="btn red" id="downOk">Descargar</button></div>');$('downCode').addEventListener('keydown',ev=>{if(ev.key==='Enter')$('downOk').click();});$('downCode').focus();$('downOk').onclick=async()=>{let ok=await validateCodeForVideo($('downCode').value,e,v);if(!ok){toast('Código incorrecto','Revisá el código recibido por WhatsApp.');return;}await fbTrack('descarga_video',{eventoId:e.id,eventoTitulo:e.titulo,videoId:v.id,titulo:v.titulo});openModal('Preparando descarga','<p>La descarga puede demorar unos minutos si el archivo es muy grande.</p><p class="muted">Si el navegador no inicia la descarga automáticamente, usá el botón alternativo.</p><div class="modal-actions"><button class="btn gray" id="openDriveAlt">Abrir en Drive</button><button class="btn red" id="retryDown">Intentar descarga</button></div>');let url=driveDownloadUrl(v.driveId);let view=driveViewUrl(v.driveId);$('openDriveAlt').onclick=()=>window.open(view,'_blank');$('retryDown').onclick=()=>window.open(url,'_blank');setTimeout(()=>window.open(url,'_blank'),450);};}
+function triggerDriveDownload(url){
+  let frame=document.getElementById('driveDownloadFrame');
+  if(!frame){
+    frame=document.createElement('iframe');
+    frame.id='driveDownloadFrame';
+    frame.name='driveDownloadFrame';
+    frame.style.cssText='position:absolute;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;';
+    document.body.appendChild(frame);
+  }
+  frame.src='about:blank';
+  setTimeout(()=>{frame.src=url;},80);
+
+  let a=document.createElement('a');
+  a.href=url;
+  a.setAttribute('download','');
+  a.rel='noopener';
+  a.style.display='none';
+  document.body.appendChild(a);
+  setTimeout(()=>{try{a.click();}catch(e){} setTimeout(()=>a.remove(),1200);},220);
+}
+function downloadVideo(id){let e=state.currentEvent;let v=findVideo(id);if(!v)return;if(!v.driveId){toast('Descarga pendiente','Todavía no está cargado el archivo final.');return;}openModal('Acceso privado','<p>Ingresá el código que recibiste después del pago.</p><div class="field"><input id="downCode" placeholder="Ej: MARTA24"></div><div class="modal-actions" style="padding-top:14px"><button class="btn red" id="downOk">Descargar</button></div>');$('downCode').addEventListener('keydown',ev=>{if(ev.key==='Enter')$('downOk').click();});$('downCode').focus();$('downOk').onclick=async()=>{let ok=await validateCodeForVideo($('downCode').value,e,v);if(!ok){toast('Código incorrecto','Revisá el código recibido por WhatsApp.');return;}await fbTrack('descarga_video',{eventoId:e.id,eventoTitulo:e.titulo,videoId:v.id,titulo:v.titulo});let url=driveDownloadUrl(v.driveId);let view=driveViewUrl(v.driveId);openModal('Preparando descarga','<p>La descarga puede demorar unos minutos si el archivo es muy grande.</p><p class="muted">No cierres esta ventana. Si el navegador no inicia la descarga automáticamente, usá el botón alternativo.</p><div class="modal-actions"><button class="btn gray" id="openDriveAlt">Abrir en Drive</button><button class="btn red" id="retryDown">Intentar descarga</button></div>');$('openDriveAlt').onclick=()=>window.open(view,'_blank');$('retryDown').onclick=()=>triggerDriveDownload(url);setTimeout(()=>triggerDriveDownload(url),350);};}
 function shareVideo(id){let ev=state.currentEvent;if(!ev)return;let url=location.origin+location.pathname+'#'+ev.numero+','+id;let text='Mirá este video de '+(ev.titulo||'Tomauno')+': '+url;if(navigator.share){navigator.share({title:'Tomauno Videos',text:text,url:url}).catch(()=>{});}else if(navigator.clipboard){navigator.clipboard.writeText(url);toast('Link copiado','Ya podés pegarlo y compartirlo por WhatsApp.');}else openModal('Compartir video','<p>Copiá este link:</p><div class="field"><input value="'+esc(url)+'" readonly></div>');}
 function focusVideoByHash(hash){let p=hash.split(',');let vid=p[1];let el=document.querySelector('[data-card-video="'+String(vid).replace(/[^a-zA-Z0-9_-]/g,'')+'"]');if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.boxShadow='0 0 0 2px rgba(255,0,0,.8),0 30px 90px rgba(0,0,0,.55)';setTimeout(()=>el.style.boxShadow='',2300);}}
 function openModal(t,h,extraClass){$('modalTitle').textContent=t;$('modalContent').innerHTML=h;let m=$('modal');m.className='modal'+(extraClass?' '+extraClass:'');m.style.display='flex';setTimeout(()=>{let pin=$('adminPin')||$('buyerName')||$('privPass');if(pin){pin.focus();pin.select&&pin.select();}},40);}
