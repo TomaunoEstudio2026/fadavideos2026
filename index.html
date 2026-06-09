@@ -36,6 +36,25 @@ body:before{background:radial-gradient(circle at 40% 40%,rgba(150,0,0,.08),trans
 
 /* v15: sin etiqueta hover de vista previa sobre tarjetas */
 .thumb:after,.thumb:hover:after{display:none!important;content:none!important;}
+
+/* v17 mobile preview full-screen + clean download message */
+.modal.video-preview.preview-mobile{padding:0;background:#000;}
+.modal.video-preview.preview-mobile .modal-box{width:100vw!important;height:100vh!important;max-height:100vh!important;border-radius:0!important;border:0!important;background:#000!important;display:flex;flex-direction:column;}
+.modal.video-preview.preview-mobile .modal-head{background:#050505!important;padding:10px 12px!important;min-height:48px;}
+.modal.video-preview.preview-mobile .modal-head h2{font-size:28px!important;}
+.modal.video-preview.preview-mobile .modal-content{padding:0!important;flex:1;display:flex;flex-direction:column;justify-content:center;background:#000;}
+.modal.video-preview.preview-mobile .video-wrap{width:100vw!important;border-radius:0!important;max-height:72vh;}
+.modal.video-preview.preview-mobile .video-frame{width:100vw!important;height:auto!important;min-height:0!important;aspect-ratio:16/9!important;}
+.preview-start-cover{position:absolute;inset:0;z-index:7;display:grid;place-items:center;background:linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.58));pointer-events:auto;touch-action:manipulation;}
+.preview-start-cover.hide{display:none!important;}
+.preview-start-btn{border:1px solid rgba(255,255,255,.24);background:rgba(224,0,0,.92);box-shadow:0 18px 60px rgba(224,0,0,.35);border-radius:999px;color:#fff;font-weight:900;letter-spacing:.8px;text-transform:uppercase;padding:14px 20px;font-size:13px;}
+.preview-protect-shield{position:absolute;inset:0;z-index:6;background:transparent;pointer-events:auto;cursor:default;touch-action:none;}
+.preview-protect-shield.off{pointer-events:none!important;}
+.preview-info{padding:12px 16px 18px;background:#080808;}
+.preview-info h3{margin:0 0 6px;font-size:16px;line-height:1.2;}
+.preview-info p{margin:0;color:#aaa;font-size:13px;line-height:1.45;}
+@media(max-width:720px){.preview-start-btn{font-size:12px;padding:13px 18px}.modal.video-preview.preview-mobile .modal-actions{justify-content:center}.preview-info{padding-bottom:22px}.preview-info h3{font-size:15px}}
+
 </style>
 </head>
 <body>
@@ -102,7 +121,52 @@ function renderCart(){let items=cartItems();let total=items.reduce((a,x)=>a+x.pr
 function buySingle(id){state.cart={};toggleCart(id);buyCart();}
 function buyCart(){let items=cartItems();if(!items.length){toast('Sin selección','Marcá al menos un video.');return;}let total=items.reduce((a,x)=>a+x.precio,0);openModal('Confirmar compra','<p>Estás por comunicarte con Javier por WhatsApp para acordar la compra.</p><div class="field"><label>Tu nombre</label><input id="buyerName" placeholder="Ej: Marta"></div><div style="padding-top:14px"><button class="btn red" id="buyOk">Continuar a WhatsApp</button></div>');$('buyerName').addEventListener('keydown',e=>{if(e.key==='Enter')$('buyOk').click();});$('buyOk').onclick=async()=>{let nombre=($('buyerName').value||'Cliente').trim();let pedidoId='';try{pedidoId=await fbCreateOrder(nombre,items,total);state.orders.unshift({id:pedidoId,clienteNombre:nombre,estado:'pendiente',items:items,totalARS:total,creado:Date.now()});updateTopStats();}catch(e){console.warn(e);}let refs=items.map(x=>x.eventoNumero+','+x.videoId).join(' + ');let list=items.map(x=>'- '+x.eventoTitulo+' / Video '+x.videoId+': '+x.titulo+' ('+money(x.precio)+')').join('%0A');let msg='Hola Javier! Soy '+encodeURIComponent(nombre)+'. Quiero comprar estos videos:%0A'+list+'%0ATotal: '+encodeURIComponent(money(total))+'%0ARef: '+encodeURIComponent(refs)+'%0APedido: '+encodeURIComponent(pedidoId||'-');window.open('https://wa.me/'+WA+'?text='+msg,'_blank');state.cart={};renderCart();closeModal();};}
 function findVideo(id){let e=state.currentEvent;return e?(e.videos||[]).find(v=>String(v.id)===String(id)):null;}
-function playVideo(id){let v=findVideo(id);let e=state.currentEvent;if(!v||!cleanYouTube(v.youtubeId)){toast('Video pendiente','Este video todavía no tiene YouTube cargado.');return;}if(state.previewTimer)clearTimeout(state.previewTimer);fbTrack('play_video',{eventoId:e.id,eventoTitulo:e.titulo,videoId:v.id,titulo:v.titulo});let start=Number(v.previewInicio||0),dur=Number(v.previewSegundos||20),isPreview=start>0&&dur>0;let frameId='ytFrame_'+String(Date.now());let src='https://www.youtube.com/embed/'+encodeURIComponent(cleanYouTube(v.youtubeId))+'?autoplay=1&mute=0&playsinline=1&rel=0&modestbranding=1&controls=0&disablekb=1&fs=0&iv_load_policy=3&enablejsapi=1&origin='+encodeURIComponent(location.origin)+'&vq=hd1080&hd=1';if(start>0)src+='&start='+start;let ribbon='<div class="video-title-ribbon">'+esc(v.titulo)+'<small>Tomauno · vista previa oficial</small></div>';openModal('Vista previa','<div class="video-wrap" oncontextmenu="return false"><iframe id="'+frameId+'" class="video-frame" allow="autoplay; encrypted-media; fullscreen" src="'+src+'" tabindex="-1"></iframe>'+ribbon+'<div class="iframe-hotspot" id="iframeHotspot" title="Tomauno"><span class="hot-brand">TOMAUNO</span></div></div><div style="padding-top:10px"><h3>'+esc(v.titulo)+'</h3><p class="muted">'+(isPreview?'La vista previa se corta automáticamente. Para acceder al video completo, solicitá la compra.':'Video configurado como libre/completo.')+'</p><div class="modal-actions"><button class="btn red" id="modalBuy">Comprar</button></div></div>','video-preview');let hot=$('iframeHotspot');let frame=$(frameId);let isTouch=matchMedia('(pointer:coarse)').matches||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);function ytCommand(func){try{frame.contentWindow.postMessage('{"event":"command","func":"'+func+'","args":""}','*');}catch(err){}}function forcePlay(){ytCommand('playVideo');setTimeout(()=>ytCommand('playVideo'),350);setTimeout(()=>ytCommand('playVideo'),900);}function briefTouchWindow(){if(!hot||!isTouch)return;hot.classList.add('touch-open');setTimeout(()=>hot.classList.remove('touch-open'),850);}if(hot){hot.oncontextmenu=(ev)=>{ev.preventDefault();toast('Vista previa protegida','Para recibir el video completo, solicitá la compra.');return false;};hot.onclick=(ev)=>{ev.preventDefault();forcePlay();if(isTouch){briefTouchWindow();}else{toast('Vista previa protegida','Los enlaces del reproductor están bloqueados por Tomauno.');}return false;};}setTimeout(forcePlay,180);setTimeout(forcePlay,900);setTimeout(()=>{if(isTouch)briefTouchWindow();},450);$('modalBuy').onclick=()=>{closeModal();buySingle(id);};if(isPreview){state.previewTimer=setTimeout(()=>{openModal('Fin de la vista previa','<p>Terminó la previsualización de '+esc(dur)+' segundos.</p><p class="muted">Para recibir el video completo, compralo y te pasamos tu código.</p><div class="modal-actions"><button class="btn red" id="modalBuy2">Comprar</button></div>');$('modalBuy2').onclick=()=>{closeModal();buySingle(id);};},dur*1000);}}
+function playVideo(id){
+  let v=findVideo(id);let e=state.currentEvent;
+  if(!v||!cleanYouTube(v.youtubeId)){toast('Video pendiente','Este video todavía no tiene YouTube cargado.');return;}
+  if(state.previewTimer)clearTimeout(state.previewTimer);
+  fbTrack('play_video',{eventoId:e.id,eventoTitulo:e.titulo,videoId:v.id,titulo:v.titulo});
+  let start=Number(v.previewInicio||0),dur=Number(v.previewSegundos||20),isPreview=start>0&&dur>0;
+  let frameId='ytFrame_'+String(Date.now());
+  let isTouch=matchMedia('(pointer:coarse)').matches||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  let base='https://www.youtube.com/embed/'+encodeURIComponent(cleanYouTube(v.youtubeId));
+  function buildSrc(muted){
+    let src=base+'?autoplay=1&mute='+(muted?1:0)+'&playsinline=1&rel=0&modestbranding=1&controls=0&disablekb=1&fs=0&iv_load_policy=3&enablejsapi=1&origin='+encodeURIComponent(location.origin)+'&vq=hd1080&hd=1';
+    if(start>0)src+='&start='+start;
+    return src;
+  }
+  let ribbon='<div class="video-title-ribbon">'+esc(v.titulo)+'<small>Tomauno · vista previa oficial</small></div>';
+  let html='<div class="video-wrap" oncontextmenu="return false">'+
+    '<iframe id="'+frameId+'" class="video-frame" allow="autoplay; encrypted-media; fullscreen" src="about:blank" tabindex="-1"></iframe>'+ribbon+
+    '<div class="preview-protect-shield off" id="previewShield" title="Tomauno"><span class="hot-brand">TOMAUNO</span></div>'+ 
+    '<div class="preview-start-cover" id="previewStart"><button class="preview-start-btn" type="button">▶ Iniciar vista previa</button></div>'+ 
+    '</div><div class="preview-info"><h3>'+esc(v.titulo)+'</h3><p>'+(isPreview?'La vista previa se corta automáticamente. Para acceder al video completo, solicitá la compra.':'Video configurado como libre/completo.')+'</p><div class="modal-actions" style="padding-top:10px"><button class="btn red" id="modalBuy">Comprar</button></div></div>';
+  openModal('Vista previa',html,isTouch?'video-preview preview-mobile':'video-preview');
+  let frame=$(frameId),shield=$('previewShield'),starter=$('previewStart');
+  function ytCommand(func){try{frame.contentWindow.postMessage('{"event":"command","func":"'+func+'","args":""}','*');}catch(err){}}
+  function protect(){if(shield)shield.classList.remove('off');}
+  function unprotectBrief(){if(shield){shield.classList.add('off');setTimeout(protect,900);}}
+  function startPlayback(){
+    if(starter)starter.classList.add('hide');
+    if(frame.getAttribute('src')==='about:blank')frame.src=buildSrc(false);
+    unprotectBrief();
+    setTimeout(()=>ytCommand('playVideo'),250);
+    setTimeout(()=>ytCommand('playVideo'),850);
+    if(isTouch){ setTimeout(()=>{try{ytCommand('playVideo');}catch(e){}},1400); }
+    setTimeout(protect,1100);
+    if(isPreview){
+      if(state.previewTimer)clearTimeout(state.previewTimer);
+      state.previewTimer=setTimeout(()=>{try{ytCommand('pauseVideo');}catch(e){};openModal('Fin de la vista previa','<p>Terminó la previsualización de '+esc(dur)+' segundos.</p><p class="muted">Para recibir el video completo, compralo y te pasamos tu código.</p><div class="modal-actions"><button class="btn red" id="modalBuy2">Comprar</button></div>');$('modalBuy2').onclick=()=>{closeModal();buySingle(id);};},dur*1000);
+    }
+  }
+  if(starter){starter.onclick=(ev)=>{ev.preventDefault();ev.stopPropagation();startPlayback();return false;};}
+  if(shield){
+    shield.oncontextmenu=(ev)=>{ev.preventDefault();toast('Vista previa protegida','Para recibir el video completo, solicitá la compra.');return false;};
+    shield.onclick=(ev)=>{ev.preventDefault();ev.stopPropagation();return false;};
+  }
+  $('modalBuy').onclick=()=>{closeModal();buySingle(id);};
+  if(!isTouch){setTimeout(startPlayback,120);}else{setTimeout(()=>{try{starter.querySelector('button').focus();}catch(e){}},80);}
+}
 
 async function validateCodeForVideo(code,e,v){let c=String(code||'').trim().toUpperCase();if(!c)return false;let base=String(v.codigo||'').trim().toUpperCase();if(base&&c===base)return true;let orders=state.orders.length?state.orders:await fbGetOrders();return orders.some(p=>String(p.estado||'').toLowerCase()==='desbloqueado'&&String(p.clave||'').trim().toUpperCase()===c&&(p.items||[]).some(it=>String(it.eventoId||'')===String(e.id)&&String(it.videoId||'')===String(v.id)));}
 function cleanDriveId(value){
@@ -124,14 +188,13 @@ function iniciarDescarga(driveId){
   iframe.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none;';
   iframe.src=url;
   document.body.appendChild(iframe);
-  toast('Iniciando descarga','Si no comienza en unos segundos, se abrirá Drive en una nueva pestaña.');
   setTimeout(function(){
     try{ if(iframe && iframe.parentNode) iframe.parentNode.removeChild(iframe); }catch(e){}
     window.open(driveViewUrl(clean),'_blank');
   },4000);
 }
 function triggerDriveDownload(driveId){iniciarDescarga(driveId);}
-function downloadVideo(id){let e=state.currentEvent;let v=findVideo(id);if(!v)return;if(!v.driveId){toast('Descarga pendiente','Todavía no está cargado el archivo final.');return;}openModal('Acceso privado','<p>Ingresá el código que recibiste después del pago.</p><div class="field"><input id="downCode" placeholder="Ej: MARTA24"></div><div class="modal-actions" style="padding-top:14px"><button class="btn red" id="downOk">Descargar</button></div>');$('downCode').addEventListener('keydown',ev=>{if(ev.key==='Enter')$('downOk').click();});$('downCode').focus();$('downOk').onclick=async()=>{let ok=await validateCodeForVideo($('downCode').value,e,v);if(!ok){toast('Código incorrecto','Revisá el código recibido por WhatsApp.');return;}await fbTrack('descarga_video',{eventoId:e.id,eventoTitulo:e.titulo,videoId:v.id,titulo:v.titulo});openModal('Preparando descarga','<p>La descarga puede demorar unos minutos si el archivo es muy grande.</p><p class="muted">Intentaremos iniciar la descarga automáticamente. Si Drive la bloquea, se abrirá en una pestaña nueva para descargar desde allí.</p><div class="modal-actions"><button class="btn red" id="retryDown">Intentar nuevamente</button></div>');$('retryDown').onclick=()=>iniciarDescarga(v.driveId);setTimeout(()=>iniciarDescarga(v.driveId),350);};}
+function downloadVideo(id){let e=state.currentEvent;let v=findVideo(id);if(!v)return;if(!v.driveId){toast('Descarga pendiente','Todavía no está cargado el archivo final.');return;}openModal('Acceso privado','<p>Ingresá el código que recibiste después del pago.</p><div class="field"><input id="downCode" placeholder="Ej: MARTA24"></div><div class="modal-actions" style="padding-top:14px"><button class="btn red" id="downOk">Descargar</button></div>');$('downCode').addEventListener('keydown',ev=>{if(ev.key==='Enter')$('downOk').click();});$('downCode').focus();$('downOk').onclick=async()=>{let ok=await validateCodeForVideo($('downCode').value,e,v);if(!ok){toast('Código incorrecto','Revisá el código recibido por WhatsApp.');return;}await fbTrack('descarga_video',{eventoId:e.id,eventoTitulo:e.titulo,videoId:v.id,titulo:v.titulo});openModal('Iniciando descarga','<p>La descarga puede demorar unos minutos si el archivo es muy grande.</p><p class="muted">Si no comienza automáticamente, se abrirá Drive en una pestaña nueva para descargar desde allí.</p><div class="modal-actions"><button class="btn red" id="retryDown">Intentar nuevamente</button></div>');$('retryDown').onclick=()=>iniciarDescarga(v.driveId);setTimeout(()=>iniciarDescarga(v.driveId),300);};}
 function shareVideo(id){let ev=state.currentEvent;if(!ev)return;let url=location.origin+location.pathname+'#'+ev.numero+','+id;let text='Mirá este video de '+(ev.titulo||'Tomauno')+': '+url;if(navigator.share){navigator.share({title:'Tomauno Videos',text:text,url:url}).catch(()=>{});}else if(navigator.clipboard){navigator.clipboard.writeText(url);toast('Link copiado','Ya podés pegarlo y compartirlo por WhatsApp.');}else openModal('Compartir video','<p>Copiá este link:</p><div class="field"><input value="'+esc(url)+'" readonly></div>');}
 function focusVideoByHash(hash){let p=hash.split(',');let vid=p[1];let el=document.querySelector('[data-card-video="'+String(vid).replace(/[^a-zA-Z0-9_-]/g,'')+'"]');if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.boxShadow='0 0 0 2px rgba(255,0,0,.8),0 30px 90px rgba(0,0,0,.55)';setTimeout(()=>el.style.boxShadow='',2300);}}
 function openModal(t,h,extraClass){$('modalTitle').textContent=t;$('modalContent').innerHTML=h;let m=$('modal');m.className='modal'+(extraClass?' '+extraClass:'');m.style.display='flex';setTimeout(()=>{let pin=$('adminPin')||$('buyerName')||$('privPass');if(pin){pin.focus();pin.select&&pin.select();}},40);}
