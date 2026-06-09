@@ -484,7 +484,9 @@ function openEv(id){
   document.getElementById("ev-sub").textContent=ev.subtitulo||"";
   const pub=DB.eventos.filter(e=>e.visibilidad!=="oculto");
   window.location.hash=pub.indexOf(ev)+1;
-  incVisit(id);renderPills();renderVideos();updateBanner();window.scrollTo(0,0);
+  incVisit(id);renderPills();
+  try{ renderVideos(); }catch(e){ console.error("renderVideos error:",e); document.getElementById("video-grid").innerHTML="<div style='color:red;padding:20px'>Error: "+e.message+"</div>"; }
+  updateBanner();window.scrollTo(0,0);
 }
 
 // GALLERY
