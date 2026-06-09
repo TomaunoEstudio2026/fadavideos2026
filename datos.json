@@ -15,14 +15,14 @@
           "bailarina": "Mia Bilau",
           "youtubeId": "7IN-spzljYY",
           "previewInicio": 30,
-          "previewSegundos": 40,
+          "previewSegundos": 10,
           "precio": 15000,
           "precioUSD": null,
           "driveId": "https://drive.google.com/file/d/1wcFWtLemxYahWLHTZ14A7ZoAghlR18Gp/view?usp=sharing",
           "codigo": "5518",
           "vendido": false,
           "descargas": 0,
-          "plays": 2
+          "plays": 3
         }
       ]
     }
