@@ -11,14 +11,14 @@
       "videos": [
         {
           "id": "1",
-          "titulo": "Coreografía 1 - Mia Bilau",
+          "titulo": "1 - Mia Bilau",
           "bailarina": "Mia Bilau",
-          "youtubeId": "QEtU84msvHo",
+          "youtubeId": "https://youtu.be/7IN-spzljYY",
           "previewInicio": 30,
           "previewSegundos": 40,
           "precio": 15000,
           "precioUSD": null,
-          "driveId": "1FTTELQgaZLsho4GP_fL0X6RfubG3OoiX",
+          "driveId": "https://drive.google.com/file/d/1wcFWtLemxYahWLHTZ14A7ZoAghlR18Gp/view?usp=sharing",
           "codigo": "5518",
           "vendido": false,
           "descargas": 0,
