@@ -540,7 +540,7 @@ function renderVCard(v){
           </div>
         </div>
       </div>
-      <div class="cb"><div class="cn">✅ #${v.id} — VENDIDO</div><div class="ct">${v.titulo}</div>${v.bailarina?`<div class="cbail">💃 ${v.bailarina}</div>`:""}
+      <div class="cb"><div class="cn">✅ #${v.id} — VENDIDO</div><div class="ct">${v.titulo}</div>${v.bailarina?"<div class=\"cbail\">💃 "+v.bailarina+"</div>":""}
       <div class="cstats">⬇️ ${v.descargas||0} desc. · ▶ ${plays} repr.</div>
       <div class="cf"><span class="pars" style="color:var(--red);font-size:12px">¡Tuyo!</span><button class="btn-dl" onclick="openDl('${curEv}','${v.id}')">⬇️ Descargar</button></div></div></div>`;
   }
@@ -554,7 +554,7 @@ function renderVCard(v){
           </div>
         </div>
       </div>
-      <div class="cb"><div class="cn">▶ #${v.id} — LIBRE</div><div class="ct">${v.titulo}</div>${v.bailarina?`<div class="cbail">💃 ${v.bailarina}</div>`:""}
+      <div class="cb"><div class="cn">▶ #${v.id} — LIBRE</div><div class="ct">${v.titulo}</div>${v.bailarina?"<div class=\"cbail\">💃 "+v.bailarina+"</div>":""}
       <div class="cstats">▶ ${plays} reproducciones</div>
       <div class="cf"><span class="pars" style="color:var(--td);font-size:12px">Gratuito</span></div></div></div>`;
   }
@@ -571,10 +571,10 @@ function renderVCard(v){
         </div>
       </div>
     </div>
-    <div class="cb"><div class="cn">#${v.id}</div><div class="ct">${v.titulo}</div>${v.bailarina?`<div class="cbail">💃 ${v.bailarina}</div>`:""}
+    <div class="cb"><div class="cn">#${v.id}</div><div class="ct">${v.titulo}</div>${v.bailarina?"<div class=\"cbail\">💃 "+v.bailarina+"</div>":""}
     <div class="cstats">▶ ${plays} repr.</div>
     <div class="cf">
-      <div class="pblock">${pars?`<span class="pars">${pars}</span>`:""}${pusd?`<span class="pusd">${pusd}</span>`:""}</div>
+      <div class="pblock">${pars?"<span class=\"pars\">"+pars+"</span>":""}${pusd?"<span class=\"pusd\">"+pusd+"</span>":""}</div>
       <a class="btn-buy" href="${buildWA(v)}" target="_blank">🛒 Quiero este</a>
     </div></div></div>`;
 }
@@ -795,7 +795,7 @@ function renderAdmVen(){
         <td style="text-align:center;color:var(--td)">${gP(ev.id,v.id)}</td>
         <td style="display:flex;gap:4px;flex-wrap:wrap">
           <button class="bs ${v.vendido?"ro":"green"}" onclick="togVen('${ev.id}','${v.id}')">${v.vendido?"🔒 Liberar":"✅ Vendido"}</button>
-          ${v.vendido?`<a class="bs wa" href="https://wa.me/?text=${waMsg}" target="_blank">📲</a><button class="bs cp" onclick="cpCode('${v.codigo}',this)">📋</button>`:""}
+          ${v.vendido?"<a class=\"bs wa\" href=\"https://wa.me/?text="+waMsg+"\" target=\"_blank\">📲</a><button class=\"bs cp\" onclick=\"cpCode('"+v.codigo+"',this)\">📋</button>":""}
         </td></tr>`);
     });
   });
