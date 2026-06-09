@@ -4,10 +4,10 @@
       "id": "ev_fada2026",
       "numero": 1,
       "titulo": "FADA Internacional 2026",
-      "subtitulo": "Videos oficiales de coreografías grabadas por Tomauno.",
+      "subtitulo": "Celebrando 10 años del Festival Argentino de Danzas Arabes",
       "imagen": "",
       "visibilidad": "publico",
-      "password": "",
+      "password": "3233",
       "videos": [
         {
           "id": "1",
@@ -22,7 +22,7 @@
           "codigo": "5518",
           "vendido": false,
           "descargas": 0,
-          "plays": 0
+          "plays": 1
         }
       ]
     }
