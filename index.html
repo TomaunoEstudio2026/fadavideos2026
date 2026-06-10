@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v58 ESTABLE (familias visible junto a eventos) -->
+<!-- TOMAUNO VIDEOS - VERSION v59 ESTABLE (pantalla amplia movil corregida + volver) -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tomauno Videos · v58</title>
+<title>Tomauno Videos · v59</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -437,6 +437,69 @@ body:before{
 .family-note strong{color:#fff}.family-note .mini{color:#aaa;font-size:12px;margin-top:10px}.family-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:16px}
 @media(max-width:700px){footer{line-height:2.2}.family-link{margin-left:0;margin-top:8px}}
 
+
+
+/* v59 ajuste puntual: Pantalla amplia móvil limpia + botón volver durante reproducción */
+@media(max-width:700px){
+  .modal.video-preview.preview-mobile .video-wrap.wide-wrap{
+    position:relative!important;
+    width:100vw!important;
+    height:calc(100vh - 58px)!important;
+    max-height:none!important;
+    left:auto!important;top:auto!important;margin:0!important;
+    transform:none!important;
+    border-radius:0!important;
+    background:#000!important;
+    overflow:hidden!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+  }
+  .modal.video-preview.preview-mobile .video-wrap.wide-wrap .video-frame.mode-wide{
+    position:relative!important;
+    left:auto!important;top:auto!important;
+    width:100vw!important;
+    height:56.25vw!important;
+    max-width:100vw!important;
+    max-height:calc(100vh - 58px)!important;
+    min-height:0!important;
+    transform:none!important;
+    aspect-ratio:16/9!important;
+    display:block!important;
+    background:#000!important;
+  }
+  .modal.video-preview.preview-mobile .video-wrap.wide-wrap + .preview-info{display:none!important;}
+  .modal.video-preview.preview-mobile .video-wrap.wide-wrap .preview-context,
+  .modal.video-preview.preview-mobile .video-wrap.wide-wrap .iframe-brand-block{display:none!important;}
+  .preview-live-back{
+    position:fixed!important;right:14px;bottom:14px;z-index:250!important;
+    width:42px!important;height:42px!important;border-radius:50%!important;padding:0!important;
+    display:grid!important;place-items:center!important;font-size:20px!important;
+    background:rgba(20,20,20,.76)!important;border:1px solid rgba(255,255,255,.22)!important;
+    color:#fff!important;backdrop-filter:blur(10px);box-shadow:0 10px 28px rgba(0,0,0,.45)!important;
+  }
+  .wide-rotate-hint{
+    position:absolute;inset:0;z-index:220;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;pointer-events:none;background:radial-gradient(circle at center,rgba(0,0,0,.55),rgba(0,0,0,.16),transparent 60%);
+    animation:wideHintOut 4.2s ease forwards;color:#fff;text-shadow:0 8px 26px #000;
+  }
+  .wide-rotate-hint .rotate-phone{font-size:56px;line-height:1;animation:phoneRock 1.15s ease-in-out infinite;}
+  .wide-rotate-hint b{font-family:'Bebas Neue';font-size:36px;letter-spacing:1px;margin-top:6px;}
+  .wide-rotate-hint small{font-size:13px;color:#ddd;margin-top:4px;}
+}
+@media(max-width:900px) and (orientation:landscape){
+  .modal.video-preview.preview-mobile .modal-head{display:none!important;}
+  .modal.video-preview.preview-mobile .modal-content{height:100vh!important;}
+  .modal.video-preview.preview-mobile .video-wrap.wide-wrap{height:100vh!important;width:100vw!important;}
+  .modal.video-preview.preview-mobile .video-wrap.wide-wrap .video-frame.mode-wide{
+    width:min(100vw,177.78vh)!important;
+    height:min(56.25vw,100vh)!important;
+    max-width:100vw!important;max-height:100vh!important;
+  }
+}
+@keyframes phoneRock{0%,100%{transform:rotate(0deg)}45%{transform:rotate(90deg)}70%{transform:rotate(90deg)}}
+@keyframes wideHintOut{0%,72%{opacity:1}100%{opacity:0;visibility:hidden}}
+
 </style>
 </head>
 <body>
@@ -605,12 +668,14 @@ function startPreviewWithMode(id,mode){
     ctxTop='<div class="preview-context top"><div><b>'+esc(e.titulo||'Evento')+'</b><small>Vista previa oficial <span class="brand-inline"><span class="toma">TOMA</span><span class="uno">UNO</span></span></small></div></div>';
     ctxBottom='<div class="preview-context bottom"><div><b>'+esc(v.titulo||'Video')+'</b><small>La vista previa se corta automáticamente</small></div></div>';
   }
-  let html='<div class="video-wrap'+wrapClass+'" oncontextmenu="return false">'+ctxTop+
+  let wideHint=(state.previewIsTouch&&mode==='wide')?'<div class="wide-rotate-hint"><div class="rotate-phone">↻</div><b>Girá tu celular</b><small>para ver la vista previa en pantalla amplia</small></div>':'';
+  let mobileBack=state.previewIsTouch?'<button class="preview-live-back" id="previewLiveBack" title="Volver">←</button>':'';
+  let html='<div class="video-wrap'+wrapClass+'" oncontextmenu="return false">'+ctxTop+wideHint
     '<iframe id="'+frameId+'" class="video-frame '+frameClass+'" allow="autoplay; encrypted-media" src="'+buildSrc()+'" tabindex="-1"></iframe>'+ 
     '<div class="preview-fade" id="previewFade"></div>'+ 
     '<div class="preview-protect-shield" id="previewShield" title="Tomauno"></div>'+ 
     '<div class="iframe-brand-block"></div>'+ctxBottom+
-    '</div><div class="preview-info"><h3>'+esc(v.titulo)+'</h3><p>'+(isPreview?'La vista previa se corta automáticamente. Para recibir el video completo enviá el comprobante de pago por WhatsApp y te pasamos tu código de descarga.':'Video configurado como libre/completo.')+'</p><div class="modal-actions" style="padding-top:10px"><button class="btn gray" id="modalClose2">Cerrar</button><button class="btn red" id="modalBuy">Comprar</button></div></div>';
+    '</div>'+mobileBack+'<div class="preview-info"><h3>'+esc(v.titulo)+'</h3><p>'+(isPreview?'La vista previa se corta automáticamente. Para recibir el video completo enviá el comprobante de pago por WhatsApp y te pasamos tu código de descarga.':'Video configurado como libre/completo.')+'</p><div class="modal-actions" style="padding-top:10px"><button class="btn gray" id="modalClose2">Cerrar</button><button class="btn red" id="modalBuy">Comprar</button></div></div>';
   openModal('Vista previa',html,(state.previewIsTouch?'video-preview preview-mobile':'video-preview')); 
   let frame=$(frameId),shield=$('previewShield'),fade=$('previewFade');
   function ytCommand(func){try{frame.contentWindow.postMessage('{"event":"command","func":"'+func+'","args":""}','*');}catch(err){}}
@@ -622,7 +687,7 @@ function startPreviewWithMode(id,mode){
     state.previewTimer=setTimeout(()=>{try{ytCommand('pauseVideo');}catch(e){};openModal('Fin de la vista previa','<p>Para recibir el video completo, enviá tu comprobante de pago por WhatsApp y te pasamos tu código de descarga.</p><div class="preview-end-actions"><button class="btn gray" id="previewEndClose">Cerrar</button><button class="btn red" id="modalBuy2">Comprar</button></div>');$('previewEndClose').onclick=closeModal;$('modalBuy2').onclick=()=>{closeModal();buySingle(id);};},dur*1000);
   }
   if(shield){shield.oncontextmenu=(ev)=>{ev.preventDefault();toast('Vista previa protegida','Para recibir el video completo, solicitá la compra.');return false;};shield.onclick=(ev)=>{ev.preventDefault();ev.stopPropagation();return false;};}
-  $('modalClose2').onclick=closeModal;let cine=$('modalCinema');if(cine&&!state.previewIsTouch){cine.style.display='inline-flex';cine.onclick=()=>{let mb=document.querySelector('#modal .modal-box');if(mb)mb.classList.toggle('cinema-pc');cine.textContent=(mb&&mb.classList.contains('cinema-pc'))?'Vista normal':'Pantalla amplia';};}$('modalBuy').onclick=()=>{closeModal();buySingle(id);};
+  if($('previewLiveBack'))$('previewLiveBack').onclick=closeModal; $('modalClose2').onclick=closeModal;let cine=$('modalCinema');if(cine&&!state.previewIsTouch){cine.style.display='inline-flex';cine.onclick=()=>{let mb=document.querySelector('#modal .modal-box');if(mb)mb.classList.toggle('cinema-pc');cine.textContent=(mb&&mb.classList.contains('cinema-pc'))?'Vista normal':'Pantalla amplia';};}$('modalBuy').onclick=()=>{closeModal();buySingle(id);};
 }
 async function validateCodeForVideo(code,e,v){let c=String(code||'').trim().toUpperCase();if(!c)return false;let base=String(v.codigo||'').trim().toUpperCase();if(base&&c===base)return true;let orders=state.orders.length?state.orders:await fbGetOrders();return orders.some(p=>String(p.estado||'').toLowerCase()==='desbloqueado'&&String(p.clave||'').trim().toUpperCase()===c&&(p.items||[]).some(it=>String(it.eventoId||'')===String(e.id)&&String(it.videoId||'')===String(v.id)));}
 function cleanDriveId(value){
