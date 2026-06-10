@@ -28,7 +28,8 @@
           "vendido": false,
           "descargas": 0,
           "plays": 0,
-          "compras": 0
+          "compras": 0,
+          "oculto": true
         },
         {
           "id": "2",
