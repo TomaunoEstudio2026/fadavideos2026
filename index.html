@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v62 ESTABLE (pantalla amplia: aviso centrado + ocultar texto al girar) -->
+<!-- TOMAUNO VIDEOS - VERSION v64 ESTABLE (pantalla amplia limpia + normal title ajustado) -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -498,6 +498,87 @@ body:before{
   .modal.video-preview.preview-mobile .video-wrap.wide-wrap .video-title-ribbon{display:none!important;}
 }
 
+
+
+/* v63 ajuste fino móvil: Pantalla Amplia solo video + título normal más seguro */
+@media(max-width:700px){
+  /* Normal: títulos algo más chicos y con límite de líneas */
+  .modal.video-preview.preview-mobile .preview-context.bottom b{
+    font-size:24px!important;
+    line-height:1.05!important;
+    max-width:92vw!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:2!important;
+    -webkit-box-orient:vertical!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .modal.video-preview.preview-mobile .preview-context.bottom small{font-size:12px!important;}
+  .modal.video-preview.preview-mobile .preview-context.top b{font-size:38px!important;}
+  .modal.video-preview.preview-mobile .preview-context.top small{font-size:12px!important;}
+
+  /* Flecha de volver más discreta durante reproducción */
+  .modal.video-preview.preview-mobile .preview-back{
+    width:34px!important;
+    height:34px!important;
+    font-size:15px!important;
+    opacity:.88!important;
+    background:rgba(20,20,20,.78)!important;
+  }
+}
+
+@media(max-width:700px) and (orientation:landscape){
+  /* Pantalla Amplia: no mostrar panel inferior ni textos; solo video + capa protectora + flecha */
+  .preview-mobile .video-wrap.wide-wrap + .preview-info{display:none!important;}
+  .preview-mobile .video-wrap.wide-wrap{
+    position:fixed!important;
+    inset:0!important;
+    width:100vw!important;
+    height:100vh!important;
+    max-width:none!important;
+    max-height:none!important;
+    margin:0!important;
+    border-radius:0!important;
+    background:#000!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    overflow:hidden!important;
+    z-index:1!important;
+  }
+  .preview-mobile .video-wrap.wide-wrap .video-frame{
+    width:100vw!important;
+    height:56.25vw!important;
+    max-height:100vh!important;
+    max-width:177.78vh!important;
+    min-height:0!important;
+    min-width:0!important;
+    aspect-ratio:16/9!important;
+    object-fit:contain!important;
+  }
+  .preview-mobile .video-wrap.wide-wrap .preview-context,
+  .preview-mobile .video-wrap.wide-wrap .iframe-brand-block,
+  .preview-mobile .video-wrap.wide-wrap .video-title-ribbon{display:none!important;}
+  .preview-mobile .video-wrap.wide-wrap .preview-protect-shield{
+    position:absolute!important;
+    inset:0!important;
+    z-index:10!important;
+    background:transparent!important;
+  }
+  .modal.video-preview.preview-mobile .preview-back{
+    position:fixed!important;
+    left:12px!important;
+    top:12px!important;
+    z-index:30!important;
+    width:32px!important;
+    height:32px!important;
+    font-size:15px!important;
+    background:rgba(18,18,18,.76)!important;
+    border:1px solid rgba(255,255,255,.18)!important;
+    box-shadow:none!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -534,7 +615,8 @@ const fbReady=(async()=>{
   }
 })();
 const FB_BASE='tomauno/videos';
-const OWNER='TomaunoEstudio2026',REPO='fadavideos2026',DATA_FILE='datos.json',WA='5493764354522',ADMIN_PASS='3233',LS_TOKEN='tomauno_gh_token',SS_ADMIN='tomauno_admin_ok',CHAT_URL='https://cursostomauno.vercel.app/#chat';
+const OWNER='TomaunoEstudio2026',REPO='fadavideos2026',DATA_FILE='datos.json',WA='5493764354522',ADMIN_PASS='3233',LS_TOKEN='tomauno_gh_token',LS_PAY_ALIAS='tomauno_pay_alias',LS_PAY_NAME='tomauno_pay_name',SS_ADMIN='tomauno_admin_ok',CHAT_URL='https://cursostomauno.vercel.app/#chat';
+const DEFAULT_PAY_ALIAS='tomauno.a',DEFAULT_PAY_NAME='Javier Mottola';
 const FALLBACK={eventos:[{id:'ev_fada2026',numero:1,titulo:'FADA 2026',subtitulo:'Festival Argentino de Danzas - Videos oficiales Tomauno',imagen:'',visibilidad:'publico',password:'',videos:[]}]};
 let state={data:null,sha:null,currentEvent:null,query:'',tab:'pedidos',cart:{},orders:[],stats:null,reactions:{},previewTimer:null,videoSaleFilter:'todos'};
 const $=id=>document.getElementById(id);
@@ -542,6 +624,8 @@ $('logoImg').src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAMAAABr
 function esc(s){return String(s==null?'':s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 function money(n){n=Number(n||0);return '$ '+n.toLocaleString('es-AR');}
 function getToken(){return localStorage.getItem(LS_TOKEN)||'';}
+function getPayAlias(){return (localStorage.getItem(LS_PAY_ALIAS)||DEFAULT_PAY_ALIAS).trim();}
+function getPayName(){return (localStorage.getItem(LS_PAY_NAME)||DEFAULT_PAY_NAME).trim();}
 function apiUrl(){return 'https://api.github.com/repos/'+OWNER+'/'+REPO+'/contents/'+DATA_FILE;}
 function headers(){let h={'Accept':'application/vnd.github+json'};let t=getToken();if(t)h.Authorization='Bearer '+t;return h;}
 function setStatus(ok,txt){$('statusDot').className=ok?'dot ok':'dot';$('statusText').textContent=txt;}
@@ -628,7 +712,11 @@ function buildOrderRequestMessage(nombre,items,total,pedidoId){
   lines.push('💵 *TOTAL:* '+money(total));
   lines.push('📌 *Referencia interna:* '+refs);
   lines.push('');
-  lines.push('⏳ Quedo a la espera de las instrucciones de pago.');
+  lines.push('💳 *Para realizar el pago:*');
+  lines.push('Alias: *'+getPayAlias()+'*');
+  lines.push('Titular: *'+getPayName()+'*');
+  lines.push('');
+  lines.push('📎 Luego enviá el comprobante por WhatsApp para recibir tu código de descarga.');
   lines.push('Muchas gracias 😊');
   return lines.join('\n');
 }
@@ -741,7 +829,7 @@ function toast(t,msg){openModal(t,'<p>'+esc(msg)+'</p><div class="modal-actions"
 function openAdmin(){sessionStorage.setItem(SS_ADMIN,'1');renderAdmin();$('adminModal').style.display='flex';}
 window.tomaunoAdmin=function(){askAdmin();};
 function askAdmin(){if(sessionStorage.getItem(SS_ADMIN)==='1'){openAdmin();return;}openModal('Acceso admin','<p>Ingresá el PIN de administración.</p><div class="field"><input id="adminPin" type="password" placeholder="PIN"></div><div style="padding-top:14px"><button class="btn red" id="adminPinOk">Entrar</button></div>');$('adminPinOk').onclick=()=>{if($('adminPin').value===ADMIN_PASS){sessionStorage.setItem(SS_ADMIN,'1');closeModal();openAdmin();}else toast('PIN incorrecto','No se pudo abrir el panel.');};$('adminPin').addEventListener('keydown',e=>{if(e.key==='Enter')$('adminPinOk').click();});setTimeout(()=>{$('adminPin').focus();},60);}
-async function renderAdmin(){if(!state.data)state.data=normalize(JSON.parse(JSON.stringify(FALLBACK)));let h='<details class="admin-token-details"><summary>Config catálogo</summary><div class="form-grid"><div class="field span2"><label>Token de catálogo privado</label><input id="adm_token" type="password" value="'+esc(getToken())+'" placeholder="Solo necesario para editar eventos/videos"></div><div class="field"><label>&nbsp;</label><button class="btn red" id="saveToken">Guardar token</button></div><div class="field"><label>&nbsp;</label><button class="btn gray" id="testToken">Probar catálogo</button></div></div><p class="muted" style="font-size:11px">Firebase guarda pedidos y estadísticas. El token solo se usa para modificar el catálogo si seguimos usando datos.json.</p></details><div class="tabs"><button class="tab '+(state.tab==='pedidos'?'active':'')+'" data-tab="pedidos">Pedidos</button><button class="tab '+(state.tab==='stats'?'active':'')+'" data-tab="stats">Estadísticas</button><button class="tab '+(state.tab==='eventos'?'active':'')+'" data-tab="eventos">Eventos</button><button class="tab '+(state.tab==='videos'?'active':'')+'" data-tab="videos">Videos</button><button class="tab '+(state.tab==='ventas'?'active':'')+'" data-tab="ventas">Códigos</button></div><div id="tabBody"><div class="empty">Cargando...</div></div>';$('adminContent').innerHTML=h;$('saveToken').onclick=()=>{localStorage.setItem(LS_TOKEN,$('adm_token').value.trim());toast('Token guardado','Ahora podés probar y guardar catálogo.');};$('testToken').onclick=()=>ghLoad().then(renderAdmin);document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.tab=b.getAttribute('data-tab');renderAdmin();});await renderTab();}
+async function renderAdmin(){if(!state.data)state.data=normalize(JSON.parse(JSON.stringify(FALLBACK)));let h='<details class="admin-token-details"><summary>Config catálogo</summary><div class="form-grid"><div class="field span2"><label>Token de catálogo privado</label><input id="adm_token" type="password" value="'+esc(getToken())+'" placeholder="Solo necesario para editar eventos/videos"></div><div class="field"><label>Alias de pago</label><input id="adm_pay_alias" value="'+esc(getPayAlias())+'" placeholder="Ej: tomauno.a"></div><div class="field"><label>Titular</label><input id="adm_pay_name" value="'+esc(getPayName())+'" placeholder="Ej: Javier Mottola"></div><div class="field"><label>&nbsp;</label><button class="btn red" id="saveToken">Guardar config</button></div><div class="field"><label>&nbsp;</label><button class="btn gray" id="testToken">Probar catálogo</button></div></div><p class="muted" style="font-size:11px">Firebase guarda pedidos y estadísticas. El token solo se usa para modificar el catálogo si seguimos usando datos.json.</p></details><div class="tabs"><button class="tab '+(state.tab==='pedidos'?'active':'')+'" data-tab="pedidos">Pedidos</button><button class="tab '+(state.tab==='stats'?'active':'')+'" data-tab="stats">Estadísticas</button><button class="tab '+(state.tab==='eventos'?'active':'')+'" data-tab="eventos">Eventos</button><button class="tab '+(state.tab==='videos'?'active':'')+'" data-tab="videos">Videos</button><button class="tab '+(state.tab==='ventas'?'active':'')+'" data-tab="ventas">Códigos</button></div><div id="tabBody"><div class="empty">Cargando...</div></div>';$('adminContent').innerHTML=h;$('saveToken').onclick=()=>{localStorage.setItem(LS_TOKEN,$('adm_token').value.trim());if($('adm_pay_alias'))localStorage.setItem(LS_PAY_ALIAS,$('adm_pay_alias').value.trim()||DEFAULT_PAY_ALIAS);if($('adm_pay_name'))localStorage.setItem(LS_PAY_NAME,$('adm_pay_name').value.trim()||DEFAULT_PAY_NAME);toast('Configuración guardada','Alias/titular y token quedaron guardados en este navegador.');};$('testToken').onclick=()=>ghLoad().then(renderAdmin);document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.tab=b.getAttribute('data-tab');renderAdmin();});await renderTab();}
 async function renderTab(){if(state.tab==='pedidos')await adminOrders();else if(state.tab==='stats')await adminStats();else if(state.tab==='eventos')adminEvents();else if(state.tab==='videos')adminVideos();else adminKeys();}
 async function adminOrders(){
   let all=await fbGetOrders();
@@ -779,6 +867,7 @@ async function adminOrders(){
     let search=[p.clienteNombre,p.clienteWhatsapp,p.clave,p.id,items.map(i=>i.titulo).join(' ')].join(' ').toLowerCase();
     h+='<tr class="order-row '+rowcls+'" data-status="'+(archivedRow?'archivado':(locked?'entregado':'pendiente'))+'" data-search="'+esc(search)+'"><td>'+new Date(Number(p.creado||0)).toLocaleString('es-AR')+'</td><td><b>'+esc(p.clienteNombre||'')+'</b><br><small>'+esc(p.clienteWhatsapp||'')+'</small></td><td>'+videos+'</td><td>'+money(p.totalARS||0)+'</td><td><span class="order-status-icon" title="'+(locked?'Entregado/habilitado':'Pendiente')+'">'+(locked?'🔓':'🔒')+'</span></td><td><b>'+esc(p.clave||'-')+'</b></td><td><div class="row-actions">';
     if(!locked)h+='<button class="btn red small" title="Desbloquear pedido" data-unlock="'+esc(p.id)+'">🔓</button>';else h+='<button class="btn green small" title="WhatsApp cliente" data-waorder="'+esc(p.id)+'">📲</button>';
+    h+='<button class="btn gray small" title="Enviar datos de pago" data-payorder="'+esc(p.id)+'">Pago</button>';
     h+='<button class="btn gray small" title="Copiar clave" data-copyorder="'+esc(p.id)+'">Clave</button><button class="btn gray small" title="Copiar texto WhatsApp" data-copywa="'+esc(p.id)+'">Texto</button><button class="btn gray small" title="Copiar enlaces Drive" data-copydrives="'+esc(p.id)+'">🔗</button><button class="btn gray small" title="Ticket PNG" data-receipt="'+esc(p.id)+'">🧾</button><button class="btn gray small" title="Archivar/desarchivar" data-archiveorder="'+esc(p.id)+'">'+(archivedRow?'↩':'🗄')+'</button><span class="delete-holder"><button class="btn gray small" title="Eliminar pedido definitivo" data-delorder="'+esc(p.id)+'">🗑</button></span></div></td></tr>';
   });
   h+='</table></div></div>';
@@ -788,6 +877,7 @@ async function adminOrders(){
   document.querySelectorAll('[data-orderfilter]').forEach(b=>b.onclick=()=>{state.orderFilter=b.getAttribute('data-orderfilter');document.querySelectorAll('[data-orderfilter]').forEach(x=>x.classList.remove('active'));b.classList.add('active');filterOrderRows();});
   document.querySelectorAll('[data-unlock]').forEach(b=>b.onclick=()=>unlockOrder(b.getAttribute('data-unlock')));
   document.querySelectorAll('[data-waorder]').forEach(b=>b.onclick=()=>sendOrderWA(b.getAttribute('data-waorder')));
+  document.querySelectorAll('[data-payorder]').forEach(b=>b.onclick=()=>sendPaymentWA(b.getAttribute('data-payorder')));
   document.querySelectorAll('[data-copyorder]').forEach(b=>b.onclick=()=>copyOrderKey(b.getAttribute('data-copyorder')));
   document.querySelectorAll('[data-copywa]').forEach(b=>b.onclick=()=>copyOrderWAText(b.getAttribute('data-copywa')));
   document.querySelectorAll('[data-copydrives]').forEach(b=>b.onclick=()=>copyOrderDriveLinks(b.getAttribute('data-copydrives')));
@@ -822,6 +912,40 @@ function showInlineDeleteOrder(btn){
 async function unlockOrder(id){let orders=state.orders.length?state.orders:await fbGetOrders();let p=orders.find(x=>x.id===id);if(!p)return;let base=slug(p.clienteNombre||'CLIENTE').slice(0,10)||'CLIENTE';let code=(p.clave||base+String(Math.floor(10+Math.random()*90))).toUpperCase();openModal('Desbloquear pedido','<p>Se habilitarán '+(p.items||[]).length+' videos para <b>'+esc(p.clienteNombre)+'</b>.</p><div class="field"><label>Clave de descarga</label><input id="unlockCode" value="'+esc(code)+'"></div><div style="padding-top:14px"><button class="btn red" id="unlockOk">Confirmar desbloqueo</button></div>');$('unlockOk').onclick=async()=>{let finalCode=($('unlockCode').value||code).trim().toUpperCase();await update(ref(db,FB_BASE+'/pedidos/'+id),{estado:'desbloqueado',clave:finalCode,desbloqueado:Date.now()});await fbTrack('pedido_desbloqueado',{clienteNombre:p.clienteNombre,totalARS:p.totalARS,cantidad:(p.items||[]).length});closeModal();await adminOrders();sendOrderWA(id,finalCode);};}
 function driveUrlFromItem(it){let id=cleanDriveId(it.driveId||it.drive||'');return id?('https://drive.google.com/file/d/'+id+'/view?usp=sharing'):'';}
 function orderDriveText(p){let lines=[];(p.items||[]).forEach((it,i)=>{let u=driveUrlFromItem(it);if(u){lines.push('VIDEO '+(i+1)+' - '+(it.titulo||('Video '+it.videoId)));lines.push(u);lines.push('');}});return lines.join('\n').trim();}
+
+function orderPaymentMessage(p){
+  let lines=[];
+  lines.push('💳 *Datos para realizar el pago*');
+  lines.push('');
+  lines.push('Hola *'+(p.clienteNombre||'')+'* 😊');
+  lines.push('');
+  lines.push('Te paso el detalle de tu pedido de *Tomauno Videos*:');
+  lines.push('');
+  lines.push('🎬 *Videos seleccionados:*');
+  (p.items||[]).forEach((it,i)=>{
+    lines.push((i+1)+'️⃣ '+(it.titulo||('Video '+it.videoId))+' - '+money(it.precio||0));
+  });
+  lines.push('');
+  lines.push('💵 *Total a abonar:* '+money(p.totalARS||0));
+  lines.push('');
+  lines.push('🏦 *Alias:* '+getPayAlias());
+  lines.push('👤 *A nombre de:* '+getPayName());
+  lines.push('');
+  lines.push('📎 Cuando realices el pago, enviame el comprobante por este WhatsApp.');
+  lines.push('🔓 Al confirmarlo te paso tu código de descarga.');
+  lines.push('');
+  lines.push('¡Muchas gracias por elegir *Tomauno*! ❤️');
+  return lines.join('
+');
+}
+async function sendPaymentWA(id){
+  let orders=state.orders.length?state.orders:await fbGetOrders();
+  let p=orders.find(x=>x.id===id);if(!p)return;
+  let msg=orderPaymentMessage(p);
+  let target=normalizePhone(p.clienteWhatsapp||'');
+  if(target){window.open('https://wa.me/'+target+'?text='+encodeURIComponent(msg),'_blank');}
+  else{if(navigator.clipboard)await navigator.clipboard.writeText(msg);toast('Sin WhatsApp del cliente','Copié el mensaje de pago. Pegalo manualmente al cliente.');}
+}
 function orderClientMessage(p,forcedCode){
   let code=forcedCode||p.clave||'';
   let lines=[];
@@ -913,7 +1037,7 @@ function orderStateLabel(p){let st=String(p.estado||'pendiente').toLowerCase();i
 function orderItemsText(p,sep){return (p.items||[]).map(function(it,i){return (i+1)+'. '+(it.titulo||('Video '+(it.videoId||'')));}).join(sep||' | ');}
 function safeFileName(s){return String(s||'TOMAUNO').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'_').replace(/^_+|_+$/g,'').toUpperCase();}
 function exportVisibleOrdersCsv(){let rows=visibleOrders();let info=reportTitle();let total=rows.reduce((a,p)=>a+Number(p.totalARS||0),0);let generado=new Date().toLocaleString('es-AR');let trs='';trs+='<tr class="title"><td colspan="8">TOMAUNO VIDEOS</td></tr>';trs+='<tr class="subtitle"><td colspan="8">Evento: '+esc(info.evento)+'</td></tr>';trs+='<tr><td colspan="2"><b>Filtro</b></td><td colspan="6">'+esc(info.filtro)+'</td></tr>';trs+='<tr><td colspan="2"><b>Generado</b></td><td colspan="6">'+esc(generado)+'</td></tr>';trs+='<tr><td colspan="2"><b>Pedidos visibles</b></td><td>'+rows.length+'</td><td colspan="2"><b>Total visible</b></td><td colspan="3">'+money(total)+'</td></tr>';trs+='<tr class="blank"><td colspan="8"></td></tr>';trs+='<tr class="head"><td>Fecha</td><td>Cliente</td><td>WhatsApp</td><td>Videos</td><td>Estado</td><td>Clave</td><td>Cant.</td><td>Total</td></tr>';rows.forEach(function(p){trs+='<tr><td>'+esc(new Date(Number(p.creado||0)).toLocaleString('es-AR'))+'</td><td>'+esc(p.clienteNombre||'')+'</td><td>'+esc(p.clienteWhatsapp||'')+'</td><td>'+esc(orderItemsText(p,' | '))+'</td><td>'+esc(orderStateLabel(p))+'</td><td>'+esc(p.clave||'')+'</td><td>'+((p.items||[]).length||0)+'</td><td>'+Number(p.totalARS||0)+'</td></tr>';});trs+='<tr class="total"><td colspan="7">TOTAL</td><td>'+Number(total||0)+'</td></tr>';let html='<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif}table{border-collapse:collapse;width:100%}td{border:1px solid #999;padding:8px;font-size:12px;vertical-align:top}.title td,.title{background:#050505;color:#fff;font-size:24px;font-weight:bold;text-align:center}.subtitle td,.subtitle{background:#e00000;color:#fff;font-size:16px;font-weight:bold;text-align:center}.head td,.head{background:#222;color:#fff;font-weight:bold;text-transform:uppercase}.blank td{border:0;height:10px}.total td,.total{background:#f2f2f2;font-weight:bold}</style></head><body><table>'+trs+'</table></body></html>';let blob=new Blob(['\ufeff'+html],{type:'application/vnd.ms-excel;charset=utf-8;'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='TOMAUNO_'+safeFileName(info.evento)+'_'+safeFileName(info.filtro)+'_'+todayKey()+'.xls';a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},1000);}
-function exportVisibleOrdersPdf(){let rows=visibleOrders();let info=reportTitle();let total=rows.reduce((a,p)=>a+Number(p.totalARS||0),0);let pendientes=rows.filter(function(p){return orderStateLabel(p)==='Pendiente';}).length;let entregados=rows.filter(function(p){return orderStateLabel(p)==='Entregado';}).length;let archivados=rows.filter(function(p){return orderStateLabel(p)==='Archivado';}).length;let body=rows.map(function(p){return '<tr><td class="date">'+esc(new Date(Number(p.creado||0)).toLocaleString('es-AR'))+'</td><td><b>'+esc(p.clienteNombre||'')+'</b><br><small>'+esc(p.clienteWhatsapp||'Sin WhatsApp')+'</small></td><td>'+esc(orderItemsText(p,' | '))+'</td><td><span class="state '+esc(orderStateLabel(p).toLowerCase())+'">'+esc(orderStateLabel(p))+'</span></td><td><b>'+esc(p.clave||'-')+'</b></td><td class="qty">'+((p.items||[]).length||0)+'</td><td class="money">'+money(p.totalARS||0)+'</td></tr>';}).join('');if(!body)body='<tr><td colspan="7" class="empty">No hay pedidos visibles para este filtro.</td></tr>';let html='<!doctype html><html><head><meta charset="utf-8"><title>Tomauno Reporte '+esc(info.filtro)+'</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{margin:0;background:#080808;color:#fff;font-family:Inter,Arial,sans-serif}.page{max-width:1180px;margin:0 auto;padding:26px}.head{position:relative;overflow:hidden;background:radial-gradient(circle at 88% 20%,rgba(224,0,0,.50),transparent 28%),linear-gradient(135deg,#050505 0%,#0b0b0b 58%,#210000 100%);border:1px solid rgba(224,0,0,.45);border-radius:24px;padding:24px 26px;margin-bottom:16px}.brand{font-size:44px;font-weight:900;letter-spacing:1.5px;line-height:1}.brand .uno{color:#ff1919}.tag{display:inline-block;margin-top:8px;background:#e00000;color:#fff;border-radius:999px;padding:7px 12px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px}.meta{margin-top:12px;color:#d6d6d6;font-size:13px;line-height:1.6}.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0 16px}.box{border:1px solid #303030;background:#141414;border-radius:16px;padding:13px}.box span{display:block;color:#999;font-size:10px;text-transform:uppercase;font-weight:900;letter-spacing:1px}.box b{display:block;font-size:25px;color:#ff1919;margin-top:3px}.report-table{width:100%;border-collapse:separate;border-spacing:0 7px}.report-table th{text-align:left;color:#ff3333;font-size:10px;text-transform:uppercase;letter-spacing:.9px;padding:7px 10px}.report-table td{background:#151515;border-top:1px solid #2d2d2d;border-bottom:1px solid #2d2d2d;padding:9px 10px;font-size:12px;vertical-align:top}.report-table td:first-child{border-left:1px solid #2d2d2d;border-radius:12px 0 0 12px}.report-table td:last-child{border-right:1px solid #2d2d2d;border-radius:0 12px 12px 0}.date{white-space:nowrap;color:#ccc}.money{white-space:nowrap;font-weight:900;color:#fff}.qty{text-align:center}.state{display:inline-block;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase}.state.pendiente{background:#3a2500;color:#ffd04d}.state.entregado,.state.desbloqueado{background:#062b16;color:#00d46a}.state.archivado{background:#2a2a2a;color:#bbb}.state.cancelado{background:#330606;color:#ff7777}.total-line{text-align:right;margin-top:14px;font-size:22px;font-weight:900}.footer{display:flex;justify-content:space-between;gap:16px;margin-top:20px;color:#aaa;font-size:12px;border-top:1px solid #242424;padding-top:12px}.printbar{position:sticky;bottom:0;background:rgba(0,0,0,.78);backdrop-filter:blur(10px);padding:12px;text-align:right}.printbar button{background:#e00000;color:#fff;border:0;border-radius:999px;padding:11px 18px;font-weight:900;cursor:pointer}.empty{text-align:center;color:#aaa;padding:40px!important}@media print{body{background:#fff;color:#111}.page{padding:0}.head{color:#fff}.box{break-inside:avoid}.report-table td{background:#fff;color:#111;border-color:#bbb}.printbar{display:none}.footer{color:#333}.state{border:1px solid #999}}</style></head><body><div class="page"><div class="head"><div class="brand"><span>TOMA</span><span class="uno">UNO</span> VIDEOS</div><div class="tag">Reporte de pedidos</div><div class="meta"><b>Evento:</b> '+esc(info.evento)+'<br><b>Filtro:</b> '+esc(info.filtro)+' · <b>Generado:</b> '+esc(info.fecha)+' · <b>Versión:</b> v57</div></div><div class="summary"><div class="box"><span>Pedidos</span><b>'+rows.length+'</b></div><div class="box"><span>Pendientes</span><b>'+pendientes+'</b></div><div class="box"><span>Entregados</span><b>'+entregados+'</b></div><div class="box"><span>Archivados</span><b>'+archivados+'</b></div><div class="box"><span>Total</span><b>'+money(total)+'</b></div></div><table class="report-table"><thead><tr><th>Fecha</th><th>Cliente</th><th>Videos</th><th>Estado</th><th>Clave</th><th>Cant.</th><th>Total</th></tr></thead><tbody>'+body+'</tbody></table><div class="total-line">Total visible: <span style="color:#ff1919">'+money(total)+'</span></div><div class="footer"><div>@tomaunomodels · WhatsApp 3764354522</div><div>Tomauno Videos · Reporte operativo</div></div><div class="printbar"><button onclick="window.print()">Imprimir / guardar PDF</button></div></div></body></html>';let w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}else toast('Pop-up bloqueado','Permití ventanas emergentes para generar el PDF.');}
+function exportVisibleOrdersPdf(){let rows=visibleOrders();let info=reportTitle();let total=rows.reduce((a,p)=>a+Number(p.totalARS||0),0);let pendientes=rows.filter(function(p){return orderStateLabel(p)==='Pendiente';}).length;let entregados=rows.filter(function(p){return orderStateLabel(p)==='Entregado';}).length;let archivados=rows.filter(function(p){return orderStateLabel(p)==='Archivado';}).length;let body=rows.map(function(p){return '<tr><td class="date">'+esc(new Date(Number(p.creado||0)).toLocaleString('es-AR'))+'</td><td><b>'+esc(p.clienteNombre||'')+'</b><br><small>'+esc(p.clienteWhatsapp||'Sin WhatsApp')+'</small></td><td>'+esc(orderItemsText(p,' | '))+'</td><td><span class="state '+esc(orderStateLabel(p).toLowerCase())+'">'+esc(orderStateLabel(p))+'</span></td><td><b>'+esc(p.clave||'-')+'</b></td><td class="qty">'+((p.items||[]).length||0)+'</td><td class="money">'+money(p.totalARS||0)+'</td></tr>';}).join('');if(!body)body='<tr><td colspan="7" class="empty">No hay pedidos visibles para este filtro.</td></tr>';let html='<!doctype html><html><head><meta charset="utf-8"><title>Tomauno Reporte '+esc(info.filtro)+'</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{margin:0;background:#080808;color:#fff;font-family:Inter,Arial,sans-serif}.page{max-width:1180px;margin:0 auto;padding:26px}.head{position:relative;overflow:hidden;background:radial-gradient(circle at 88% 20%,rgba(224,0,0,.50),transparent 28%),linear-gradient(135deg,#050505 0%,#0b0b0b 58%,#210000 100%);border:1px solid rgba(224,0,0,.45);border-radius:24px;padding:24px 26px;margin-bottom:16px}.brand{font-size:44px;font-weight:900;letter-spacing:1.5px;line-height:1}.brand .uno{color:#ff1919}.tag{display:inline-block;margin-top:8px;background:#e00000;color:#fff;border-radius:999px;padding:7px 12px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px}.meta{margin-top:12px;color:#d6d6d6;font-size:13px;line-height:1.6}.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0 16px}.box{border:1px solid #303030;background:#141414;border-radius:16px;padding:13px}.box span{display:block;color:#999;font-size:10px;text-transform:uppercase;font-weight:900;letter-spacing:1px}.box b{display:block;font-size:25px;color:#ff1919;margin-top:3px}.report-table{width:100%;border-collapse:separate;border-spacing:0 7px}.report-table th{text-align:left;color:#ff3333;font-size:10px;text-transform:uppercase;letter-spacing:.9px;padding:7px 10px}.report-table td{background:#151515;border-top:1px solid #2d2d2d;border-bottom:1px solid #2d2d2d;padding:9px 10px;font-size:12px;vertical-align:top}.report-table td:first-child{border-left:1px solid #2d2d2d;border-radius:12px 0 0 12px}.report-table td:last-child{border-right:1px solid #2d2d2d;border-radius:0 12px 12px 0}.date{white-space:nowrap;color:#ccc}.money{white-space:nowrap;font-weight:900;color:#fff}.qty{text-align:center}.state{display:inline-block;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase}.state.pendiente{background:#3a2500;color:#ffd04d}.state.entregado,.state.desbloqueado{background:#062b16;color:#00d46a}.state.archivado{background:#2a2a2a;color:#bbb}.state.cancelado{background:#330606;color:#ff7777}.total-line{text-align:right;margin-top:14px;font-size:22px;font-weight:900}.footer{display:flex;justify-content:space-between;gap:16px;margin-top:20px;color:#aaa;font-size:12px;border-top:1px solid #242424;padding-top:12px}.printbar{position:sticky;bottom:0;background:rgba(0,0,0,.78);backdrop-filter:blur(10px);padding:12px;text-align:right}.printbar button{background:#e00000;color:#fff;border:0;border-radius:999px;padding:11px 18px;font-weight:900;cursor:pointer}.empty{text-align:center;color:#aaa;padding:40px!important}@media print{body{background:#fff;color:#111}.page{padding:0}.head{color:#fff}.box{break-inside:avoid}.report-table td{background:#fff;color:#111;border-color:#bbb}.printbar{display:none}.footer{color:#333}.state{border:1px solid #999}}</style></head><body><div class="page"><div class="head"><div class="brand"><span>TOMA</span><span class="uno">UNO</span> VIDEOS</div><div class="tag">Reporte de pedidos</div><div class="meta"><b>Evento:</b> '+esc(info.evento)+'<br><b>Filtro:</b> '+esc(info.filtro)+' · <b>Generado:</b> '+esc(info.fecha)+' · <b>Versión:</b> v64</div></div><div class="summary"><div class="box"><span>Pedidos</span><b>'+rows.length+'</b></div><div class="box"><span>Pendientes</span><b>'+pendientes+'</b></div><div class="box"><span>Entregados</span><b>'+entregados+'</b></div><div class="box"><span>Archivados</span><b>'+archivados+'</b></div><div class="box"><span>Total</span><b>'+money(total)+'</b></div></div><table class="report-table"><thead><tr><th>Fecha</th><th>Cliente</th><th>Videos</th><th>Estado</th><th>Clave</th><th>Cant.</th><th>Total</th></tr></thead><tbody>'+body+'</tbody></table><div class="total-line">Total visible: <span style="color:#ff1919">'+money(total)+'</span></div><div class="footer"><div>@tomaunomodels · WhatsApp 3764354522</div><div>Tomauno Videos · Reporte operativo</div></div><div class="printbar"><button onclick="window.print()">Imprimir / guardar PDF</button></div></div></body></html>';let w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}else toast('Pop-up bloqueado','Permití ventanas emergentes para generar el PDF.');}
 
 async function deleteOrder(id){try{if(!db){await fbReady;} if(!db||!remove){toast('Sin conexión','No se pudo conectar a la base.');return;} await remove(ref(db,FB_BASE+'/pedidos/'+id));await adminOrders();updateTopStats();}catch(e){console.warn(e);toast('Error','No se pudo eliminar el pedido.');}}
 function receiptText(p){let fecha=new Date(Number(p.desbloqueado||p.creado||Date.now())).toLocaleString('es-AR');let lines=[];lines.push('🧾 *TOMAUNO - TICKET PAGADO*');lines.push('');lines.push('👤 *Cliente:* '+(p.clienteNombre||''));if(p.clienteWhatsapp)lines.push('📲 *WhatsApp:* '+p.clienteWhatsapp);lines.push('📅 *Fecha:* '+fecha);lines.push('🔓 *Clave:* '+(p.clave||'-'));lines.push('');lines.push('🎬 *Videos:*');(p.items||[]).forEach((it,i)=>lines.push((i+1)+'️⃣ '+(it.titulo||('Video '+it.videoId))+' - '+money(it.precio||0)));lines.push('');lines.push('💵 *Total:* '+money(p.totalARS||0));lines.push('');lines.push('📸 @tomaunomodels');lines.push('📲 3764354522');return lines.join('\n');}
