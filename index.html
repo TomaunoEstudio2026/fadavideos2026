@@ -1159,6 +1159,13 @@ window.tomaunoAdmin=function(){askAdmin();};
 function askAdmin(){if(sessionStorage.getItem(SS_ADMIN)==='1'){openAdmin();return;}openModal('Acceso admin','<p>Ingresá el PIN de administración.</p><div class="field"><input id="adminPin" type="password" placeholder="PIN"></div><div style="padding-top:14px"><button class="btn red" id="adminPinOk">Entrar</button></div>');$('adminPinOk').onclick=()=>{if($('adminPin').value===ADMIN_PASS){sessionStorage.setItem(SS_ADMIN,'1');closeModal();openAdmin();}else toast('PIN incorrecto','No se pudo abrir el panel.');};$('adminPin').addEventListener('keydown',e=>{if(e.key==='Enter')$('adminPinOk').click();});setTimeout(()=>{$('adminPin').focus();},60);}
 async function renderAdmin(){let adm=$('adminModal');if(adm){adm.className='admin-modal'+(state.tab==='director'?(state.directorMode==='full'?' director-full':' director-dock'):'');}if(!state.data)state.data=normalize(JSON.parse(JSON.stringify(FALLBACK)));let h='<details class="admin-token-details" '+(state.tab==='director'?'':'open')+'><summary>Config general</summary><div class="form-grid"><div class="field"><label>Alias de pago global</label><input id="adm_pay_alias" value="'+esc(getPayAlias())+'" placeholder="Ej: tomauno.a"></div><div class="field"><label>Titular global</label><input id="adm_pay_name" value="'+esc(getPayName())+'" placeholder="Ej: Javier Mottola"></div><div class="field"><label>&nbsp;</label><button class="btn red" id="savePayConfig">Guardar pago</button></div><div class="field span2"><label>Token de catálogo privado</label><input id="adm_token" type="password" value="'+esc(getToken())+'" placeholder="Solo necesario para editar eventos/videos"></div><div class="field"><label>&nbsp;</label><button class="btn gray" id="saveToken">Guardar token</button></div><div class="field"><label>&nbsp;</label><button class="btn gray" id="testToken">Probar catálogo</button></div></div><p class="muted" style="font-size:11px">Alias y titular se guardan en Firebase bajo tomauno/videos/config/general y sirven para todos los dispositivos. El token solo modifica el catálogo datos.json.</p></details><div class="tabs"><button class="tab '+(state.tab==='pedidos'?'active':'')+'" data-tab="pedidos">Pedidos</button><button class="tab '+(state.tab==='stats'?'active':'')+'" data-tab="stats">Estadísticas</button><button class="tab '+(state.tab==='eventos'?'active':'')+'" data-tab="eventos">Eventos</button><button class="tab '+(state.tab==='videos'?'active':'')+'" data-tab="videos">Videos</button><button class="tab '+(state.tab==='ventas'?'active':'')+'" data-tab="ventas">Códigos</button><button class="tab '+(state.tab==='director'?'active':'')+'" data-tab="director">Director</button></div><div id="tabBody"><div class="empty">Cargando...</div></div>';$('adminContent').innerHTML=h;$('savePayConfig').onclick=()=>fbSaveConfig($('adm_pay_alias').value,$('adm_pay_name').value);$('saveToken').onclick=()=>{localStorage.setItem(LS_TOKEN,$('adm_token').value.trim());toast('Token guardado','El token de catálogo quedó guardado en este navegador.');};$('testToken').onclick=()=>ghLoad().then(renderAdmin);document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.tab=b.getAttribute('data-tab');renderAdmin();});await renderTab();}
 async function renderTab(){if(state.tab==='pedidos')await adminOrders();else if(state.tab==='stats')await adminStats();else if(state.tab==='eventos')adminEvents();else if(state.tab==='videos')adminVideos();else if(state.tab==='director')adminDirector();else adminKeys();}
+function clientPhoneHtml(phone){
+  let raw=String(phone||'').trim();
+  let norm=normalizePhone(raw);
+  if(!raw)return '<small>Sin WhatsApp</small>';
+  if(norm)return '<a href="https://wa.me/'+esc(norm)+'" target="_blank" style="color:#00d46a;text-decoration:none;font-weight:900">'+esc(raw)+'</a>';
+  return '<small>'+esc(raw)+'</small>';
+}
 async function adminOrders(){
   let all=await fbGetOrders();
   updateTopStats();
@@ -1193,10 +1200,10 @@ async function adminOrders(){
     let locked=status==='desbloqueado';
     let rowcls=archivedRow?'order-archived':(locked?'order-done':'order-new');
     let search=[p.clienteNombre,p.clienteWhatsapp,p.clave,p.id,items.map(i=>i.titulo).join(' ')].join(' ').toLowerCase();
-    h+='<tr class="order-row '+rowcls+'" data-status="'+(archivedRow?'archivado':(locked?'entregado':'pendiente'))+'" data-search="'+esc(search)+'"><td>'+new Date(Number(p.creado||0)).toLocaleString('es-AR')+'</td><td><b>'+esc(p.clienteNombre||'')+'</b><br><small>'+esc(p.clienteWhatsapp||'')+'</small></td><td>'+videos+'</td><td>'+money(p.totalARS||0)+'</td><td><span class="order-status-icon" title="'+(locked?'Entregado/habilitado':'Pendiente')+'">'+(locked?'🔓':'🔒')+'</span></td><td><b>'+esc(p.clave||'-')+'</b></td><td><div class="row-actions">';
+    h+='<tr class="order-row '+rowcls+'" data-status="'+(archivedRow?'archivado':(locked?'entregado':'pendiente'))+'" data-search="'+esc(search)+'"><td>'+new Date(Number(p.creado||0)).toLocaleString('es-AR')+'</td><td><b>'+esc(p.clienteNombre||'')+'</b><br>'+clientPhoneHtml(p.clienteWhatsapp)+'</td><td>'+videos+'</td><td>'+money(p.totalARS||0)+'</td><td><span class="order-status-icon" title="'+(locked?'Entregado/habilitado':'Pendiente')+'">'+(locked?'🔓':'🔒')+'</span></td><td><b>'+esc(p.clave||'-')+'</b></td><td><div class="row-actions">';
     if(!locked)h+='<button class="btn red small" title="Desbloquear pedido" data-unlock="'+esc(p.id)+'">🔓</button>';else h+='<button class="btn green small" title="WhatsApp cliente" data-waorder="'+esc(p.id)+'">📲</button>';
-    h+='<button class="btn gray small" title="Enviar datos de pago" data-payorder="'+esc(p.id)+'">Pago</button>';
-    h+='<button class="btn gray small" title="Copiar clave" data-copyorder="'+esc(p.id)+'">Clave</button><button class="btn gray small" title="Copiar texto WhatsApp" data-copywa="'+esc(p.id)+'">Texto</button><button class="btn gray small" title="Copiar enlaces Drive" data-copydrives="'+esc(p.id)+'">🔗</button><button class="btn gray small" title="Ticket PNG" data-receipt="'+esc(p.id)+'">🧾</button><button class="btn gray small" title="Archivar/desarchivar" data-archiveorder="'+esc(p.id)+'">'+(archivedRow?'↩':'🗄')+'</button><span class="delete-holder"><button class="btn gray small" title="Eliminar pedido definitivo" data-delorder="'+esc(p.id)+'">🗑</button></span></div></td></tr>';
+    h+='<button class="btn gray small" title="Copiar datos de pago" data-payorder="'+esc(p.id)+'">Pagar</button>';
+    h+='<button class="btn gray small" title="Copiar clave" data-copyorder="'+esc(p.id)+'">Clave</button><button class="btn gray small" title="Copiar mensaje final con clave y links" data-copywa="'+esc(p.id)+'">Pagó</button><button class="btn gray small" title="Copiar enlaces Drive" data-copydrives="'+esc(p.id)+'">🔗</button><button class="btn gray small" title="Ticket PNG" data-receipt="'+esc(p.id)+'">🧾</button><button class="btn gray small" title="Archivar/desarchivar" data-archiveorder="'+esc(p.id)+'">'+(archivedRow?'↩':'🗄')+'</button><span class="delete-holder"><button class="btn gray small" title="Eliminar pedido definitivo" data-delorder="'+esc(p.id)+'">🗑</button></span></div></td></tr>';
   });
   h+='</table></div></div>';
   $('tabBody').innerHTML=h;
@@ -1274,9 +1281,12 @@ async function sendPaymentWA(id){
   let orders=state.orders.length?state.orders:await fbGetOrders();
   let p=orders.find(x=>x.id===id);if(!p)return;
   let msg=orderPaymentMessage(p);
-  let target=normalizePhone(p.clienteWhatsapp||'');
-  if(target){window.open('https://wa.me/'+target+'?text='+encodeURIComponent(msg),'_blank');}
-  else{if(navigator.clipboard)await navigator.clipboard.writeText(msg);toast('Sin WhatsApp del cliente','Copié el mensaje de pago. Pegalo manualmente al cliente.');}
+  if(navigator.clipboard){
+    await navigator.clipboard.writeText(msg);
+    toast('Datos de pago copiados','Pegalos en WhatsApp Web o en el chat del cliente. Incluye alias, titular, evento, total y pedido de comprobante.');
+  }else{
+    openModal('Datos de pago','<p>Copiá este texto para enviarlo al cliente:</p><div class="field"><textarea readonly>'+esc(msg)+'</textarea></div>');
+  }
 }
 function orderClientMessage(p,forcedCode){
   let code=forcedCode||p.clave||'';
