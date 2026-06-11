@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v77 VISUAL AJUSTADA - base v76, JS intacto -->
+<!-- TOMAUNO VIDEOS - VERSION v79 - Panel Director desde v74 estable -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tomauno Videos v77 VISUAL AJUSTADA</title>
+<title>Tomauno Videos v79 Director</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -742,127 +742,10 @@ body:before{
 
 
 
-/* ===== v76 BOMBA VISUAL - SOLO CSS, JS INTACTO ===== */
-html,body{background:#000!important;}
-body{
-  background:
-    radial-gradient(circle at 50% -8%, rgba(255,25,25,.24), transparent 24%),
-    radial-gradient(circle at 8% 28%, rgba(224,0,0,.12), transparent 26%),
-    radial-gradient(circle at 94% 74%, rgba(224,0,0,.16), transparent 25%),
-    linear-gradient(180deg,#000 0%,#040404 48%,#000 100%)!important;
-}
-body:before{
-  content:''!important;
-  position:fixed!important;
-  inset:-28%!important;
-  pointer-events:none!important;
-  z-index:0!important;
-  background:
-    radial-gradient(circle at 32% 22%, rgba(255,0,0,.20), transparent 28%),
-    radial-gradient(circle at 72% 78%, rgba(224,0,0,.16), transparent 30%),
-    radial-gradient(circle at 50% 48%, rgba(255,40,40,.07), transparent 38%)!important;
-  filter:blur(42px)!important;
-  opacity:.80!important;
-  animation:tomaBombaBg 13s ease-in-out infinite alternate!important;
-}
-@keyframes tomaBombaBg{0%{transform:translate3d(-1.8%,.6%,0) scale(1);opacity:.62}100%{transform:translate3d(2%,-1.2%,0) scale(1.05);opacity:.94}}
-.bggrid{opacity:.11!important;background-size:54px 54px!important;}
-header{background:rgba(0,0,0,.92)!important;border-bottom:1px solid rgba(255,25,25,.18)!important;box-shadow:0 10px 40px rgba(0,0,0,.45)!important;}
-.hero{background:radial-gradient(circle at 50% 28%,rgba(224,0,0,.16),transparent 46%)!important;border:1px solid rgba(224,0,0,.08)!important;box-shadow:0 0 80px rgba(224,0,0,.06) inset!important;}
-.hero h1{
-  color:#fff!important;
-  text-shadow:0 15px 45px #000,0 0 18px rgba(224,0,0,.55),0 0 44px rgba(224,0,0,.25)!important;
-  animation:tomaGlowBomba 4.2s ease-in-out infinite!important;
-}
-.hero h1 span,.wordmark span{color:#ff1919!important;}
-@keyframes tomaGlowBomba{0%,100%{text-shadow:0 15px 45px #000,0 0 12px rgba(224,0,0,.35),0 0 26px rgba(224,0,0,.12)}50%{text-shadow:0 15px 48px #000,0 0 28px rgba(255,25,25,.90),0 0 64px rgba(224,0,0,.36)}}
-.eyebrow{background:rgba(224,0,0,.18)!important;border-color:rgba(255,25,25,.62)!important;color:#ff3a3a!important;box-shadow:0 0 26px rgba(224,0,0,.16)!important;}
-.section-head h2,.modal-head h2,.admin-head h2{color:#fff!important;text-shadow:0 0 22px rgba(224,0,0,.28)!important;}
-.section-head h2:first-letter{color:#ff1919!important;}
-.topstat,.metric-card{background:linear-gradient(180deg,rgba(20,20,20,.88),rgba(8,8,8,.88))!important;border-color:rgba(255,255,255,.10)!important;box-shadow:0 18px 50px rgba(0,0,0,.35),0 0 24px rgba(224,0,0,.055)!important;}
-.topstat b,.metric-card b,.price{color:#ff1919!important;text-shadow:0 0 18px rgba(224,0,0,.22)!important;}
-.card{background:linear-gradient(180deg,#151515,#090909)!important;border-color:rgba(255,255,255,.095)!important;box-shadow:0 24px 72px rgba(0,0,0,.44)!important;}
-.card:hover{border-color:rgba(255,25,25,.58)!important;box-shadow:0 30px 90px rgba(0,0,0,.62),0 0 38px rgba(224,0,0,.16)!important;}
-.thumb:before,.event-img:before{background:linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.74))!important;}
-.btn.red,.pill.active,.tab.active{background:linear-gradient(135deg,#b80000,#ff1f1f)!important;border-color:rgba(255,25,25,.66)!important;box-shadow:0 13px 34px rgba(224,0,0,.28)!important;}
-.btn.red:hover,.pill.active:hover,.tab.active:hover{box-shadow:0 16px 44px rgba(224,0,0,.40)!important;}
-.search:focus,.field input:focus,.field textarea:focus,.field select:focus{border-color:rgba(255,25,25,.82)!important;box-shadow:0 0 0 4px rgba(224,0,0,.14)!important;}
-.badge{background:rgba(12,12,12,.86)!important;border-color:rgba(255,25,25,.30)!important;color:#fff!important;}
-.chat{box-shadow:0 0 42px rgba(0,200,83,.42),0 0 18px rgba(255,255,255,.08)!important;}
-.daily-visits{background:rgba(0,0,0,.52)!important;border-color:rgba(224,0,0,.18)!important;color:#b9b9b9!important;}
-.family-pill,.family-link{border-color:rgba(255,25,25,.18)!important;background:rgba(20,20,20,.72)!important;}
-@media(max-width:700px){.hero h1{font-size:78px!important}.hero{padding-top:26px!important}}
-
-
-
-/* ===== v77 AJUSTE VISUAL - SOLO CSS, JS INTACTO =====
-   Corrige recuadros bordó, títulos y brillo de miniaturas. */
-html,body{background:#000!important;}
-body{
-  background:
-    radial-gradient(circle at 50% -12%, rgba(224,0,0,.14), transparent 22%),
-    radial-gradient(circle at 8% 30%, rgba(224,0,0,.055), transparent 24%),
-    radial-gradient(circle at 96% 78%, rgba(224,0,0,.075), transparent 25%),
-    #000!important;
-}
-body:before{
-  content:''!important;
-  position:fixed!important;
-  inset:0!important;
-  width:100vw!important;
-  height:100vh!important;
-  pointer-events:none!important;
-  z-index:0!important;
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255,0,0,.10), transparent 34%),
-    radial-gradient(circle at 72% 78%, rgba(224,0,0,.075), transparent 34%),
-    radial-gradient(circle at 50% 48%, rgba(255,30,30,.035), transparent 42%)!important;
-  filter:blur(26px)!important;
-  opacity:.82!important;
-  transform:none!important;
-  animation:tomaBgV77 18s ease-in-out infinite alternate!important;
-}
-@keyframes tomaBgV77{
-  from{opacity:.58;transform:scale(1) translate3d(-.8%,.4%,0)}
-  to{opacity:.9;transform:scale(1.035) translate3d(.8%,-.4%,0)}
-}
-.bggrid{opacity:.075!important;background-size:66px 66px!important;}
-.hero{
-  background:transparent!important;
-  border:0!important;
-  box-shadow:none!important;
-}
-.hero h1{
-  color:#fff!important;
-  text-shadow:0 16px 48px #000,0 0 22px rgba(255,25,25,.62),0 0 54px rgba(224,0,0,.22)!important;
-  animation:tomaGlowV77 4.5s ease-in-out infinite!important;
-}
-.hero h1 span,.wordmark span{color:#ff1919!important;}
-@keyframes tomaGlowV77{
-  0%,100%{text-shadow:0 16px 48px #000,0 0 14px rgba(224,0,0,.36),0 0 28px rgba(224,0,0,.13)}
-  50%{text-shadow:0 16px 50px #000,0 0 32px rgba(255,25,25,.94),0 0 76px rgba(224,0,0,.34)}
-}
-.section-head h2,
-.modal-head h2,
-.admin-head h2,
-.preview-mode-title{
-  color:#ff1919!important;
-  text-shadow:0 0 18px rgba(224,0,0,.28),0 10px 32px #000!important;
-}
-.section-head h2:first-letter{color:inherit!important;}
-.card{background:linear-gradient(180deg,#141414,#080808)!important;border-color:rgba(255,255,255,.10)!important;}
-.event-img:before,.thumb:before{
-  background:linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.50))!important;
-}
-.thumb{
-  filter:contrast(1.12) saturate(1.20) brightness(1.10)!important;
-}
-.video-frame{
-  filter:contrast(1.08) saturate(1.14) brightness(1.06)!important;
-}
-.video-card .body h3{color:#fff!important;}
-.event-img b{color:#fff!important;text-shadow:0 12px 34px #000,0 0 28px rgba(224,0,0,.35)!important;}
-.topstat,.metric-card{background:rgba(10,10,10,.86)!important;}
+/* v79 Panel Director: filtros de preview + comandos FFmpeg */
+.director-panel{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start}
+.director-card{border:1px solid rgba(255,255,255,.12);background:#141414;border-radius:18px;padding:14px}
+.director-card h3{margin:0 0 10px;font-size:20px}.director-row{display:grid;grid-template-columns:150px 1fr 58px;gap:10px;align-items:center;margin:10px 0}.director-row label{font-size:11px;color:#aaa;font-weight:900;text-transform:uppercase;letter-spacing:.8px}.director-row input[type=range]{width:100%}.director-val{text-align:right;color:#fff;font-size:11px;font-weight:900}.director-preview{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,.12)}.director-preview iframe{width:100%;height:100%;border:0;display:block;filter:var(--director-preview-filter,none)}.director-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.director-cmd{width:100%;min-height:150px;background:#080808!important;color:#f3f3f3!important;font-family:Consolas,monospace;font-size:11px;line-height:1.4}.director-note{font-size:12px;color:#aaa;line-height:1.45;margin-top:8px}.director-checks{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.director-checks label{border:1px solid rgba(255,255,255,.10);background:#101010;border-radius:12px;padding:9px;font-size:12px;color:#ddd}.video-frame,.thumb{filter:var(--tomauno-event-filter, none)}@media(max-width:900px){.director-panel{grid-template-columns:1fr}.director-row{grid-template-columns:1fr}.director-val{text-align:left}.director-checks{grid-template-columns:1fr}}
 
 </style>
 </head>
@@ -1126,8 +1009,8 @@ function toast(t,msg){openModal(t,'<p>'+esc(msg)+'</p><div class="modal-actions"
 function openAdmin(){sessionStorage.setItem(SS_ADMIN,'1');renderAdmin();$('adminModal').style.display='flex';}
 window.tomaunoAdmin=function(){askAdmin();};
 function askAdmin(){if(sessionStorage.getItem(SS_ADMIN)==='1'){openAdmin();return;}openModal('Acceso admin','<p>Ingresá el PIN de administración.</p><div class="field"><input id="adminPin" type="password" placeholder="PIN"></div><div style="padding-top:14px"><button class="btn red" id="adminPinOk">Entrar</button></div>');$('adminPinOk').onclick=()=>{if($('adminPin').value===ADMIN_PASS){sessionStorage.setItem(SS_ADMIN,'1');closeModal();openAdmin();}else toast('PIN incorrecto','No se pudo abrir el panel.');};$('adminPin').addEventListener('keydown',e=>{if(e.key==='Enter')$('adminPinOk').click();});setTimeout(()=>{$('adminPin').focus();},60);}
-async function renderAdmin(){if(!state.data)state.data=normalize(JSON.parse(JSON.stringify(FALLBACK)));let h='<details class="admin-token-details" open><summary>Config general</summary><div class="form-grid"><div class="field"><label>Alias de pago global</label><input id="adm_pay_alias" value="'+esc(getPayAlias())+'" placeholder="Ej: tomauno.a"></div><div class="field"><label>Titular global</label><input id="adm_pay_name" value="'+esc(getPayName())+'" placeholder="Ej: Javier Mottola"></div><div class="field"><label>&nbsp;</label><button class="btn red" id="savePayConfig">Guardar pago</button></div><div class="field span2"><label>Token de catálogo privado</label><input id="adm_token" type="password" value="'+esc(getToken())+'" placeholder="Solo necesario para editar eventos/videos"></div><div class="field"><label>&nbsp;</label><button class="btn gray" id="saveToken">Guardar token</button></div><div class="field"><label>&nbsp;</label><button class="btn gray" id="testToken">Probar catálogo</button></div></div><p class="muted" style="font-size:11px">Alias y titular se guardan en Firebase bajo tomauno/videos/config/general y sirven para todos los dispositivos. El token solo modifica el catálogo datos.json.</p></details><div class="tabs"><button class="tab '+(state.tab==='pedidos'?'active':'')+'" data-tab="pedidos">Pedidos</button><button class="tab '+(state.tab==='stats'?'active':'')+'" data-tab="stats">Estadísticas</button><button class="tab '+(state.tab==='eventos'?'active':'')+'" data-tab="eventos">Eventos</button><button class="tab '+(state.tab==='videos'?'active':'')+'" data-tab="videos">Videos</button><button class="tab '+(state.tab==='ventas'?'active':'')+'" data-tab="ventas">Códigos</button></div><div id="tabBody"><div class="empty">Cargando...</div></div>';$('adminContent').innerHTML=h;$('savePayConfig').onclick=()=>fbSaveConfig($('adm_pay_alias').value,$('adm_pay_name').value);$('saveToken').onclick=()=>{localStorage.setItem(LS_TOKEN,$('adm_token').value.trim());toast('Token guardado','El token de catálogo quedó guardado en este navegador.');};$('testToken').onclick=()=>ghLoad().then(renderAdmin);document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.tab=b.getAttribute('data-tab');renderAdmin();});await renderTab();}
-async function renderTab(){if(state.tab==='pedidos')await adminOrders();else if(state.tab==='stats')await adminStats();else if(state.tab==='eventos')adminEvents();else if(state.tab==='videos')adminVideos();else adminKeys();}
+async function renderAdmin(){if(!state.data)state.data=normalize(JSON.parse(JSON.stringify(FALLBACK)));let h='<details class="admin-token-details" open><summary>Config general</summary><div class="form-grid"><div class="field"><label>Alias de pago global</label><input id="adm_pay_alias" value="'+esc(getPayAlias())+'" placeholder="Ej: tomauno.a"></div><div class="field"><label>Titular global</label><input id="adm_pay_name" value="'+esc(getPayName())+'" placeholder="Ej: Javier Mottola"></div><div class="field"><label>&nbsp;</label><button class="btn red" id="savePayConfig">Guardar pago</button></div><div class="field span2"><label>Token de catálogo privado</label><input id="adm_token" type="password" value="'+esc(getToken())+'" placeholder="Solo necesario para editar eventos/videos"></div><div class="field"><label>&nbsp;</label><button class="btn gray" id="saveToken">Guardar token</button></div><div class="field"><label>&nbsp;</label><button class="btn gray" id="testToken">Probar catálogo</button></div></div><p class="muted" style="font-size:11px">Alias y titular se guardan en Firebase bajo tomauno/videos/config/general y sirven para todos los dispositivos. El token solo modifica el catálogo datos.json.</p></details><div class="tabs"><button class="tab '+(state.tab==='pedidos'?'active':'')+'" data-tab="pedidos">Pedidos</button><button class="tab '+(state.tab==='stats'?'active':'')+'" data-tab="stats">Estadísticas</button><button class="tab '+(state.tab==='eventos'?'active':'')+'" data-tab="eventos">Eventos</button><button class="tab '+(state.tab==='videos'?'active':'')+'" data-tab="videos">Videos</button><button class="tab '+(state.tab==='ventas'?'active':'')+'" data-tab="ventas">Códigos</button><button class="tab '+(state.tab==='director'?'active':'')+'" data-tab="director">Director</button></div><div id="tabBody"><div class="empty">Cargando...</div></div>';$('adminContent').innerHTML=h;$('savePayConfig').onclick=()=>fbSaveConfig($('adm_pay_alias').value,$('adm_pay_name').value);$('saveToken').onclick=()=>{localStorage.setItem(LS_TOKEN,$('adm_token').value.trim());toast('Token guardado','El token de catálogo quedó guardado en este navegador.');};$('testToken').onclick=()=>ghLoad().then(renderAdmin);document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.tab=b.getAttribute('data-tab');renderAdmin();});await renderTab();}
+async function renderTab(){if(state.tab==='pedidos')await adminOrders();else if(state.tab==='stats')await adminStats();else if(state.tab==='eventos')adminEvents();else if(state.tab==='videos')adminVideos();else if(state.tab==='director')adminDirector();else adminKeys();}
 async function adminOrders(){
   let all=await fbGetOrders();
   updateTopStats();
@@ -1386,6 +1269,25 @@ function delVid(id){let ev=adminEvent();openModal('Eliminar video','<p>¿Seguro 
 function cleanLine(s){return String(s||'').replace(/\s+/g,' ').replace(/\s*-\s*/g,' - ').trim();}
 function bulkAdd(){let ev=adminEvent();let txt=($('bulk_titles').value||'').trim();if(!ev||!txt){toast('Sin texto','Pegá un título por renglón.');return;}let added=0;txt.split(/\r?\n/).forEach(line=>{line=cleanLine(line);if(!line||/^participante/i.test(line))return;let cols=line.split(/\t/).map(cleanLine);let raw=cols.length>1?(cols[0]+' - '+(cols[1]||'')):line;let parts=raw.split(' - ');let titulo=parts.shift().trim();let subtitulo=parts.join(' - ').trim();if(!subtitulo&&cols.length>2)subtitulo=[cols[2],cols[3]].filter(Boolean).join(' • ');if(!titulo)return;ev.videos.push({id:String(nextVid(ev)),titulo:titulo,subtitulo:subtitulo,bailarina:subtitulo,youtubeId:'',previewInicio:120,previewSegundos:20,precio:15000,driveId:'',codigo:randCode(),descargas:0,plays:0});added++;});$('bulk_titles').value='';ghSave('Carga masiva '+added+' videos').then(ok=>{if(ok){state.currentEvent=ev;renderAdmin();renderVideos();}});}
 function adminKeys(){let events=state.data&&state.data.eventos?state.data.eventos:[];let opts=events.map(e=>'<option value="'+esc(e.id)+'">'+esc((e.numero?'#'+e.numero+' ':'')+e.titulo)+'</option>').join('');let h='<h3>Códigos base del catálogo</h3><p class="muted">Estos códigos son los de cada video cargado en el catálogo. Los pedidos usan una <b>clave de pedido</b> independiente. Para ventas normales usá la pestaña <b>Pedidos</b>.</p><div class="form-grid" style="margin:12px 0"><div class="field span2"><label>Aplicar un código a todo un evento/curso</label><select id="bulkKeyEvent">'+opts+'</select></div><div class="field"><label>Código general</label><input id="bulkKeyValue" placeholder="Ej: CURSO2026"></div><div class="field"><label>&nbsp;</label><button class="btn red" id="applyBulkKey">Aplicar a todos</button></div></div><p class="muted" style="font-size:11px">Útil para cursos o álbumes cerrados: todos los videos del evento aceptarán la misma clave.</p><table class="table"><tr><th>Evento</th><th>Video</th><th>Código base</th><th>Acción</th></tr>';totalVideos().forEach(x=>{if(x.video.driveId)h+='<tr><td>'+esc(x.evento.titulo)+'</td><td>'+esc(x.video.titulo)+'</td><td><b>'+esc(x.video.codigo||'-')+'</b></td><td><button class="btn small gray" data-copy="'+esc(x.video.codigo||'')+'">Copiar</button></td></tr>';});h+='</table>';$('tabBody').innerHTML=h;document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>{let v=b.getAttribute('data-copy')||'';if(v){navigator.clipboard.writeText(v);toast('Copiado','Código copiado.');}});let bulk=$('applyBulkKey');if(bulk)bulk.onclick=()=>{let ev=(state.data.eventos||[]).find(e=>String(e.id)===String($('bulkKeyEvent').value));let key=($('bulkKeyValue').value||'').trim().toUpperCase();if(!ev||!key){toast('Falta código','Elegí evento y escribí una clave.');return;}openModal('Aplicar código','<p>Se aplicará <b>'+esc(key)+'</b> a todos los videos de <b>'+esc(ev.titulo)+'</b>.</p><div class="modal-actions"><button class="btn gray" id="cancelBulkKey">Cancelar</button><button class="btn red" id="okBulkKey">Aplicar</button></div>');$('cancelBulkKey').onclick=closeModal;$('okBulkKey').onclick=()=>{(ev.videos||[]).forEach(v=>v.codigo=key);closeModal();ghSave('Aplicar código general').then(ok=>{if(ok){toast('Código aplicado','Todos los videos del evento aceptan esa clave.');adminKeys();renderVideos();}});};};}
+
+
+/* v79 Panel Director: preset visual y comando FFmpeg local */
+function directorDefaultPreset(){return {brillo:8,contraste:8,saturacion:12,calidez:0,nitidez:0,volumen:120,graves:0,agudos:0,rotacion:'0',normalizarLuz:false,normalizarAudio:true,logoFinal:false,logoPath:'logo_tomauno.png',outDir:'C:\\TOMAUNO\\ENTREGAS'};}
+function directorPresetForEvent(ev){let def=directorDefaultPreset();let p=Object.assign({},def,(ev&&ev.directorPreset)||{});try{let ls=localStorage.getItem('tomauno_director_'+(ev&&ev.id||'global'));if(ls)p=Object.assign(p,JSON.parse(ls));}catch(e){}return p;}
+function directorCssFilter(p){let b=100+Number(p.brillo||0);let c=100+Number(p.contraste||0);let s=100+Number(p.saturacion||0);let hue=Number(p.calidez||0);let sharp=Number(p.nitidez||0);let f='brightness('+b+'%) contrast('+c+'%) saturate('+s+'%)'; if(hue)f+=' sepia('+Math.min(18,Math.abs(hue))+'%) hue-rotate('+(hue>0?'-':'')+Math.abs(hue)*0.8+'deg)'; if(sharp>0)f+=' contrast('+(100+Math.min(12,sharp))+'%)'; return f;}
+function applyDirectorPresetToView(){let ev=state.currentEvent;if(!ev)return;let p=directorPresetForEvent(ev);document.documentElement.style.setProperty('--tomauno-event-filter',directorCssFilter(p));}
+const __tvRenderVideosDirector=renderVideos;renderVideos=function(){__tvRenderVideosDirector();applyDirectorPresetToView();};
+function directorFfmpegFilters(p){let vf=[];let eq=[];if(Number(p.brillo||0))eq.push('brightness='+(Number(p.brillo)/100).toFixed(2));if(Number(p.contraste||0))eq.push('contrast='+(1+Number(p.contraste)/100).toFixed(2));if(Number(p.saturacion||0))eq.push('saturation='+(1+Number(p.saturacion)/100).toFixed(2));if(eq.length)vf.push('eq='+eq.join(':'));if(Number(p.calidez||0)){let w=Number(p.calidez);vf.push('colorbalance=rs='+((w>0?w:0)/100).toFixed(2)+':bs='+((w<0?Math.abs(w):0)/100).toFixed(2));}if(Number(p.nitidez||0)>0)vf.push('unsharp=5:5:'+(Number(p.nitidez)/20).toFixed(2)+':3:3:0.0');if(p.normalizarLuz)vf.push('normalize=strength=0.35:smoothing=30');if(String(p.rotacion)==='90')vf.push('transpose=1');if(String(p.rotacion)==='-90')vf.push('transpose=2');if(String(p.rotacion)==='180')vf.push('hflip,vflip');return vf.length?vf.join(','):'null';}
+function directorAudioFilters(p){let af=[];let vol=Number(p.volumen||100);if(vol!==100)af.push('volume='+(vol/100).toFixed(2));if(Number(p.graves||0))af.push('equalizer=f=120:t=q:w=1.0:g='+Number(p.graves));if(Number(p.agudos||0))af.push('equalizer=f=4200:t=q:w=1.0:g='+Number(p.agudos));if(p.normalizarAudio)af.push('loudnorm=I=-16:TP=-1.5:LRA=11');return af.length?af.join(','):'anull';}
+function directorCommandForEvent(ev,p){let vf=directorFfmpegFilters(p),af=directorAudioFilters(p);let cmd='ffmpeg -y -i "%INPUT%" -vf "'+vf+'" -af "'+af+'" -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -c:a aac -b:a 192k "'+(p.outDir||'C:\\TOMAUNO\\ENTREGAS')+'\\%NAME%_TOMAUNO.mp4"';if(p.logoFinal){cmd+='\n\nREM Logo/outro: dejá '+(p.logoPath||'logo_tomauno.png')+' en la misma carpeta. El comando de outro exacto depende de si usás PNG o MP4.';}return cmd;}
+function directorRange(id,label,val,min,max,suf){return '<div class="director-row"><label>'+label+'</label><input type="range" id="dir_'+id+'" min="'+min+'" max="'+max+'" value="'+esc(val)+'"><span class="director-val" id="dir_'+id+'_val">'+esc(val)+suf+'</span></div>';}
+function adminDirector(){let events=state.data.eventos||[];let ev=events.find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||events[0];if(!ev){$('tabBody').innerHTML='<div class="empty">No hay eventos.</div>';return;}state.directorEventId=ev.id;let p=directorPresetForEvent(ev);let vids=(ev.videos||[]).filter(v=>v.youtubeId);let sample=vids[0]||{};let yt=cleanYouTube(state.directorSample||sample.youtubeId||'');let opts=events.map(e=>'<option value="'+esc(e.id)+'" '+(e.id===ev.id?'selected':'')+'>'+esc((e.numero?'#'+e.numero+' ':'')+e.titulo)+'</option>').join('');let html='<div class="director-panel"><div class="director-card"><h3>Modo Director</h3><p class="director-note">Ajustá un video de referencia, guardá el preset del evento y copiá el comando FFmpeg para procesar en tu PC.</p><div class="field"><label>Evento</label><select id="dir_event">'+opts+'</select></div><div class="field" style="margin-top:10px"><label>YouTube de prueba / ID</label><input id="dir_sample" value="'+esc(yt)+'" placeholder="Pegar link o ID de YouTube"></div><div class="director-preview" style="margin-top:12px"><iframe id="dir_frame" allow="autoplay; encrypted-media" src="'+(yt?'https://www.youtube.com/embed/'+esc(yt)+'?rel=0&modestbranding=1&vq=hd1080':'about:blank')+'"></iframe></div><div class="director-actions"><button class="btn gray small" id="dir_natural">Natural</button><button class="btn gray small" id="dir_oscuro">Escenario oscuro</button><button class="btn gray small" id="dir_color">Color potente</button><button class="btn gray small" id="dir_reset">Reset</button></div></div><div class="director-card"><h3>Ajustes visuales y audio</h3>'+directorRange('brillo','Brillo',p.brillo,-30,40,'%')+directorRange('contraste','Contraste',p.contraste,-30,45,'%')+directorRange('saturacion','Saturación',p.saturacion,-40,60,'%')+directorRange('calidez','Calidez',p.calidez,-30,30,'')+directorRange('nitidez','Nitidez',p.nitidez,0,40,'')+directorRange('volumen','Volumen',p.volumen,60,180,'%')+directorRange('graves','Graves',p.graves,-12,12,'dB')+directorRange('agudos','Agudos',p.agudos,-12,12,'dB')+'<div class="field"><label>Rotación para exportar</label><select id="dir_rotacion"><option value="0">Sin rotar</option><option value="90">↻ 90° derecha</option><option value="-90">↺ 90° izquierda</option><option value="180">180°</option></select></div><div class="director-checks"><label><input type="checkbox" id="dir_normalizarLuz"> Normalizar luz experimental</label><label><input type="checkbox" id="dir_normalizarAudio"> Normalizar audio</label><label><input type="checkbox" id="dir_logoFinal"> Agregar logo/outro al final</label></div><div class="field" style="margin-top:10px"><label>Archivo logo/outro local</label><input id="dir_logoPath" value="'+esc(p.logoPath||'logo_tomauno.png')+'"></div><div class="field" style="margin-top:10px"><label>Carpeta salida local</label><input id="dir_outDir" value="'+esc(p.outDir||'C:\\TOMAUNO\\ENTREGAS')+'"></div><div class="director-actions"><button class="btn red" id="dir_save">Guardar preset evento</button><button class="btn gray" id="dir_copycmd">Copiar comando FFmpeg</button></div></div></div><div class="director-card" style="margin-top:16px"><h3>Comando local</h3><textarea id="dir_cmd" class="director-cmd" readonly></textarea><p class="director-note">Uso: reemplazá <b>%INPUT%</b> por el archivo original y <b>%NAME%</b> por el nombre de salida. Más adelante podemos generar un .BAT para procesar una carpeta completa.</p></div>';$('tabBody').innerHTML=html;$('dir_rotacion').value=String(p.rotacion||'0');$('dir_normalizarLuz').checked=!!p.normalizarLuz;$('dir_normalizarAudio').checked=p.normalizarAudio!==false;$('dir_logoFinal').checked=!!p.logoFinal;bindDirector(ev);updateDirectorPreview();}
+function readDirectorPreset(){let ids=['brillo','contraste','saturacion','calidez','nitidez','volumen','graves','agudos'];let p={};ids.forEach(id=>p[id]=Number($('dir_'+id).value||0));p.rotacion=$('dir_rotacion').value;p.normalizarLuz=$('dir_normalizarLuz').checked;p.normalizarAudio=$('dir_normalizarAudio').checked;p.logoFinal=$('dir_logoFinal').checked;p.logoPath=$('dir_logoPath').value;p.outDir=$('dir_outDir').value;return p;}
+function bindDirector(ev){$('dir_event').onchange=()=>{state.directorEventId=$('dir_event').value;state.directorSample='';adminDirector();};$('dir_sample').onchange=()=>{state.directorSample=cleanYouTube($('dir_sample').value);adminDirector();};['brillo','contraste','saturacion','calidez','nitidez','volumen','graves','agudos'].forEach(id=>{$('dir_'+id).oninput=()=>updateDirectorPreview();});['dir_rotacion','dir_normalizarLuz','dir_normalizarAudio','dir_logoFinal','dir_logoPath','dir_outDir'].forEach(id=>{$(id).onchange=()=>updateDirectorPreview();});$('dir_natural').onclick=()=>setDirectorPreset({brillo:5,contraste:6,saturacion:8,calidez:0,nitidez:8,volumen:115,graves:0,agudos:1,normalizarAudio:true});$('dir_oscuro').onclick=()=>setDirectorPreset({brillo:16,contraste:12,saturacion:18,calidez:4,nitidez:10,volumen:130,graves:1,agudos:2,normalizarAudio:true});$('dir_color').onclick=()=>setDirectorPreset({brillo:10,contraste:18,saturacion:28,calidez:5,nitidez:12,volumen:125,graves:1,agudos:3,normalizarAudio:true});$('dir_reset').onclick=()=>setDirectorPreset(directorDefaultPreset());$('dir_save').onclick=()=>saveDirectorPreset(ev);$('dir_copycmd').onclick=async()=>{let cmd=$('dir_cmd').value;if(navigator.clipboard){await navigator.clipboard.writeText(cmd);toast('Copiado','Comando FFmpeg copiado.');}else toast('Comando listo','Copialo desde el cuadro.');};}
+function setDirectorPreset(p){Object.keys(p).forEach(k=>{let el=$('dir_'+k);if(!el)return;if(el.type==='checkbox')el.checked=!!p[k];else el.value=p[k];});updateDirectorPreview();}
+function updateDirectorPreview(){let p=readDirectorPreset();let css=directorCssFilter(p);document.documentElement.style.setProperty('--director-preview-filter',css);['brillo','contraste','saturacion','calidez','nitidez','volumen','graves','agudos'].forEach(id=>{let el=$('dir_'+id),v=$('dir_'+id+'_val');if(el&&v){let suf=(id==='volumen'||id==='brillo'||id==='contraste'||id==='saturacion')?'%':((id==='graves'||id==='agudos')?'dB':'');v.textContent=el.value+suf;}});let ev=(state.data.eventos||[]).find(e=>e.id===state.directorEventId)||state.currentEvent||{};let cmd=$('dir_cmd');if(cmd)cmd.value=directorCommandForEvent(ev,p);}
+async function saveDirectorPreset(ev){let p=readDirectorPreset();ev.directorPreset=p;localStorage.setItem('tomauno_director_'+ev.id,JSON.stringify(p));applyDirectorPresetToView();let ok=await ghSave('Guardar preset director '+(ev.titulo||''),true);if(ok)toast('Preset guardado','El evento usará estos ajustes visuales y tenés listo el comando local.');else toast('Preset local','No se pudo guardar en catálogo. Quedó guardado en este navegador.');}
+
 function cleanYouTube(input){let s=String(input||'').trim();if(!s)return '';try{if(s.indexOf('http')===0){let u=new URL(s);if(u.hostname.indexOf('youtu.be')>-1)return (u.pathname.split('/')[1]||'').split('?')[0];if(u.searchParams.get('v'))return u.searchParams.get('v');let m=u.pathname.match(/\/(embed|shorts)\/([^/?#]+)/);if(m)return m[2];}}catch(e){}let mm=s.match(/([A-Za-z0-9_-]{11})/);return mm?mm[1]:s;}
 function formatTime(sec){sec=Number(sec||0);let m=Math.floor(sec/60),s=sec%60;return m+':'+(s<10?'0':'')+s;}
 $('btnEvents').onclick=renderEvents;$('btnVideos').onclick=renderVideos;$('modalClose').onclick=closeModal;$('modal').onclick=e=>{if(e.target===$('modal'))closeModal();};$('adminTrigger').ondblclick=askAdmin; $('adminTrigger').addEventListener('click',function(e){ if(e.altKey||e.ctrlKey){askAdmin();return;} window.scrollTo({top:0,behavior:'smooth'}); }); $('adminTrigger').setAttribute('title','Clic: volver arriba · Doble clic: admin · Ctrl+clic: admin');$('adminClose').onclick=()=>{$('adminModal').style.display='none';};$('chatBtn').onclick=()=>{$('chatFrame').src=CHAT_URL;$('chatModal').style.display='flex';};$('chatClose').onclick=()=>{$('chatModal').style.display='none';$('chatFrame').src='about:blank';};$('chatOpen').onclick=()=>window.open(CHAT_URL,'_blank');let fp=$('familyPrivacyBtn');if(fp)fp.onclick=openFamilyPrivacy;$('cartBuy').onclick=buyCart;$('cartClear').onclick=()=>{state.cart={};renderVideos();};document.addEventListener('contextmenu',e=>{if(e.target&&e.target.closest&&e.target.closest('.admin-modal,.modal:not(.video-preview)'))return; e.preventDefault();e.stopPropagation();if(!state._lastCtx||Date.now()-state._lastCtx>1500){state._lastCtx=Date.now();toast('Contenido protegido','La vista previa no permite copiar enlaces desde la web.');}return false;},{capture:true});document.addEventListener('dragstart',e=>{if(e.target&&e.target.closest&&e.target.closest('[data-rowv]'))return;e.preventDefault();},{capture:true});window.addEventListener('hashchange',afterLoad);
