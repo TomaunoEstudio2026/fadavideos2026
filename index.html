@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v74 - pantalla amplia forzada + comprobante obligatorio -->
+<!-- TOMAUNO VIDEOS - VERSION v77 VISUAL AJUSTADA - base v76, JS intacto -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tomauno Videos v74</title>
+<title>Tomauno Videos v77 VISUAL AJUSTADA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -739,6 +739,130 @@ body:before{
 .modal.video-preview.preview-mobile.preview-wide-only .preview-protect-shield{position:absolute!important;inset:0!important;z-index:20!important;background:transparent!important;}
 @keyframes v74Hint{0%,70%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
 @keyframes v74RotatePhone{0%,100%{transform:rotate(0deg)}50%{transform:rotate(90deg)}}
+
+
+
+/* ===== v76 BOMBA VISUAL - SOLO CSS, JS INTACTO ===== */
+html,body{background:#000!important;}
+body{
+  background:
+    radial-gradient(circle at 50% -8%, rgba(255,25,25,.24), transparent 24%),
+    radial-gradient(circle at 8% 28%, rgba(224,0,0,.12), transparent 26%),
+    radial-gradient(circle at 94% 74%, rgba(224,0,0,.16), transparent 25%),
+    linear-gradient(180deg,#000 0%,#040404 48%,#000 100%)!important;
+}
+body:before{
+  content:''!important;
+  position:fixed!important;
+  inset:-28%!important;
+  pointer-events:none!important;
+  z-index:0!important;
+  background:
+    radial-gradient(circle at 32% 22%, rgba(255,0,0,.20), transparent 28%),
+    radial-gradient(circle at 72% 78%, rgba(224,0,0,.16), transparent 30%),
+    radial-gradient(circle at 50% 48%, rgba(255,40,40,.07), transparent 38%)!important;
+  filter:blur(42px)!important;
+  opacity:.80!important;
+  animation:tomaBombaBg 13s ease-in-out infinite alternate!important;
+}
+@keyframes tomaBombaBg{0%{transform:translate3d(-1.8%,.6%,0) scale(1);opacity:.62}100%{transform:translate3d(2%,-1.2%,0) scale(1.05);opacity:.94}}
+.bggrid{opacity:.11!important;background-size:54px 54px!important;}
+header{background:rgba(0,0,0,.92)!important;border-bottom:1px solid rgba(255,25,25,.18)!important;box-shadow:0 10px 40px rgba(0,0,0,.45)!important;}
+.hero{background:radial-gradient(circle at 50% 28%,rgba(224,0,0,.16),transparent 46%)!important;border:1px solid rgba(224,0,0,.08)!important;box-shadow:0 0 80px rgba(224,0,0,.06) inset!important;}
+.hero h1{
+  color:#fff!important;
+  text-shadow:0 15px 45px #000,0 0 18px rgba(224,0,0,.55),0 0 44px rgba(224,0,0,.25)!important;
+  animation:tomaGlowBomba 4.2s ease-in-out infinite!important;
+}
+.hero h1 span,.wordmark span{color:#ff1919!important;}
+@keyframes tomaGlowBomba{0%,100%{text-shadow:0 15px 45px #000,0 0 12px rgba(224,0,0,.35),0 0 26px rgba(224,0,0,.12)}50%{text-shadow:0 15px 48px #000,0 0 28px rgba(255,25,25,.90),0 0 64px rgba(224,0,0,.36)}}
+.eyebrow{background:rgba(224,0,0,.18)!important;border-color:rgba(255,25,25,.62)!important;color:#ff3a3a!important;box-shadow:0 0 26px rgba(224,0,0,.16)!important;}
+.section-head h2,.modal-head h2,.admin-head h2{color:#fff!important;text-shadow:0 0 22px rgba(224,0,0,.28)!important;}
+.section-head h2:first-letter{color:#ff1919!important;}
+.topstat,.metric-card{background:linear-gradient(180deg,rgba(20,20,20,.88),rgba(8,8,8,.88))!important;border-color:rgba(255,255,255,.10)!important;box-shadow:0 18px 50px rgba(0,0,0,.35),0 0 24px rgba(224,0,0,.055)!important;}
+.topstat b,.metric-card b,.price{color:#ff1919!important;text-shadow:0 0 18px rgba(224,0,0,.22)!important;}
+.card{background:linear-gradient(180deg,#151515,#090909)!important;border-color:rgba(255,255,255,.095)!important;box-shadow:0 24px 72px rgba(0,0,0,.44)!important;}
+.card:hover{border-color:rgba(255,25,25,.58)!important;box-shadow:0 30px 90px rgba(0,0,0,.62),0 0 38px rgba(224,0,0,.16)!important;}
+.thumb:before,.event-img:before{background:linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.74))!important;}
+.btn.red,.pill.active,.tab.active{background:linear-gradient(135deg,#b80000,#ff1f1f)!important;border-color:rgba(255,25,25,.66)!important;box-shadow:0 13px 34px rgba(224,0,0,.28)!important;}
+.btn.red:hover,.pill.active:hover,.tab.active:hover{box-shadow:0 16px 44px rgba(224,0,0,.40)!important;}
+.search:focus,.field input:focus,.field textarea:focus,.field select:focus{border-color:rgba(255,25,25,.82)!important;box-shadow:0 0 0 4px rgba(224,0,0,.14)!important;}
+.badge{background:rgba(12,12,12,.86)!important;border-color:rgba(255,25,25,.30)!important;color:#fff!important;}
+.chat{box-shadow:0 0 42px rgba(0,200,83,.42),0 0 18px rgba(255,255,255,.08)!important;}
+.daily-visits{background:rgba(0,0,0,.52)!important;border-color:rgba(224,0,0,.18)!important;color:#b9b9b9!important;}
+.family-pill,.family-link{border-color:rgba(255,25,25,.18)!important;background:rgba(20,20,20,.72)!important;}
+@media(max-width:700px){.hero h1{font-size:78px!important}.hero{padding-top:26px!important}}
+
+
+
+/* ===== v77 AJUSTE VISUAL - SOLO CSS, JS INTACTO =====
+   Corrige recuadros bordó, títulos y brillo de miniaturas. */
+html,body{background:#000!important;}
+body{
+  background:
+    radial-gradient(circle at 50% -12%, rgba(224,0,0,.14), transparent 22%),
+    radial-gradient(circle at 8% 30%, rgba(224,0,0,.055), transparent 24%),
+    radial-gradient(circle at 96% 78%, rgba(224,0,0,.075), transparent 25%),
+    #000!important;
+}
+body:before{
+  content:''!important;
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100vh!important;
+  pointer-events:none!important;
+  z-index:0!important;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,0,0,.10), transparent 34%),
+    radial-gradient(circle at 72% 78%, rgba(224,0,0,.075), transparent 34%),
+    radial-gradient(circle at 50% 48%, rgba(255,30,30,.035), transparent 42%)!important;
+  filter:blur(26px)!important;
+  opacity:.82!important;
+  transform:none!important;
+  animation:tomaBgV77 18s ease-in-out infinite alternate!important;
+}
+@keyframes tomaBgV77{
+  from{opacity:.58;transform:scale(1) translate3d(-.8%,.4%,0)}
+  to{opacity:.9;transform:scale(1.035) translate3d(.8%,-.4%,0)}
+}
+.bggrid{opacity:.075!important;background-size:66px 66px!important;}
+.hero{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+.hero h1{
+  color:#fff!important;
+  text-shadow:0 16px 48px #000,0 0 22px rgba(255,25,25,.62),0 0 54px rgba(224,0,0,.22)!important;
+  animation:tomaGlowV77 4.5s ease-in-out infinite!important;
+}
+.hero h1 span,.wordmark span{color:#ff1919!important;}
+@keyframes tomaGlowV77{
+  0%,100%{text-shadow:0 16px 48px #000,0 0 14px rgba(224,0,0,.36),0 0 28px rgba(224,0,0,.13)}
+  50%{text-shadow:0 16px 50px #000,0 0 32px rgba(255,25,25,.94),0 0 76px rgba(224,0,0,.34)}
+}
+.section-head h2,
+.modal-head h2,
+.admin-head h2,
+.preview-mode-title{
+  color:#ff1919!important;
+  text-shadow:0 0 18px rgba(224,0,0,.28),0 10px 32px #000!important;
+}
+.section-head h2:first-letter{color:inherit!important;}
+.card{background:linear-gradient(180deg,#141414,#080808)!important;border-color:rgba(255,255,255,.10)!important;}
+.event-img:before,.thumb:before{
+  background:linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.50))!important;
+}
+.thumb{
+  filter:contrast(1.12) saturate(1.20) brightness(1.10)!important;
+}
+.video-frame{
+  filter:contrast(1.08) saturate(1.14) brightness(1.06)!important;
+}
+.video-card .body h3{color:#fff!important;}
+.event-img b{color:#fff!important;text-shadow:0 12px 34px #000,0 0 28px rgba(224,0,0,.35)!important;}
+.topstat,.metric-card{background:rgba(10,10,10,.86)!important;}
 
 </style>
 </head>
