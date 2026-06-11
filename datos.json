@@ -1725,7 +1725,23 @@
           "plays": 0,
           "compras": 0
         }
-      ]
+      ],
+      "directorPreset": {
+        "brillo": -3,
+        "contraste": 11,
+        "saturacion": 24,
+        "calidez": -21,
+        "nitidez": 15,
+        "volumen": 163,
+        "graves": 5,
+        "agudos": 2,
+        "rotacion": "0",
+        "normalizarLuz": false,
+        "normalizarAudio": false,
+        "logoFinal": true,
+        "logoPath": "logo_tomauno.png",
+        "outDir": "C:\\TOMAUNO\\ENTREGAS"
+      }
     }
   ],
   "meta": {
