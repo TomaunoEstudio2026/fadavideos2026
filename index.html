@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v66 ESTABLE (pago con evento) -->
+<!-- TOMAUNO VIDEOS - VERSION v67 ESTABLE (pantalla amplia real) -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tomauno Videos · v60</title>
+<title>Tomauno Videos · v67</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -579,6 +579,117 @@ body:before{
   }
 }
 
+
+
+/* ===== VERSION v67 - Pantalla amplia móvil real: sin panel inferior ===== */
+.modal.video-preview.preview-mobile.preview-wide-only{
+  padding:0!important;
+  align-items:stretch!important;
+  justify-content:stretch!important;
+  background:#000!important;
+}
+.modal.video-preview.preview-mobile.preview-wide-only .modal-box{
+  width:100vw!important;
+  height:100vh!important;
+  max-height:100vh!important;
+  border:0!important;
+  border-radius:0!important;
+  background:#000!important;
+  overflow:hidden!important;
+}
+.modal.video-preview.preview-mobile.preview-wide-only .modal-head{display:none!important;}
+.modal.video-preview.preview-mobile.preview-wide-only .modal-content{
+  width:100vw!important;
+  height:100vh!important;
+  padding:0!important;
+  margin:0!important;
+  overflow:hidden!important;
+  background:#000!important;
+  position:relative!important;
+}
+.modal.video-preview.preview-mobile.preview-wide-only .video-wrap.wide-wrap{
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100vh!important;
+  max-height:100vh!important;
+  margin:0!important;
+  border-radius:0!important;
+  background:#000!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+  transform:none!important;
+  left:0!important;
+  top:0!important;
+}
+.modal.video-preview.preview-mobile.preview-wide-only .video-wrap.wide-wrap .video-frame.mode-wide{
+  position:relative!important;
+  left:auto!important;
+  top:auto!important;
+  transform:none!important;
+  width:100vw!important;
+  height:56.25vw!important;
+  max-height:100vh!important;
+  max-width:177.78vh!important;
+  min-height:0!important;
+  aspect-ratio:16/9!important;
+  background:#000!important;
+  display:block!important;
+}
+@media(max-width:700px) and (orientation:landscape){
+  .modal.video-preview.preview-mobile.preview-wide-only .video-wrap.wide-wrap .video-frame.mode-wide{
+    width:min(100vw,177.78vh)!important;
+    height:min(56.25vw,100vh)!important;
+  }
+}
+.modal.video-preview.preview-mobile.preview-wide-only .preview-info,
+.modal.video-preview.preview-mobile.preview-wide-only .preview-context,
+.modal.video-preview.preview-mobile.preview-wide-only .iframe-brand-block,
+.modal.video-preview.preview-mobile.preview-wide-only .video-title-ribbon{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  height:0!important;
+  max-height:0!important;
+  overflow:hidden!important;
+}
+.modal.video-preview.preview-mobile.preview-wide-only .preview-live-back{
+  position:fixed!important;
+  top:10px!important;
+  left:10px!important;
+  z-index:9999!important;
+  width:36px!important;
+  height:36px!important;
+  padding:0!important;
+  border-radius:50%!important;
+  font-size:20px!important;
+  line-height:1!important;
+  background:rgba(0,0,0,.58)!important;
+  border:1px solid rgba(255,255,255,.18)!important;
+  color:#fff!important;
+}
+.modal.video-preview.preview-mobile.preview-wide-only .wide-rotate-hint{
+  position:fixed!important;
+  inset:0!important;
+  z-index:30!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  background:radial-gradient(circle at center,rgba(224,0,0,.18),rgba(0,0,0,.78) 58%,rgba(0,0,0,.92))!important;
+  pointer-events:none!important;
+  animation:wideHintOut 4s ease forwards!important;
+}
+.modal.video-preview.preview-mobile.preview-wide-only .preview-protect-shield{
+  position:fixed!important;
+  inset:0!important;
+  z-index:20!important;
+  background:transparent!important;
+}
+
 </style>
 </head>
 <body>
@@ -733,7 +844,7 @@ function playVideo(id){
     '<label class="preview-mode" data-mode="normal"><span><b>Normal</b><small>Video completo, sin recorte. Ideal para grupos o movimientos amplios.</small></span><strong>▶</strong></label>'+
     '<label class="preview-mode" data-mode="zoom"><span><b>Zoom impacto</b><small>Más grande y llamativo. Puede recortar bordes si la persona sale de cuadro.</small></span><strong>⛶</strong></label>'+
     '<label class="preview-mode" data-mode="wide"><span><b>Pantalla amplia</b><small>Para girar el celular y ver el video completo más grande, sin recorte.</small></span><strong>↻</strong></label>'+
-    '</div><p class="preview-quality">La calidad de imagen dependerá de la conexión a internet del momento.</p><button class="btn gray preview-back preview-back-bottom" id="previewBack" title="Volver">← Volver</button></div>';
+    '</div><p class="preview-quality">La calidad de imagen dependerá de la conexión a internet del momento.</p><button class="btn gray preview-back preview-back-bottom" id="previewBack" title="Volver">←</button></div>';
   openModal('Vista previa',chooser,'video-preview preview-mobile');
   $('previewBack').onclick=closeModal;
   document.querySelectorAll('[data-mode]').forEach(el=>{el.onclick=()=>{let m=el.getAttribute('data-mode')||'normal';localStorage.setItem('tomauno_preview_mode',m);startPreviewWithMode(id,m);};});
@@ -756,13 +867,23 @@ function startPreviewWithMode(id,mode){
   }
   let wideHint=(state.previewIsTouch&&mode==='wide')?'<div class="wide-rotate-hint"><div class="rotate-phone">↻</div><b>Girá tu celular</b><small>para ver la vista previa en pantalla amplia</small></div>':'';
   let mobileBack=state.previewIsTouch?'<button class="preview-live-back" id="previewLiveBack" title="Volver">←</button>':'';
-  let html='<div class="video-wrap'+wrapClass+'" oncontextmenu="return false">'+ctxTop+wideHint+
-    '<iframe id="'+frameId+'" class="video-frame '+frameClass+'" allow="autoplay; encrypted-media" src="'+buildSrc()+'" tabindex="-1"></iframe>'+ 
-    '<div class="preview-fade" id="previewFade"></div>'+ 
-    '<div class="preview-protect-shield" id="previewShield" title="Tomauno"></div>'+ 
-    '<div class="iframe-brand-block"></div>'+ctxBottom+
-    '</div>'+mobileBack+'<div class="preview-info"><h3>'+esc(v.titulo)+'</h3><p>'+(isPreview?'La vista previa se corta automáticamente. Para recibir el video completo enviá el comprobante de pago por WhatsApp y te pasamos tu código de descarga.':'Video configurado como libre/completo.')+'</p><div class="modal-actions" style="padding-top:10px"><button class="btn gray" id="modalClose2">Cerrar</button><button class="btn red" id="modalBuy">Comprar</button></div></div>';
-  openModal('Vista previa',html,(state.previewIsTouch?'video-preview preview-mobile':'video-preview')); 
+  let isWideOnly=state.previewIsTouch&&mode==='wide';
+  let html='';
+  if(isWideOnly){
+    html='<div class="video-wrap'+wrapClass+'" oncontextmenu="return false">'+wideHint+
+      '<iframe id="'+frameId+'" class="video-frame '+frameClass+'" allow="autoplay; encrypted-media" src="'+buildSrc()+'" tabindex="-1"></iframe>'+ 
+      '<div class="preview-fade" id="previewFade"></div>'+ 
+      '<div class="preview-protect-shield" id="previewShield" title="Tomauno"></div>'+
+      '</div>'+mobileBack;
+  }else{
+    html='<div class="video-wrap'+wrapClass+'" oncontextmenu="return false">'+ctxTop+wideHint+
+      '<iframe id="'+frameId+'" class="video-frame '+frameClass+'" allow="autoplay; encrypted-media" src="'+buildSrc()+'" tabindex="-1"></iframe>'+ 
+      '<div class="preview-fade" id="previewFade"></div>'+ 
+      '<div class="preview-protect-shield" id="previewShield" title="Tomauno"></div>'+ 
+      '<div class="iframe-brand-block"></div>'+ctxBottom+
+      '</div>'+mobileBack+'<div class="preview-info"><h3>'+esc(v.titulo)+'</h3><p>'+(isPreview?'La vista previa se corta automáticamente. Para recibir el video completo enviá el comprobante de pago por WhatsApp y te pasamos tu código de descarga.':'Video configurado como libre/completo.')+'</p><div class="modal-actions" style="padding-top:10px"><button class="btn gray" id="modalClose2">Cerrar</button><button class="btn red" id="modalBuy">Comprar</button></div></div>';
+  }
+  openModal('Vista previa',html,(state.previewIsTouch?'video-preview preview-mobile'+(isWideOnly?' preview-wide-only':''):'video-preview')); 
   let frame=$(frameId),shield=$('previewShield'),fade=$('previewFade');
   function ytCommand(func){try{frame.contentWindow.postMessage('{"event":"command","func":"'+func+'","args":""}','*');}catch(err){}}
   function protect(){if(shield)shield.classList.remove('off');}
@@ -774,7 +895,7 @@ function startPreviewWithMode(id,mode){
   }
   if(shield){shield.oncontextmenu=(ev)=>{ev.preventDefault();toast('Vista previa protegida','Para recibir el video completo, solicitá la compra.');return false;};shield.onclick=(ev)=>{ev.preventDefault();ev.stopPropagation();return false;};}
   if($('previewLiveBack'))$('previewLiveBack').onclick=closeModal;
-  $('modalClose2').onclick=closeModal;let cine=$('modalCinema');if(cine&&!state.previewIsTouch){cine.style.display='inline-flex';cine.onclick=()=>{let mb=document.querySelector('#modal .modal-box');if(mb)mb.classList.toggle('cinema-pc');cine.textContent=(mb&&mb.classList.contains('cinema-pc'))?'Vista normal':'Pantalla amplia';};}$('modalBuy').onclick=()=>{closeModal();buySingle(id);};
+  if($('modalClose2'))$('modalClose2').onclick=closeModal;let cine=$('modalCinema');if(cine&&!state.previewIsTouch){cine.style.display='inline-flex';cine.onclick=()=>{let mb=document.querySelector('#modal .modal-box');if(mb)mb.classList.toggle('cinema-pc');cine.textContent=(mb&&mb.classList.contains('cinema-pc'))?'Vista normal':'Pantalla amplia';};}if($('modalBuy'))$('modalBuy').onclick=()=>{closeModal();buySingle(id);};
 }
 async function validateCodeForVideo(code,e,v){let c=String(code||'').trim().toUpperCase();if(!c)return false;let base=String(v.codigo||'').trim().toUpperCase();if(base&&c===base)return true;let orders=state.orders.length?state.orders:await fbGetOrders();return orders.some(p=>String(p.estado||'').toLowerCase()==='desbloqueado'&&String(p.clave||'').trim().toUpperCase()===c&&(p.items||[]).some(it=>String(it.eventoId||'')===String(e.id)&&String(it.videoId||'')===String(v.id)));}
 function cleanDriveId(value){
@@ -1041,7 +1162,7 @@ function orderStateLabel(p){let st=String(p.estado||'pendiente').toLowerCase();i
 function orderItemsText(p,sep){return (p.items||[]).map(function(it,i){return (i+1)+'. '+(it.titulo||('Video '+(it.videoId||'')));}).join(sep||' | ');}
 function safeFileName(s){return String(s||'TOMAUNO').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'_').replace(/^_+|_+$/g,'').toUpperCase();}
 function exportVisibleOrdersCsv(){let rows=visibleOrders();let info=reportTitle();let total=rows.reduce((a,p)=>a+Number(p.totalARS||0),0);let generado=new Date().toLocaleString('es-AR');let trs='';trs+='<tr class="title"><td colspan="8">TOMAUNO VIDEOS</td></tr>';trs+='<tr class="subtitle"><td colspan="8">Evento: '+esc(info.evento)+'</td></tr>';trs+='<tr><td colspan="2"><b>Filtro</b></td><td colspan="6">'+esc(info.filtro)+'</td></tr>';trs+='<tr><td colspan="2"><b>Generado</b></td><td colspan="6">'+esc(generado)+'</td></tr>';trs+='<tr><td colspan="2"><b>Pedidos visibles</b></td><td>'+rows.length+'</td><td colspan="2"><b>Total visible</b></td><td colspan="3">'+money(total)+'</td></tr>';trs+='<tr class="blank"><td colspan="8"></td></tr>';trs+='<tr class="head"><td>Fecha</td><td>Cliente</td><td>WhatsApp</td><td>Videos</td><td>Estado</td><td>Clave</td><td>Cant.</td><td>Total</td></tr>';rows.forEach(function(p){trs+='<tr><td>'+esc(new Date(Number(p.creado||0)).toLocaleString('es-AR'))+'</td><td>'+esc(p.clienteNombre||'')+'</td><td>'+esc(p.clienteWhatsapp||'')+'</td><td>'+esc(orderItemsText(p,' | '))+'</td><td>'+esc(orderStateLabel(p))+'</td><td>'+esc(p.clave||'')+'</td><td>'+((p.items||[]).length||0)+'</td><td>'+Number(p.totalARS||0)+'</td></tr>';});trs+='<tr class="total"><td colspan="7">TOTAL</td><td>'+Number(total||0)+'</td></tr>';let html='<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif}table{border-collapse:collapse;width:100%}td{border:1px solid #999;padding:8px;font-size:12px;vertical-align:top}.title td,.title{background:#050505;color:#fff;font-size:24px;font-weight:bold;text-align:center}.subtitle td,.subtitle{background:#e00000;color:#fff;font-size:16px;font-weight:bold;text-align:center}.head td,.head{background:#222;color:#fff;font-weight:bold;text-transform:uppercase}.blank td{border:0;height:10px}.total td,.total{background:#f2f2f2;font-weight:bold}</style></head><body><table>'+trs+'</table></body></html>';let blob=new Blob(['\ufeff'+html],{type:'application/vnd.ms-excel;charset=utf-8;'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='TOMAUNO_'+safeFileName(info.evento)+'_'+safeFileName(info.filtro)+'_'+todayKey()+'.xls';a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},1000);}
-function exportVisibleOrdersPdf(){let rows=visibleOrders();let info=reportTitle();let total=rows.reduce((a,p)=>a+Number(p.totalARS||0),0);let pendientes=rows.filter(function(p){return orderStateLabel(p)==='Pendiente';}).length;let entregados=rows.filter(function(p){return orderStateLabel(p)==='Entregado';}).length;let archivados=rows.filter(function(p){return orderStateLabel(p)==='Archivado';}).length;let body=rows.map(function(p){return '<tr><td class="date">'+esc(new Date(Number(p.creado||0)).toLocaleString('es-AR'))+'</td><td><b>'+esc(p.clienteNombre||'')+'</b><br><small>'+esc(p.clienteWhatsapp||'Sin WhatsApp')+'</small></td><td>'+esc(orderItemsText(p,' | '))+'</td><td><span class="state '+esc(orderStateLabel(p).toLowerCase())+'">'+esc(orderStateLabel(p))+'</span></td><td><b>'+esc(p.clave||'-')+'</b></td><td class="qty">'+((p.items||[]).length||0)+'</td><td class="money">'+money(p.totalARS||0)+'</td></tr>';}).join('');if(!body)body='<tr><td colspan="7" class="empty">No hay pedidos visibles para este filtro.</td></tr>';let html='<!doctype html><html><head><meta charset="utf-8"><title>Tomauno Reporte '+esc(info.filtro)+'</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{margin:0;background:#080808;color:#fff;font-family:Inter,Arial,sans-serif}.page{max-width:1180px;margin:0 auto;padding:26px}.head{position:relative;overflow:hidden;background:radial-gradient(circle at 88% 20%,rgba(224,0,0,.50),transparent 28%),linear-gradient(135deg,#050505 0%,#0b0b0b 58%,#210000 100%);border:1px solid rgba(224,0,0,.45);border-radius:24px;padding:24px 26px;margin-bottom:16px}.brand{font-size:44px;font-weight:900;letter-spacing:1.5px;line-height:1}.brand .uno{color:#ff1919}.tag{display:inline-block;margin-top:8px;background:#e00000;color:#fff;border-radius:999px;padding:7px 12px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px}.meta{margin-top:12px;color:#d6d6d6;font-size:13px;line-height:1.6}.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0 16px}.box{border:1px solid #303030;background:#141414;border-radius:16px;padding:13px}.box span{display:block;color:#999;font-size:10px;text-transform:uppercase;font-weight:900;letter-spacing:1px}.box b{display:block;font-size:25px;color:#ff1919;margin-top:3px}.report-table{width:100%;border-collapse:separate;border-spacing:0 7px}.report-table th{text-align:left;color:#ff3333;font-size:10px;text-transform:uppercase;letter-spacing:.9px;padding:7px 10px}.report-table td{background:#151515;border-top:1px solid #2d2d2d;border-bottom:1px solid #2d2d2d;padding:9px 10px;font-size:12px;vertical-align:top}.report-table td:first-child{border-left:1px solid #2d2d2d;border-radius:12px 0 0 12px}.report-table td:last-child{border-right:1px solid #2d2d2d;border-radius:0 12px 12px 0}.date{white-space:nowrap;color:#ccc}.money{white-space:nowrap;font-weight:900;color:#fff}.qty{text-align:center}.state{display:inline-block;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase}.state.pendiente{background:#3a2500;color:#ffd04d}.state.entregado,.state.desbloqueado{background:#062b16;color:#00d46a}.state.archivado{background:#2a2a2a;color:#bbb}.state.cancelado{background:#330606;color:#ff7777}.total-line{text-align:right;margin-top:14px;font-size:22px;font-weight:900}.footer{display:flex;justify-content:space-between;gap:16px;margin-top:20px;color:#aaa;font-size:12px;border-top:1px solid #242424;padding-top:12px}.printbar{position:sticky;bottom:0;background:rgba(0,0,0,.78);backdrop-filter:blur(10px);padding:12px;text-align:right}.printbar button{background:#e00000;color:#fff;border:0;border-radius:999px;padding:11px 18px;font-weight:900;cursor:pointer}.empty{text-align:center;color:#aaa;padding:40px!important}@media print{body{background:#fff;color:#111}.page{padding:0}.head{color:#fff}.box{break-inside:avoid}.report-table td{background:#fff;color:#111;border-color:#bbb}.printbar{display:none}.footer{color:#333}.state{border:1px solid #999}}</style></head><body><div class="page"><div class="head"><div class="brand"><span>TOMA</span><span class="uno">UNO</span> VIDEOS</div><div class="tag">Reporte de pedidos</div><div class="meta"><b>Evento:</b> '+esc(info.evento)+'<br><b>Filtro:</b> '+esc(info.filtro)+' · <b>Generado:</b> '+esc(info.fecha)+' · <b>Versión:</b> v65</div></div><div class="summary"><div class="box"><span>Pedidos</span><b>'+rows.length+'</b></div><div class="box"><span>Pendientes</span><b>'+pendientes+'</b></div><div class="box"><span>Entregados</span><b>'+entregados+'</b></div><div class="box"><span>Archivados</span><b>'+archivados+'</b></div><div class="box"><span>Total</span><b>'+money(total)+'</b></div></div><table class="report-table"><thead><tr><th>Fecha</th><th>Cliente</th><th>Videos</th><th>Estado</th><th>Clave</th><th>Cant.</th><th>Total</th></tr></thead><tbody>'+body+'</tbody></table><div class="total-line">Total visible: <span style="color:#ff1919">'+money(total)+'</span></div><div class="footer"><div>@tomaunomodels · WhatsApp 3764354522</div><div>Tomauno Videos · Reporte operativo</div></div><div class="printbar"><button onclick="window.print()">Imprimir / guardar PDF</button></div></div></body></html>';let w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}else toast('Pop-up bloqueado','Permití ventanas emergentes para generar el PDF.');}
+function exportVisibleOrdersPdf(){let rows=visibleOrders();let info=reportTitle();let total=rows.reduce((a,p)=>a+Number(p.totalARS||0),0);let pendientes=rows.filter(function(p){return orderStateLabel(p)==='Pendiente';}).length;let entregados=rows.filter(function(p){return orderStateLabel(p)==='Entregado';}).length;let archivados=rows.filter(function(p){return orderStateLabel(p)==='Archivado';}).length;let body=rows.map(function(p){return '<tr><td class="date">'+esc(new Date(Number(p.creado||0)).toLocaleString('es-AR'))+'</td><td><b>'+esc(p.clienteNombre||'')+'</b><br><small>'+esc(p.clienteWhatsapp||'Sin WhatsApp')+'</small></td><td>'+esc(orderItemsText(p,' | '))+'</td><td><span class="state '+esc(orderStateLabel(p).toLowerCase())+'">'+esc(orderStateLabel(p))+'</span></td><td><b>'+esc(p.clave||'-')+'</b></td><td class="qty">'+((p.items||[]).length||0)+'</td><td class="money">'+money(p.totalARS||0)+'</td></tr>';}).join('');if(!body)body='<tr><td colspan="7" class="empty">No hay pedidos visibles para este filtro.</td></tr>';let html='<!doctype html><html><head><meta charset="utf-8"><title>Tomauno Reporte '+esc(info.filtro)+'</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{margin:0;background:#080808;color:#fff;font-family:Inter,Arial,sans-serif}.page{max-width:1180px;margin:0 auto;padding:26px}.head{position:relative;overflow:hidden;background:radial-gradient(circle at 88% 20%,rgba(224,0,0,.50),transparent 28%),linear-gradient(135deg,#050505 0%,#0b0b0b 58%,#210000 100%);border:1px solid rgba(224,0,0,.45);border-radius:24px;padding:24px 26px;margin-bottom:16px}.brand{font-size:44px;font-weight:900;letter-spacing:1.5px;line-height:1}.brand .uno{color:#ff1919}.tag{display:inline-block;margin-top:8px;background:#e00000;color:#fff;border-radius:999px;padding:7px 12px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px}.meta{margin-top:12px;color:#d6d6d6;font-size:13px;line-height:1.6}.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0 16px}.box{border:1px solid #303030;background:#141414;border-radius:16px;padding:13px}.box span{display:block;color:#999;font-size:10px;text-transform:uppercase;font-weight:900;letter-spacing:1px}.box b{display:block;font-size:25px;color:#ff1919;margin-top:3px}.report-table{width:100%;border-collapse:separate;border-spacing:0 7px}.report-table th{text-align:left;color:#ff3333;font-size:10px;text-transform:uppercase;letter-spacing:.9px;padding:7px 10px}.report-table td{background:#151515;border-top:1px solid #2d2d2d;border-bottom:1px solid #2d2d2d;padding:9px 10px;font-size:12px;vertical-align:top}.report-table td:first-child{border-left:1px solid #2d2d2d;border-radius:12px 0 0 12px}.report-table td:last-child{border-right:1px solid #2d2d2d;border-radius:0 12px 12px 0}.date{white-space:nowrap;color:#ccc}.money{white-space:nowrap;font-weight:900;color:#fff}.qty{text-align:center}.state{display:inline-block;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase}.state.pendiente{background:#3a2500;color:#ffd04d}.state.entregado,.state.desbloqueado{background:#062b16;color:#00d46a}.state.archivado{background:#2a2a2a;color:#bbb}.state.cancelado{background:#330606;color:#ff7777}.total-line{text-align:right;margin-top:14px;font-size:22px;font-weight:900}.footer{display:flex;justify-content:space-between;gap:16px;margin-top:20px;color:#aaa;font-size:12px;border-top:1px solid #242424;padding-top:12px}.printbar{position:sticky;bottom:0;background:rgba(0,0,0,.78);backdrop-filter:blur(10px);padding:12px;text-align:right}.printbar button{background:#e00000;color:#fff;border:0;border-radius:999px;padding:11px 18px;font-weight:900;cursor:pointer}.empty{text-align:center;color:#aaa;padding:40px!important}@media print{body{background:#fff;color:#111}.page{padding:0}.head{color:#fff}.box{break-inside:avoid}.report-table td{background:#fff;color:#111;border-color:#bbb}.printbar{display:none}.footer{color:#333}.state{border:1px solid #999}}</style></head><body><div class="page"><div class="head"><div class="brand"><span>TOMA</span><span class="uno">UNO</span> VIDEOS</div><div class="tag">Reporte de pedidos</div><div class="meta"><b>Evento:</b> '+esc(info.evento)+'<br><b>Filtro:</b> '+esc(info.filtro)+' · <b>Generado:</b> '+esc(info.fecha)+' · <b>Versión:</b> v67</div></div><div class="summary"><div class="box"><span>Pedidos</span><b>'+rows.length+'</b></div><div class="box"><span>Pendientes</span><b>'+pendientes+'</b></div><div class="box"><span>Entregados</span><b>'+entregados+'</b></div><div class="box"><span>Archivados</span><b>'+archivados+'</b></div><div class="box"><span>Total</span><b>'+money(total)+'</b></div></div><table class="report-table"><thead><tr><th>Fecha</th><th>Cliente</th><th>Videos</th><th>Estado</th><th>Clave</th><th>Cant.</th><th>Total</th></tr></thead><tbody>'+body+'</tbody></table><div class="total-line">Total visible: <span style="color:#ff1919">'+money(total)+'</span></div><div class="footer"><div>@tomaunomodels · WhatsApp 3764354522</div><div>Tomauno Videos · Reporte operativo</div></div><div class="printbar"><button onclick="window.print()">Imprimir / guardar PDF</button></div></div></body></html>';let w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}else toast('Pop-up bloqueado','Permití ventanas emergentes para generar el PDF.');}
 
 async function deleteOrder(id){try{if(!db){await fbReady;} if(!db||!remove){toast('Sin conexión','No se pudo conectar a la base.');return;} await remove(ref(db,FB_BASE+'/pedidos/'+id));await adminOrders();updateTopStats();}catch(e){console.warn(e);toast('Error','No se pudo eliminar el pedido.');}}
 function receiptText(p){let fecha=new Date(Number(p.desbloqueado||p.creado||Date.now())).toLocaleString('es-AR');let lines=[];lines.push('🧾 *TOMAUNO - TICKET PAGADO*');lines.push('');lines.push('👤 *Cliente:* '+(p.clienteNombre||''));if(p.clienteWhatsapp)lines.push('📲 *WhatsApp:* '+p.clienteWhatsapp);lines.push('📅 *Fecha:* '+fecha);lines.push('🔓 *Clave:* '+(p.clave||'-'));lines.push('');lines.push('🎬 *Videos:*');(p.items||[]).forEach((it,i)=>lines.push((i+1)+'️⃣ '+(it.titulo||('Video '+it.videoId))+' - '+money(it.precio||0)));lines.push('');lines.push('💵 *Total:* '+money(p.totalARS||0));lines.push('');lines.push('📸 @tomaunomodels');lines.push('📲 3764354522');return lines.join('\n');}
