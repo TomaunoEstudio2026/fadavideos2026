@@ -1727,12 +1727,12 @@
         }
       ],
       "directorPreset": {
-        "brillo": 9,
-        "exposicion": 13,
-        "sombras": 47,
-        "contraste": 4,
+        "brillo": 0,
+        "exposicion": 11,
+        "sombras": 9,
+        "contraste": 7,
         "saturacion": 0,
-        "calidez": -16,
+        "calidez": 0,
         "nitidez": 0,
         "ruidoImagen": 0,
         "volumen": 100,
