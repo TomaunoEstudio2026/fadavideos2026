@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v65 ESTABLE (pantalla amplia limpia + normal title ajustado) -->
+<!-- TOMAUNO VIDEOS - VERSION v66 ESTABLE (pago con evento) -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -921,6 +921,11 @@ function orderPaymentMessage(p){
   lines.push('');
   lines.push('Te paso el detalle de tu pedido de *Tomauno Videos*:');
   lines.push('');
+  let evNames=[...new Set((p.items||[]).map(it=>it.eventoTitulo||it.evento||'').filter(Boolean))];
+  if(evNames.length){
+    lines.push('🎭 *Evento:* '+evNames.join(' / '));
+    lines.push('');
+  }
   lines.push('🎬 *Videos seleccionados:*');
   (p.items||[]).forEach((it,i)=>{
     lines.push((i+1)+'️⃣ '+(it.titulo||('Video '+it.videoId))+' - '+money(it.precio||0));
