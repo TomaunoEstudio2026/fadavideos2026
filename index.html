@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v106 - Logo URL evento limpio + preview real -->
+<!-- TOMAUNO VIDEOS - VERSION v107 - Logo carga real robusta -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1299,17 +1299,29 @@ function findVideo(id){let e=state.currentEvent;return e?(e.videos||[]).find(v=>
 function normalizeLogoUrlForDisplay(url){
   let s=String(url||'').trim();
   if(!s)return '';
+  if(/^(logo1|logo2|logo3|logo)$/i.test(s))return '';
   if(!/^https?:\/\//i.test(s))return s;
   try{
     let u=new URL(s);
+    let host=u.hostname.toLowerCase();
     if(/\.(png|jpg|jpeg|webp|gif)(\?.*)?$/i.test(u.pathname))return s;
-    if(u.hostname==='imgur.com' || u.hostname==='www.imgur.com'){
+    if(host==='drive.google.com'){
+      let id='';
+      let m=u.pathname.match(/\/file\/d\/([^/]+)/);
+      if(m)id=m[1];
+      if(!id && u.searchParams.get('id'))id=u.searchParams.get('id');
+      if(id)return 'https://drive.google.com/uc?export=view&id='+encodeURIComponent(id);
+    }
+    if(host==='imgur.com' || host==='www.imgur.com'){
       let parts=u.pathname.split('/').filter(Boolean);
-      if(parts[0]==='a'){return s;} /* álbum: necesita enlace directo para mostrarse */
+      if(parts[0]==='a'){return s;} /* álbum: no es imagen directa */
       if(parts[0])return 'https://i.imgur.com/'+parts[0]+'.png';
     }
   }catch(_e){}
   return s;
+}
+function logoImgSafeAttrs(){
+  return ' alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onload="this.classList.remove(\'logo-hidden\');this.classList.add(\'show\')" onerror="this.classList.remove(\'show\');this.classList.add(\'logo-hidden\');this.removeAttribute(\'src\')"';
 }
 function logoSlotDefaultSettings(slot){
   slot=String(slot||'1');
@@ -1352,8 +1364,8 @@ function logoOverlayHtml(ev,p,opts){
   return logos.map(item=>{
     let st=getLogoSlotSettings(eventPreset,item.slot);
     let fade=opts.fade?' preview-delayed-logo':'';
-    let cls='director-logo-overlay logo-slot-'+item.slot+' pos-'+esc(st.logoPos||'br')+' show'+fade;
-    return '<img src="'+esc(item.url)+'" class="'+cls+'" onerror="this.style.display=\'none\'" style="width:'+esc(st.logoSize||16)+'%;opacity:'+(Number(st.logoOpacity||78)/100).toFixed(2)+';--director-logo-margin:'+esc(st.logoMargin||18)+'px;--director-logo-opacity:'+(Number(st.logoOpacity||78)/100).toFixed(2)+'" alt="logo">';
+    let cls='director-logo-overlay logo-slot-'+item.slot+' pos-'+esc(st.logoPos||'br')+' logo-hidden'+fade;
+    return '<img src="'+esc(item.url)+'" class="'+cls+'" '+logoImgSafeAttrs()+' style="width:'+esc(st.logoSize||16)+'%;opacity:'+(Number(st.logoOpacity||78)/100).toFixed(2)+';--director-logo-margin:'+esc(st.logoMargin||18)+'px;--director-logo-opacity:'+(Number(st.logoOpacity||78)/100).toFixed(2)+'">';
   }).join('');
 }
 function stripLogoFieldsFromVideoPreset(p){
@@ -1732,7 +1744,7 @@ function roundRect(ctx,x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.moveTo(x+r,y);
 async function copyCanvas(c){return new Promise((resolve,reject)=>{c.toBlob(async b=>{try{await navigator.clipboard.write([new ClipboardItem({'image/png':b})]);resolve();}catch(e){reject(e);}},'image/png');});}
 async function receiptOrder(id){let orders=state.orders.length?state.orders:await fbGetOrders();let p=orders.find(x=>x.id===id);if(!p)return;let c=makeReceiptCanvas(p);let img=c.toDataURL('image/png');let html='<img class="ticket-preview" id="ticketImg" src="'+img+'"><div class="receipt-actions"><button class="btn gray" id="copyReceiptImg">Copiar imagen</button><button class="btn red" id="downloadReceiptImg">Descargar PNG</button><button class="btn gray icon" title="Imprimir" onclick="window.print()">🖨</button><button class="btn gray" id="copyReceiptText">Copiar texto</button></div>';openModal('Ticket pagado',html);$('downloadReceiptImg').onclick=()=>{let a=document.createElement('a');a.href=img;a.download='ticket-tomauno-'+slug(p.clienteNombre||'cliente')+'.png';a.click();};$('copyReceiptImg').onclick=async()=>{try{await copyCanvas(c);toast('Copiado','Imagen del ticket copiada.');}catch(e){toast('No se pudo copiar','Usá Descargar PNG y adjuntalo por WhatsApp.');}};$('copyReceiptText').onclick=()=>{let txt=receiptText(p);navigator.clipboard&&navigator.clipboard.writeText(txt);toast('Copiado','Texto del ticket copiado.');};}
 async function adminStats(){let stats=await fbGetStats();updateTopStats();let orders=await fbGetOrders();let totals=(stats&&stats.totales)||{};let today=(stats&&stats.dias&&stats.dias[todayKey()])||{};let unlocked=orders.filter(p=>p.estado==='desbloqueado');let revenue=unlocked.reduce((a,p)=>a+Number(p.totalARS||0),0);let h='<div class="admin-compact"><h3>Estadísticas</h3><div class="metric-grid"><div class="metric-card"><b>'+Number(totals.visita_web||0)+'</b><span>Visitas web</span></div><div class="metric-card"><b>'+Number(totals.play_video||0)+'</b><span>Reproducciones</span></div><div class="metric-card"><b>'+Number(totals.compra_iniciada||0)+'</b><span>Compras iniciadas</span></div><div class="metric-card"><b>'+Number(totals.descarga_video||0)+'</b><span>Descargas</span></div><div class="metric-card"><b>'+Number(today.visita_web||0)+'</b><span>Visitas hoy</span></div><div class="metric-card"><b>'+Number(today.play_video||0)+'</b><span>Plays hoy</span></div><div class="metric-card"><b>'+unlocked.length+'</b><span>Pedidos desbloqueados</span></div><div class="metric-card"><b>'+money(revenue)+'</b><span>Recaudación</span></div></div><h3>Videos más vistos</h3><div class="rank-list">';let vids=(stats&&stats.videos)||{};Object.keys(vids).map(k=>Object.assign({key:k},vids[k])).sort((a,b)=>Number(b.play_video||0)-Number(a.play_video||0)).slice(0,12).forEach((v,i)=>{h+='<div class="rank-row"><b>#'+(i+1)+'</b><div>'+esc(v.titulo||v.key)+'<br><small>'+esc(v.eventoTitulo||'')+'</small></div><strong>▶ '+Number(v.play_video||0)+'</strong></div>';});h+='</div></div>';$('tabBody').innerHTML=h;}
-function adminEvents(){let h='<h3>Eventos</h3><div class="form-grid"><div class="field"><label>Editar</label><select id="ev_id"><option value="">Nuevo</option>'+optionsEvents('')+'</select></div><div class="field"><label>Título</label><input id="ev_titulo"></div><div class="field span2"><label>Subtítulo</label><input id="ev_sub"></div><div class="field span2"><label>Imagen placa URL</label><input id="ev_img" placeholder="Opcional URL directa"></div><div class="field span2"><label>Logo evento URL principal</label><input id="ev_logo" placeholder="URL directa .png/.jpg/.webp o Drive directo"><div class="logo-event-help">Se guarda en el evento. Solo aparece si marcás <b>Mostrar logo</b>. Si queda vacío usa el logo TOMAUNO.</div></div><div class="field"><label>&nbsp;</label><label class="inline-check" style="margin-top:12px"><input type="checkbox" id="ev_show_logo"> Mostrar logo</label></div><div class="field"><label>Logo 2 URL opcional</label><input id="ev_logo2" placeholder="Preparado para futuro"></div><div class="field"><label>Logo 3 URL opcional</label><input id="ev_logo3" placeholder="Preparado para futuro"></div><div class="field"><label>Visibilidad</label><select id="ev_vis"><option value="publico">Público</option><option value="privado">Privado</option><option value="oculto">Oculto</option></select></div><div class="field"><label>Password privado</label><input id="ev_pass"></div><details class="event-description-details"><summary>➕ Texto de portada dentro del evento y placa</summary><label class="inline-check"><input type="checkbox" id="ev_show_title" checked> Mostrar título encima de la imagen/flyer en la tarjeta de evento</label><textarea id="ev_desc" placeholder="Texto opcional. Podés usar *negrita*, _cursiva_, @instagram, links web o WhatsApp. Se mostrará dentro de la página del evento."></textarea></details><div class="field span4"><button class="btn red" id="ev_save">Guardar evento</button></div></div><div class="table-wrap"><table class="table"><tr><th>#</th><th>Título</th><th>Estado</th><th>Videos</th><th>Acciones</th></tr>';state.data.eventos.forEach(e=>h+='<tr><td>'+esc(e.numero)+'</td><td>'+esc(e.titulo)+'</td><td>'+esc(e.visibilidad)+'</td><td>'+e.videos.length+'</td><td><button class="btn small gray" data-editev="'+esc(e.id)+'">Editar</button> <button class="btn small gray" data-delev="'+esc(e.id)+'">Eliminar</button></td></tr>');h+='</table></div>';$('tabBody').innerHTML=h;$('ev_id').onchange=loadEv;$('ev_save').onclick=saveEv;document.querySelectorAll('[data-editev]').forEach(b=>b.onclick=()=>{$('ev_id').value=b.getAttribute('data-editev');loadEv();});document.querySelectorAll('[data-delev]').forEach(b=>b.onclick=()=>delEv(b.getAttribute('data-delev')));}
+function adminEvents(){let h='<h3>Eventos</h3><div class="form-grid"><div class="field"><label>Editar</label><select id="ev_id"><option value="">Nuevo</option>'+optionsEvents('')+'</select></div><div class="field"><label>Título</label><input id="ev_titulo"></div><div class="field span2"><label>Subtítulo</label><input id="ev_sub"></div><div class="field span2"><label>Imagen placa URL</label><input id="ev_img" placeholder="Opcional URL directa"></div><div class="field span2"><label>Logo evento URL principal</label><input id="ev_logo" placeholder="URL directa .png/.jpg/.webp o Drive directo"><div class="logo-event-help">Se guarda en el evento. Solo aparece si marcás <b>Mostrar logo</b>. Si queda vacío, no se muestra ese logo.</div></div><div class="field"><label>&nbsp;</label><label class="inline-check" style="margin-top:12px"><input type="checkbox" id="ev_show_logo"> Mostrar logo</label></div><div class="field"><label>Logo 2 URL opcional</label><input id="ev_logo2" placeholder="Preparado para futuro"></div><div class="field"><label>Logo 3 URL opcional</label><input id="ev_logo3" placeholder="Preparado para futuro"></div><div class="field"><label>Visibilidad</label><select id="ev_vis"><option value="publico">Público</option><option value="privado">Privado</option><option value="oculto">Oculto</option></select></div><div class="field"><label>Password privado</label><input id="ev_pass"></div><details class="event-description-details"><summary>➕ Texto de portada dentro del evento y placa</summary><label class="inline-check"><input type="checkbox" id="ev_show_title" checked> Mostrar título encima de la imagen/flyer en la tarjeta de evento</label><textarea id="ev_desc" placeholder="Texto opcional. Podés usar *negrita*, _cursiva_, @instagram, links web o WhatsApp. Se mostrará dentro de la página del evento."></textarea></details><div class="field span4"><button class="btn red" id="ev_save">Guardar evento</button></div></div><div class="table-wrap"><table class="table"><tr><th>#</th><th>Título</th><th>Estado</th><th>Videos</th><th>Acciones</th></tr>';state.data.eventos.forEach(e=>h+='<tr><td>'+esc(e.numero)+'</td><td>'+esc(e.titulo)+'</td><td>'+esc(e.visibilidad)+'</td><td>'+e.videos.length+'</td><td><button class="btn small gray" data-editev="'+esc(e.id)+'">Editar</button> <button class="btn small gray" data-delev="'+esc(e.id)+'">Eliminar</button></td></tr>');h+='</table></div>';$('tabBody').innerHTML=h;$('ev_id').onchange=loadEv;$('ev_save').onclick=saveEv;document.querySelectorAll('[data-editev]').forEach(b=>b.onclick=()=>{$('ev_id').value=b.getAttribute('data-editev');loadEv();});document.querySelectorAll('[data-delev]').forEach(b=>b.onclick=()=>delEv(b.getAttribute('data-delev')));}
 function optionsEvents(sel){let h='';state.data.eventos.forEach(e=>h+='<option value="'+esc(e.id)+'" '+(e.id===sel?'selected':'')+'>#'+esc(e.numero)+' '+esc(e.titulo)+'</option>');return h;}
 function nextEvNum(){return Math.max(0,...state.data.eventos.map(e=>Number(e.numero)||0))+1;}
 function loadEv(){let e=state.data.eventos.find(x=>x.id===$('ev_id').value)||{};$('ev_titulo').value=e.titulo||'';$('ev_sub').value=e.subtitulo||'';$('ev_img').value=e.imagen||'';if($('ev_logo'))$('ev_logo').value=e.logoUrl||'';if($('ev_logo2'))$('ev_logo2').value=e.logoUrl2||'';if($('ev_logo3'))$('ev_logo3').value=e.logoUrl3||'';if($('ev_show_logo'))$('ev_show_logo').checked=!!e.mostrarLogo;$('ev_vis').value=e.visibilidad||'publico';$('ev_pass').value=e.password||'';if($('ev_desc')){$('ev_desc').value=e.descripcionPortada||'';}if($('ev_show_title')){$('ev_show_title').checked=e.mostrarTituloFlyer!==false;}}
@@ -1897,10 +1909,21 @@ function loadDirectorLogoSlotControls(slot){
 }
 function bindDirector(ev){$('dir_mode_full').onclick=()=>{state.directorMode='full';renderAdmin();};$('dir_mode_dock').onclick=()=>{state.directorMode='dock';renderAdmin();};$('dir_event').onchange=()=>{state.directorScope='event';state.directorEventId=$('dir_event').value;state.directorSample='';state.directorVideoId='';adminDirector();};let dse=$('dir_scope_event');if(dse)dse.onclick=()=>{state.directorScope='event';adminDirector();};let dsv=$('dir_scope_video');if(dsv)dsv.onclick=()=>{state.directorScope='video';let sel=$('dir_video_select');if(sel&&sel.value)state.directorVideoId=sel.value;adminDirector();};let due=$('dir_use_event');if(due)due.onclick=()=>{let evNow=(state.data.eventos||[]).find(e=>e.id===state.directorEventId)||ev;let v=directorVideoById(evNow,state.directorVideoId);if(v)delete v.directorPreset;try{localStorage.removeItem('tomauno_director_video_'+evNow.id+'_'+String(state.directorVideoId||''));}catch(_e){}state.directorScope='event';applyDirectorPresetToView();renderVideos();toast('Ajuste individual quitado','Este video vuelve a usar el ajuste del evento.');adminDirector();};let vsel=$('dir_video_select');if(vsel){vsel.onchange=()=>{state.directorVideoId=vsel.value;let evNow=(state.data.eventos||[]).find(e=>e.id===state.directorEventId)||ev;let vv=(evNow.videos||[]).find(v=>String(v.id)===String(vsel.value));state.directorSample=cleanYouTube(vv&&vv.youtubeId||'');let inp=$('dir_sample');if(inp)inp.value=state.directorSample;let fr=$('dir_frame');if(fr&&state.directorSample)fr.src='https://www.youtube.com/embed/'+encodeURIComponent(state.directorSample)+'?rel=0&modestbranding=1&vq=hd1080';updateDirectorPreview();};}$('dir_sample').onchange=()=>{state.directorSample=cleanYouTube($('dir_sample').value);let evNow=(state.data.eventos||[]).find(e=>e.id===state.directorEventId)||ev;let match=(evNow.videos||[]).find(v=>cleanYouTube(v.youtubeId||'')===state.directorSample);if(match){state.directorVideoId=String(match.id);let sel=$('dir_video_select');if(sel)sel.value=String(match.id);}let fr=$('dir_frame');if(fr&&state.directorSample)fr.src='https://www.youtube.com/embed/'+encodeURIComponent(state.directorSample)+'?rel=0&modestbranding=1&vq=hd1080';updateDirectorPreview();};['brillo','exposicion','sombras','contraste','saturacion','calidez','nitidez','ruidoImagen','volumen','graves','agudos','ruidoAudio','zoom','posX','posY','logoSize','logoOpacity','logoMargin','histZoom','histPosX','histPosY'].forEach(id=>{let el=$('dir_'+id);if(el){el.oninput=()=>updateDirectorPreview();el.ondblclick=()=>directorResetRange(id);}});['dir_rotacion','dir_normalizarLuz','dir_normalizarAudio','dir_logoDurante','dir_logoFinal','dir_outDir','dir_logoPos','dir_historia','dir_histInicio','dir_histFin'].forEach(id=>{let el=$(id);if(el)el.onchange=()=>updateDirectorPreview();});['dir_logoSlot1','dir_logoSlot2','dir_logoSlot3'].forEach(id=>{let el=$(id);if(el)el.onchange=()=>{loadDirectorLogoSlotControls(el.value);updateDirectorPreview();};});let lf=$('dir_logoFile');if(lf){lf.onchange=()=>{let file=lf.files&&lf.files[0];if(!file)return;state.directorLogoName=file.name;let url=URL.createObjectURL(file);state.directorLogoUrl=url;let img=$('dir_logo_preview'),ov=$('dir_logo_overlay');if(img){img.src=url;img.classList.add('show');}if(ov){ov.src=url;ov.classList.add('show');}let chk=$('dir_logoDurante');if(chk)chk.checked=true;updateDirectorPreview();};}$('dir_big').onclick=()=>openDirectorFullscreen();$('dir_natural').onclick=()=>setDirectorPreset({brillo:4,exposicion:0,sombras:4,contraste:8,saturacion:8,calidez:0,nitidez:10,ruidoImagen:0,volumen:115,graves:0,agudos:1,ruidoAudio:0,normalizarAudio:true});$('dir_oscuro').onclick=()=>setDirectorPreset({brillo:10,exposicion:24,sombras:28,contraste:16,saturacion:22,calidez:28,nitidez:14,ruidoImagen:8,volumen:135,graves:1,agudos:2,ruidoAudio:15,normalizarAudio:true});$('dir_color').onclick=()=>setDirectorPreset({brillo:8,exposicion:18,sombras:14,contraste:24,saturacion:42,calidez:30,nitidez:16,ruidoImagen:4,volumen:125,graves:1,agudos:3,ruidoAudio:8,normalizarAudio:true});$('dir_reset').onclick=()=>setDirectorPreset(directorDefaultPreset());[1,2,3].forEach(n=>setupDirectorMemoryButton(n));refreshDirectorMemoryButtons();$('dir_save').onclick=()=>saveDirectorPreset(ev);$('dir_copycmd').onclick=async()=>{let cmd=$('dir_cmd').value;if(navigator.clipboard){await navigator.clipboard.writeText(cmd);toast('Copiado','Comando FFmpeg copiado.');}else toast('Comando listo','Copialo desde el cuadro.');};}
 function setDirectorPreset(p){Object.keys(p).forEach(k=>{if(k==='logoSlot'){let r=$('dir_logoSlot'+p[k]);if(r)r.checked=true;return;}let el=$('dir_'+k);if(!el)return;if(el.type==='checkbox')el.checked=!!p[k];else el.value=p[k];});updateDirectorPreview();}
-function hideBrokenLogo(img){try{if(img){img.classList.remove('show');img.classList.add('logo-hidden');img.removeAttribute('src');}}catch(_e){}}
+function hideBrokenLogo(img){try{if(img){img.classList.remove('show');img.classList.add('logo-hidden');img.removeAttribute('src');img.alt='';}}catch(_e){}}
+function prepareLogoImg(img,url){
+  if(!img)return;
+  hideBrokenLogo(img);
+  if(!url)return;
+  img.alt='';
+  img.loading='lazy';
+  img.decoding='async';
+  img.referrerPolicy='no-referrer';
+  img.onload=function(){this.classList.remove('logo-hidden');this.classList.add('show');};
+  img.onerror=function(){hideBrokenLogo(this);};
+  img.src=url;
+}
 function syncDirectorGridLogos(p,ev){
   // La grilla por ahora no muestra logos para no cargar visualmente las tarjetas.
-  // Esta función queda definida para evitar cortes JS cuando Director actualiza en vivo.
   return;
 }
 function updateDirectorLogoOverlay(p){
@@ -1911,20 +1934,16 @@ function updateDirectorLogoOverlay(p){
     let ov=$('dir_logo_overlay_'+slot);if(!ov)return;
     let url=getEventLogoUrlSlot(ev,slot);
     let st=getLogoSlotSettings(p,slot);
-    if(url){
-      ov.onerror=function(){hideBrokenLogo(ov);};
-      ov.src=url;
-      ov.className='director-logo-overlay logo-slot-'+slot+' pos-'+String(st.logoPos||'br')+' show';
-      ov.style.width=String(st.logoSize||16)+'%';
-      ov.style.opacity=String((Number(st.logoOpacity||78)/100).toFixed(2));
-      ov.style.setProperty('--director-logo-margin',String(Number(st.logoMargin||18))+'px');
-      ov.style.setProperty('--director-logo-opacity',String((Number(st.logoOpacity||78)/100).toFixed(2)));
-      ov.style.outline=(slot===activeSlot)?'1px solid rgba(255,255,255,.45)':'none';
-    }else{hideBrokenLogo(ov);}
+    ov.className='director-logo-overlay logo-slot-'+slot+' pos-'+String(st.logoPos||'br')+' logo-hidden';
+    ov.style.width=String(st.logoSize||16)+'%';
+    ov.style.opacity=String((Number(st.logoOpacity||78)/100).toFixed(2));
+    ov.style.setProperty('--director-logo-margin',String(Number(st.logoMargin||18))+'px');
+    ov.style.setProperty('--director-logo-opacity',String((Number(st.logoOpacity||78)/100).toFixed(2)));
+    ov.style.outline=(slot===activeSlot)?'1px solid rgba(255,255,255,.45)':'none';
+    prepareLogoImg(ov,url);
   });
   let prev=$('dir_logo_preview');let activeUrl=getEventLogoUrlSlot(ev,activeSlot);
-  if(prev&&activeUrl){prev.onerror=function(){hideBrokenLogo(prev);};prev.src=activeUrl;prev.classList.add('show');prev.classList.remove('logo-hidden');}
-  else if(prev){prev.classList.remove('show');prev.classList.add('logo-hidden');prev.removeAttribute('src');}
+  if(prev){prepareLogoImg(prev,activeUrl);if(activeUrl)prev.classList.add('director-logo-preview');}
 }
 
 function directorFullscreenSrc(yt,start){
