@@ -2015,8 +2015,8 @@
       "titulo": "🌿 Selvática Fashion Show 🌿",
       "subtitulo": "Alfombra Roja | Selectiva | Desfile | Gala Show y Pink Party! 🎉",
       "imagen": "https://i.imgur.com/8Tq7QzT.png",
-      "visibilidad": "publico",
-      "password": "",
+      "visibilidad": "privado",
+      "password": "3233",
       "directorPreset": {
         "brillo": 0,
         "exposicion": 19,
