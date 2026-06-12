@@ -1849,6 +1849,20 @@
           "previewSegundos": 20,
           "precio": 15000,
           "driveId": "https://drive.google.com/file/d/1H5tYVLusHW_v6Pyn69vR1NPdXB49OIS-/view?usp=drive_link"
+        },
+        {
+          "id": "8",
+          "descargas": 0,
+          "plays": 0,
+          "codigo": "6084",
+          "titulo": "Maira - Resistencia Chaco",
+          "subtitulo": "Selvática Fashion Show",
+          "bailarina": "Selvática Fashion Show",
+          "youtubeId": "xb12kJKLcuU",
+          "previewInicio": 120,
+          "previewSegundos": 20,
+          "precio": 15000,
+          "driveId": "https://drive.google.com/file/d/10VKWlhtRv1o98y4-i_iMuJCHr1cDERqD/view?usp=drive_link"
         }
       ],
       "titulo": "🌿 Selvática Fashion Show 🌿",
