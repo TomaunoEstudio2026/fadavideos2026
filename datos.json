@@ -1807,6 +1807,20 @@
           "previewSegundos": 20,
           "precio": 15000,
           "driveId": "https://drive.google.com/file/d/1fDjcJoNqTeK8SDlcEBhfIJj-rm13bjwN/view?usp=drive_link"
+        },
+        {
+          "id": "5",
+          "descargas": 0,
+          "plays": 0,
+          "codigo": "6167",
+          "titulo": "Miss Fada Rosario",
+          "subtitulo": "",
+          "bailarina": "",
+          "youtubeId": "zBpLUPYUE-c",
+          "previewInicio": 120,
+          "previewSegundos": 20,
+          "precio": 15000,
+          "driveId": "https://drive.google.com/file/d/1djxfC4WqRTazMdvYA2SlMTkYgrl82Kpf/view?usp=drive_link"
         }
       ],
       "titulo": "🌿 Selvática Fashion Show 🌿",
