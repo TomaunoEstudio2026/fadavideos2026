@@ -1765,7 +1765,22 @@
     {
       "id": "ev_1781236406488",
       "numero": 2,
-      "videos": [],
+      "videos": [
+        {
+          "id": "1",
+          "descargas": 0,
+          "plays": 0,
+          "codigo": "9086",
+          "titulo": "Bailarina Luana Aldavel",
+          "subtitulo": "Ciudad de Corrientes Capital",
+          "bailarina": "Ciudad de Corrientes Capital",
+          "youtubeId": "r-BEsyp3LGM",
+          "previewInicio": 120,
+          "previewSegundos": 20,
+          "precio": 15000,
+          "driveId": "https://drive.google.com/file/d/1Kedq3lpA-cnQSCYhBHXlAkghcRu2VOPE/view?usp=sharing"
+        }
+      ],
       "titulo": "🌿 Selvática Fashion Show 🌿",
       "subtitulo": "Alfombra Roja | Selectiva | Desfile | Gala Show y Pink Party! 🎉",
       "imagen": "https://i.imgur.com/8Tq7QzT.png",
