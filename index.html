@@ -974,6 +974,19 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .event-description-details input[type="checkbox"]{width:auto!important;accent-color:#e00000}
 @media(max-width:700px){.event-intro-card{font-size:13px!important;line-height:1.58!important;margin:4px 0 14px!important;}}
 
+
+/* ===== v93 cierre visual: títulos blancos, texto más compacto y subir suave ===== */
+.section-head h2{color:#fff!important;}
+.event-card .body h3{color:#fff!important;}
+.event-img b{color:#fff!important;}
+.event-intro-card{font-size:13.5px!important;line-height:1.62!important;max-width:960px!important;margin:4px 0 16px!important;color:#d0d0d0!important;}
+.event-intro-card a{color:#e24646!important;font-weight:500!important;}
+.event-intro-card .ig-link{color:#bb6666!important;font-weight:500!important;}
+.back-top-btn{position:fixed;right:24px;bottom:98px;z-index:34;width:44px;height:44px;border-radius:50%;display:none;place-items:center;padding:0!important;font-size:19px!important;background:rgba(18,18,18,.88)!important;border:1px solid rgba(255,255,255,.16)!important;color:#fff!important;box-shadow:0 14px 38px rgba(0,0,0,.55),0 0 22px rgba(224,0,0,.14)!important;backdrop-filter:blur(10px);}
+.back-top-btn.show{display:grid;}
+.back-top-btn:hover{border-color:rgba(255,0,0,.45)!important;box-shadow:0 18px 45px rgba(0,0,0,.65),0 0 30px rgba(224,0,0,.22)!important;}
+@media(max-width:700px){.event-intro-card{font-size:12.5px!important;line-height:1.52!important}.back-top-btn{display:none!important}}
+
 </style>
 </head>
 <body>
@@ -988,6 +1001,7 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 </main>
 <div class="cartbar" id="cartBar"><b id="cartText">0 seleccionados</b><button class="btn red small" id="cartBuy">Comprar selección</button><button class="btn gray small" id="cartClear">Limpiar</button></div>
 <button class="chat" id="chatBtn" title="Consultar">💬</button>
+<button class="back-top-btn" id="backTopBtn" title="Subir">↑</button>
 <footer>© <a href="https://wa.me/5493764354522" target="_blank">Javier Móttola</a> · <a href="https://instagram.com/tomaunomodels" target="_blank">@tomaunomodels</a> <button class="family-link" id="familyPrivacyBtn" type="button">👨‍👩‍👧 Familias y privacidad</button></footer>
 <div class="modal" id="modal"><div class="modal-box"><div class="modal-head"><h2 id="modalTitle">Tomauno</h2><button class="btn gray small close-x" id="modalClose" title="Cerrar"></button></div><div class="modal-content" id="modalContent"></div></div></div>
 <div class="modal" id="chatModal"><div class="modal-box" style="width:min(470px,96vw);padding:0"><div class="modal-head"><h2>Consultas</h2><div><button class="btn gray small" id="chatOpen">Abrir aparte</button> <button class="btn gray small" id="chatClose">×</button></div></div><iframe class="chat-frame" id="chatFrame" src="about:blank"></iframe></div></div>
@@ -1609,6 +1623,30 @@ async function saveDirectorPreset(ev){let p=readDirectorPreset();let ok=false;if
 function cleanYouTube(input){let s=String(input||'').trim();if(!s)return '';try{if(s.indexOf('http')===0){let u=new URL(s);if(u.hostname.indexOf('youtu.be')>-1)return (u.pathname.split('/')[1]||'').split('?')[0];if(u.searchParams.get('v'))return u.searchParams.get('v');let m=u.pathname.match(/\/(embed|shorts)\/([^/?#]+)/);if(m)return m[2];}}catch(e){}let mm=s.match(/([A-Za-z0-9_-]{11})/);return mm?mm[1]:s;}
 function formatTime(sec){sec=Number(sec||0);let m=Math.floor(sec/60),s=sec%60;return m+':'+(s<10?'0':'')+s;}
 $('btnEvents').onclick=renderEvents;$('btnVideos').onclick=renderVideos;$('modalClose').onclick=closeModal;$('modal').onclick=e=>{if(e.target===$('modal'))closeModal();};$('adminTrigger').ondblclick=askAdmin; $('adminTrigger').addEventListener('click',function(e){ if(e.altKey||e.ctrlKey){askAdmin();return;} window.scrollTo({top:0,behavior:'smooth'}); }); $('adminTrigger').setAttribute('title','Clic: volver arriba · Doble clic: admin · Ctrl+clic: admin');$('adminClose').onclick=()=>{$('adminModal').style.display='none';};$('chatBtn').onclick=()=>{$('chatFrame').src=CHAT_URL;$('chatModal').style.display='flex';};$('chatClose').onclick=()=>{$('chatModal').style.display='none';$('chatFrame').src='about:blank';};$('chatOpen').onclick=()=>window.open(CHAT_URL,'_blank');let fp=$('familyPrivacyBtn');if(fp)fp.onclick=openFamilyPrivacy;$('cartBuy').onclick=buyCart;$('cartClear').onclick=()=>{state.cart={};renderVideos();};document.addEventListener('contextmenu',e=>{if(e.target&&e.target.closest&&e.target.closest('.admin-modal,.modal:not(.video-preview)'))return; e.preventDefault();e.stopPropagation();if(!state._lastCtx||Date.now()-state._lastCtx>1500){state._lastCtx=Date.now();toast('Contenido protegido','La vista previa no permite copiar enlaces desde la web.');}return false;},{capture:true});document.addEventListener('dragstart',e=>{if(e.target&&e.target.closest&&e.target.closest('[data-rowv]'))return;e.preventDefault();},{capture:true});window.addEventListener('hashchange',afterLoad);
+
+function tomaunoScrollTopSmooth(){
+  let start=window.scrollY||document.documentElement.scrollTop||0;
+  let duration=Math.min(1100,Math.max(520,start*0.34));
+  let t0=null;
+  function easeOutCubic(t){return 1-Math.pow(1-t,3);}
+  function step(ts){
+    if(!t0)t0=ts;
+    let p=Math.min(1,(ts-t0)/duration);
+    window.scrollTo(0,Math.round(start*(1-easeOutCubic(p))));
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+function updateBackTopBtn(){
+  let b=$('backTopBtn');
+  if(!b)return;
+  b.classList.toggle('show',(window.scrollY||document.documentElement.scrollTop||0)>520);
+}
+let backTopEl=$('backTopBtn');
+if(backTopEl)backTopEl.onclick=tomaunoScrollTopSmooth;
+window.addEventListener('scroll',updateBackTopBtn,{passive:true});
+updateBackTopBtn();
+
 (async()=>{await fbReady; await fbGetConfig(); await ghLoad(); await Promise.all([fbGetOrders(),fbGetStats(),fbGetReactions()]); fbListenReactions(); updateTopStats();})();
 </script>
 </body></html>
