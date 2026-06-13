@@ -1758,7 +1758,7 @@
         "posY": 0,
         "logoSize": 8,
         "logoOpacity": 100,
-        "logoMargin": 10,
+        "logoMargin": 11,
         "histZoom": 0,
         "histPosX": 0,
         "histPosY": 0,
@@ -1767,7 +1767,7 @@
         "normalizarAudio": false,
         "logoDurante": true,
         "logoFinal": false,
-        "logoPos": "tr",
+        "logoPos": "br",
         "logoPath": "logo_tomauno.png",
         "historia": false,
         "histInicio": "00:00",
@@ -1777,10 +1777,10 @@
         "logoIndex": 1,
         "logos": {
           "1": {
-            "logoPos": "tr",
+            "logoPos": "br",
             "logoSize": 8,
             "logoOpacity": 100,
-            "logoMargin": 10
+            "logoMargin": 11
           },
           "2": {
             "logoPos": "bl",
