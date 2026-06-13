@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v108 - Logo URL robusto -->
+<!-- TOMAUNO VIDEOS - VERSION v109 - Logo URL robusto -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1030,7 +1030,7 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 
 
 /* ===== v97 fixes: versión, botones compactos, Director global/individual ===== */
-:root{--tomauno-version:'v108';}
+:root{--tomauno-version:'v106';}
 .admin-video-inline{display:grid!important;grid-template-columns:minmax(0,1fr) 40px!important;gap:7px!important;align-items:center!important;width:100%!important}
 .admin-video-inline input{width:100%!important;min-width:0!important;max-width:100%!important}
 .admin-video-inline .apply-all-mini{width:38px!important;height:38px!important;min-width:38px!important;padding:0!important;border-radius:50%!important;display:grid!important;place-items:center!important;font-size:14px!important;line-height:1!important;margin:0!important}
@@ -1110,7 +1110,7 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 </style>
 </head>
 <body>
-<div class="bggrid"></div><div class="version-mini">v108</div>
+<div class="bggrid"></div><div class="version-mini">v106</div>
 <header>
   <div class="brand" id="adminTrigger"><img id="logoImg" alt="Tomauno"><div class="wordmark"><strong>TOMA<span>UNO</span></strong><small>VIDEOS</small></div></div>
   <div class="nav"><button class="pill" id="btnEvents">Eventos</button><button class="pill" id="btnVideos">Videos</button><span class="status"><i class="dot" id="statusDot"></i><span id="statusText">Conectando</span></span></div>
@@ -1320,36 +1320,8 @@ function normalizeLogoUrlForDisplay(url){
   }catch(_e){}
   return s;
 }
-function logoCandidateUrls(url){
-  let s=normalizeLogoUrlForDisplay(url);
-  if(!s)return [];
-  let out=[s];
-  try{
-    let u=new URL(s);
-    let host=u.hostname.toLowerCase();
-    if(host==='i.imgur.com'){
-      let id=(u.pathname.split('/').filter(Boolean)[0]||'').replace(/\.(png|jpg|jpeg|webp|gif)$/i,'');
-      if(id){['png','jpg','jpeg','webp'].forEach(ext=>out.push('https://i.imgur.com/'+id+'.'+ext));}
-    }
-  }catch(_e){}
-  return Array.from(new Set(out.filter(Boolean)));
-}
-function tomaunoLogoFallback(img){
-  try{
-    let list=[];
-    try{list=JSON.parse(decodeURIComponent(img.getAttribute('data-logo-candidates')||'[]'));}catch(_e){list=[];}
-    let idx=Number(img.getAttribute('data-logo-index')||0)+1;
-    if(idx<list.length){img.setAttribute('data-logo-index',String(idx));img.src=list[idx];return;}
-    hideBrokenLogo(img);
-  }catch(_e){hideBrokenLogo(img);}
-}
-function logoImgAttrsForUrl(url){
-  let list=logoCandidateUrls(url);
-  if(!list.length)return ' alt="" class="logo-hidden"';
-  return ' alt="" loading="lazy" decoding="async" data-logo-index="0" data-logo-candidates="'+encodeURIComponent(JSON.stringify(list)).replace(/\"/g,'&quot;')+'" onload="this.classList.remove(\'logo-hidden\');this.classList.add(\'show\')" onerror="tomaunoLogoFallback(this)" src="'+esc(list[0])+'"';
-}
 function logoImgSafeAttrs(){
-  return ' alt="" loading="lazy" decoding="async" onload="this.classList.remove(\'logo-hidden\');this.classList.add(\'show\')" onerror="tomaunoLogoFallback(this)"';
+  return ' alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onload="this.classList.remove(\'logo-hidden\');this.classList.add(\'show\')" onerror="this.classList.remove(\'show\');this.classList.add(\'logo-hidden\');this.removeAttribute(\'src\')"';
 }
 function logoSlotDefaultSettings(slot){
   slot=String(slot||'1');
@@ -1996,7 +1968,7 @@ function cleanYouTube(input){let s=String(input||'').trim();if(!s)return '';try{
 function formatTime(sec){sec=Number(sec||0);let m=Math.floor(sec/60),s=sec%60;return m+':'+(s<10?'0':'')+s;}
 $('btnEvents').onclick=renderEvents;$('btnVideos').onclick=renderVideos;$('modalClose').onclick=closeModal;$('modal').onclick=e=>{if(e.target===$('modal'))closeModal();};$('adminTrigger').ondblclick=askAdmin; $('adminTrigger').addEventListener('click',function(e){ if(e.altKey||e.ctrlKey){askAdmin();return;} window.scrollTo({top:0,behavior:'smooth'}); }); $('adminTrigger').setAttribute('title','Clic: volver arriba · Doble clic: admin · Ctrl+clic: admin');$('adminClose').onclick=()=>{$('adminModal').style.display='none';if(state.currentEvent){try{renderVideos();}catch(_e){}}};$('chatBtn').onclick=()=>{$('chatFrame').src=CHAT_URL;$('chatModal').style.display='flex';};$('chatClose').onclick=()=>{$('chatModal').style.display='none';$('chatFrame').src='about:blank';};$('chatOpen').onclick=()=>window.open(CHAT_URL,'_blank');let fp=$('familyPrivacyBtn');if(fp)fp.onclick=openFamilyPrivacy;$('cartBuy').onclick=buyCart;$('cartClear').onclick=()=>{state.cart={};renderVideos();};document.addEventListener('contextmenu',e=>{if(e.target&&e.target.closest&&e.target.closest('.admin-modal,.modal:not(.video-preview)'))return; e.preventDefault();e.stopPropagation();if(!state._lastCtx||Date.now()-state._lastCtx>1500){state._lastCtx=Date.now();toast('Contenido protegido','La vista previa no permite copiar enlaces desde la web.');}return false;},{capture:true});document.addEventListener('dragstart',e=>{if(e.target&&e.target.closest&&e.target.closest('[data-rowv]'))return;e.preventDefault();},{capture:true});window.addEventListener('hashchange',afterLoad);
 document.addEventListener('keydown',function(e){
-  if((e.ctrlKey||e.metaKey)&&String(e.key).toLowerCase()==='d'){
+  if((e.ctrlKey||e.metaKey)&&String(e.key).toLowerCase()==='m'){
     e.preventDefault();
     if(sessionStorage.getItem(SS_ADMIN)!=='1'){toast('Solo administrador','Ingresá como ADM para abrir Director.');return;}
     let id=state.currentPreviewVideoId||'';
@@ -2039,7 +2011,7 @@ updateBackTopBtn();
 function confirmDeleteVideoFromGrid(id){
   try{ delVid(String(id)); }catch(e){ console.warn('confirmDeleteVideoFromGrid',e); toast('Error','No se pudo abrir la confirmación para eliminar.'); }
 }
-(async()=>{await fbReady; await fbGetConfig(); await console.log("TOMAUNO VIDEOS v108");
+(async()=>{await fbReady; await fbGetConfig(); await console.log("TOMAUNO VIDEOS v106");
 ghLoad(); await Promise.all([fbGetOrders(),fbGetStats(),fbGetReactions()]); fbListenReactions(); updateTopStats();})();
 </script>
 </body></html>
