@@ -1846,9 +1846,9 @@
         "fuenteTipo": "youtube"
       },
       "logoUrl1": "https://i.imgur.com/A885uwa.png",
-      "logoUrl2": "",
+      "logoUrl2": "https://imgur.com/K66kOhO",
       "logoUrl3": "",
-      "mostrarLogo": false,
+      "mostrarLogo": true,
       "descripcionPortada": "",
       "mostrarTituloFlyer": true
     },
