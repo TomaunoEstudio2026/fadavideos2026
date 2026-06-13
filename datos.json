@@ -1844,7 +1844,13 @@
         "histFin": "00:15",
         "outDir": "C:\\TOMAUNO\\ENTREGAS",
         "fuenteTipo": "youtube"
-      }
+      },
+      "logoUrl1": "https://i.imgur.com/A885uwa.png",
+      "logoUrl2": "",
+      "logoUrl3": "",
+      "mostrarLogo": false,
+      "descripcionPortada": "",
+      "mostrarTituloFlyer": true
     },
     {
       "id": "ev_1781236406488",
