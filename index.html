@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v115 AJUSTES DIRECTOR - base v110 rollback estable -->
+<!-- TOMAUNO VIDEOS - VERSION v116 AJUSTES DIRECTOR - base v110 rollback estable -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1062,7 +1062,7 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .video-card .thumb{overflow:hidden;}
 
 
-/* ===== v115 limpieza Director sobre rollback estable ===== */
+/* ===== v116 limpieza Director sobre rollback estable ===== */
 /* Quita marca ficticia Tomauno del reproductor; quedan solo logos reales/temporales si se configuran */
 .iframe-brand-block,.iframe-brand-block:before,.iframe-brand-block:after{display:none!important;content:none!important;}
 /* Oculta la mini imagen vieja bajo Examinar para evitar confusión; el overlay del video sigue funcionando */
@@ -1073,12 +1073,17 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .director-fullscreen-seek input[type=range]{flex:1;accent-color:#e30000}
 .director-fullscreen-seek input[type=number]{width:82px;background:#111;color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:8px}
 
-/* ===== v115 logos por URL estables ===== */
+/* ===== v116 logos por URL estables ===== */
 .director-logo-overlay.pos-bc{left:50%;bottom:var(--director-logo-margin,18px);transform:translateX(-50%)}
 .director-logo-source{border:1px solid rgba(255,255,255,.10);background:#0d0d0d;border-radius:12px;padding:10px;margin-bottom:10px;font-size:12px;color:#ddd;line-height:1.35}
 .director-logo-source b{color:#fff}.director-logo-source code{font-size:11px;color:#ffb3b3;word-break:break-all}.director-logo-source .empty-logo{color:#aaa}
 .director-logo-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 10px}
 .director-logo-picker button.active{border-color:#ff2020!important;background:rgba(255,32,32,.18)!important;color:#fff!important}
+
+/* v116 logo preview/director cleanup */
+.director-logo-overlay{z-index:20!important;max-width:45%;max-height:35%;}
+.director-logo-picker .btn.active{background:linear-gradient(135deg,#e00000,#ff2020)!important;border-color:#ff4545!important;color:#fff!important;}
+.director-logo-source{font-size:12px;color:#ddd;margin:6px 0 8px;}
 </style>
 </head>
 <body>
@@ -1785,10 +1790,144 @@ function directorEnsureLogos(p){p=p||{};p.logos=p.logos||{};for(let i=1;i<=3;i++
 function directorLogoCfg(p,idx){p=directorEnsureLogos(p||{});idx=Number(idx||p.logoIndex||1);let cfg=Object.assign({},p.logos[idx]||{});cfg.logoPos=cfg.logoPos||p.logoPos||'br';cfg.logoSize=Number(cfg.logoSize||p.logoSize||16);cfg.logoOpacity=Number(cfg.logoOpacity||p.logoOpacity||78);cfg.logoMargin=Number(cfg.logoMargin||p.logoMargin||18);return cfg;}
 function directorApplyLogoCfgToControls(p,idx){let cfg=directorLogoCfg(p,idx);if($('dir_logoSize'))$('dir_logoSize').value=cfg.logoSize;if($('dir_logoOpacity'))$('dir_logoOpacity').value=cfg.logoOpacity;if($('dir_logoMargin'))$('dir_logoMargin').value=cfg.logoMargin;if($('dir_logoPos'))$('dir_logoPos').value=cfg.logoPos;}
 function directorBuildLogoOverlays(ev,p){p=directorEnsureLogos(p||{});if(!eventLogosEnabled(ev)||!p.logoDurante)return '';let h='';for(let i=1;i<=3;i++){let url=eventLogoUrl(ev,i);if(!url)continue;let cfg=directorLogoCfg(p,i);h+='<img src="'+esc(url)+'" class="director-logo-overlay pos-'+esc(cfg.logoPos||'br')+' show" style="width:'+esc(cfg.logoSize||16)+'%;opacity:'+(Number(cfg.logoOpacity||78)/100).toFixed(2)+'" onerror="this.style.display=\'none\'">';}return h;}
-function directorLogoSourceText(ev,p){let box=$('dir_logo_source');if(!box)return;let idx=Number((p&&p.logoIndex)||1);let url=eventLogoUrl(ev,idx);if(!eventLogosEnabled(ev)){box.innerHTML='Logos: <span class="empty-logo">desactivados en el evento</span>';return;}if(!url){box.innerHTML='Logo '+idx+': <span class="empty-logo">sin URL cargada</span>';return;}box.innerHTML='Logo '+idx+' activo: <code>'+esc(url)+'</code>';}
-function directorLogoSwitch(idx){let p=readDirectorPreset();p.logoIndex=Number(idx||1);state.directorDraftPreset=p;directorApplyLogoCfgToControls(p,p.logoIndex);updateDirectorPreview();}
+function directorLogoSourceText(ev,p){
+  let box=$('dir_logo_source'); if(!box)return;
+  let idx=Number((p&&p.logoIndex)||1);
+  if(!eventLogosEnabled(ev)){box.innerHTML='<span class="empty-logo">Logos desactivados en este evento.</span>';return;}
+  let url=eventLogoUrl(ev,idx);
+  if(!url){box.innerHTML='Logo '+idx+': <span class="empty-logo">sin URL cargada</span>';return;}
+  box.innerHTML='Editando <b>Logo '+idx+'</b>';
+}
+function directorLogoSwitch(idx){
+  let p=readDirectorPreset();
+  p.logoIndex=Number(idx||1);
+  let hidden=$('dir_logoIndex'); if(hidden)hidden.value=String(p.logoIndex);
+  state.directorDraftPreset=p;
+  directorApplyLogoCfgToControls(p,p.logoIndex);
+  updateDirectorPreview();
+}
 
-function adminDirector(){let events=state.data.eventos||[];let ev=events.find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||events[0];if(!ev){$('tabBody').innerHTML='<div class="empty">No hay eventos.</div>';return;}state.directorEventId=ev.id;if(!state.directorScope)state.directorScope='event';let p=directorActivePreset(ev);state.directorDraftPreset=JSON.parse(JSON.stringify(p||directorDefaultPreset()));let vids=(ev.videos||[]).filter(v=>v.youtubeId);let sample=vids.find(v=>String(v.id)===String(state.directorVideoId))||vids[0]||{};let yt=cleanYouTube(state.directorSample||sample.youtubeId||'');let opts=events.map(e=>'<option value="'+esc(e.id)+'" '+(e.id===ev.id?'selected':'')+'>'+esc((e.numero?'#'+e.numero+' ':'')+e.titulo)+'</option>').join('');let vopts=vids.map(v=>'<option value="'+esc(v.id)+'" '+(String(v.id)===String(sample.id)?'selected':'')+'>'+esc((v.id?('#'+v.id+' - '):'')+(v.titulo||'Sin título')+(v.subtitulo?(' · '+v.subtitulo):''))+'</option>').join('');let html='<div class="director-mode-switch"><button class="btn small '+(state.directorMode==='full'?'active':'')+'" id="dir_mode_full">⛶ Director completo</button><button class="btn small '+(state.directorMode==='dock'||!state.directorMode?'active':'')+'" id="dir_mode_dock">⇲ Ver grilla al lado</button></div><div class="director-panel v84"><div class="director-card director-preview-sticky"><h3>Vista Director</h3><p class="director-note">Ajustá un video de referencia. La imagen se aplica en vivo a la grilla del evento abierto. Audio y exportación quedan preparados para FFmpeg local. En v89 los deslizantes visuales están suavizados para calibrar con más precisión.</p><div class="director-live-badge">● Vista web activa</div><div class="field"><label>Evento</label><select id="dir_event">'+opts+'</select></div><div class="director-select-row"><div class="field"><label>Video de referencia</label><select id="dir_video_select">'+(vopts||'<option value="">Sin videos YouTube</option>')+'</select></div><div class="field"><label>YouTube / ID manual</label><input id="dir_sample" value="'+esc(yt)+'" placeholder="Pegar link o ID de YouTube"></div></div><div class="director-scope-switch"><button class="btn small '+(state.directorScope==='video'?'':'active')+'" id="dir_scope_event" type="button">Evento completo</button><button class="btn small '+(state.directorScope==='video'?'active':'')+'" id="dir_scope_video" type="button">Solo este video</button>'+(state.directorScope==='video'?'<button class="btn small warn" id="dir_use_event" type="button">↩ Usar ajuste evento</button>':'')+'</div><div class="director-preview-wrap" style="margin-top:12px"><iframe id="dir_frame" allow="autoplay; encrypted-media" src="'+(yt?'https://www.youtube.com/embed/'+esc(yt)+'?rel=0&modestbranding=1&vq=hd1080':'about:blank')+'"></iframe><img id="dir_logo_overlay_1" class="director-logo-overlay pos-br" alt="logo 1"><img id="dir_logo_overlay_2" class="director-logo-overlay pos-bl" alt="logo 2"><img id="dir_logo_overlay_3" class="director-logo-overlay pos-bc" alt="logo 3"><div id="dir_story_frame" class="director-story-frame"></div></div><div class="director-actions"><button class="btn gray small" id="dir_big">⛶ Ver grande</button><button class="btn gray small" id="dir_natural">Natural</button><button class="btn gray small" id="dir_oscuro">Escenario oscuro</button><button class="btn gray small" id="dir_color">Color potente</button><button class="btn gray small" id="dir_reset">Reset</button></div><div class="director-memories"><small>Memorias:</small><button class="btn gray small director-memory-btn" id="dir_mem_1" type="button">M1</button><button class="btn gray small director-memory-btn" id="dir_mem_2" type="button">M2</button><button class="btn gray small director-memory-btn" id="dir_mem_3" type="button">M3</button><small>clic aplica · doble clic guarda</small></div><div class="director-source-note"><b>Base futura:</b> Director queda preparado para fuente YouTube, Drive o archivo local. Para desfiles/galas largas después sumamos biblioteca de fuentes y cortes vendibles.</div></div><div class="director-card"><h3>Controles</h3><details class="director-details" open><summary>Imagen</summary><div class="director-details-body">'+directorRange('exposicion','Exposición suave',p.exposicion,-70,120,'%')+directorRange('sombras','Sombras / zonas oscuras',p.sombras,-50,180,'%')+directorRange('brillo','Brillo fino',p.brillo,-50,90,'%')+directorRange('contraste','Contraste',p.contraste,-40,90,'%')+directorRange('saturacion','Saturación',p.saturacion,-50,110,'%')+directorRange('calidez','Frío ❄️ / Cálido 🔥',p.calidez,-70,100,'')+directorRange('nitidez','Nitidez',p.nitidez,0,70,'')+directorRange('ruidoImagen','Reducir ruido imagen',p.ruidoImagen||0,0,100,'%')+'</div></details><details class="director-details"><summary>Audio para exportar</summary><div class="director-details-body">'+directorRange('volumen','Volumen exportación',p.volumen,40,280,'%')+directorRange('graves','Graves exportación',p.graves,-18,18,'dB')+directorRange('agudos','Agudos exportación',p.agudos,-18,18,'dB')+directorRange('ruidoAudio','Reducción de ruido audio',p.ruidoAudio,0,100,'%')+'<div class="director-help-warn">El audio no se escucha modificado en YouTube. Se aplica al procesar con FFmpeg.</div></div></details><details class="director-details" open><summary>Encuadre</summary><div class="director-details-body">'+directorRange('zoom','Zoom / acercar',p.zoom,0,100,'%')+directorRange('posX','Mover horizontal',p.posX,-50,50,'%')+directorRange('posY','Mover vertical',p.posY,-50,50,'%')+'<div class="field"><label>Rotación</label><select id="dir_rotacion"><option value="0">Sin rotar</option><option value="90">↻ 90° derecha</option><option value="-90">↺ 90° izquierda</option><option value="180">180°</option></select></div></div></details><details class="director-details"><summary>Logo del evento</summary><div class="director-details-body"><div class="director-logo-source" id="dir_logo_source">Logo activo: <span class="empty-logo">sin revisar</span></div><div class="director-logo-picker"><button class="btn gray small" id="dir_logo_pick_1" type="button">Logo 1</button><button class="btn gray small" id="dir_logo_pick_2" type="button">Logo 2</button><button class="btn gray small" id="dir_logo_pick_3" type="button">Logo 3</button></div><input type="hidden" id="dir_logoIndex" value="'+esc(p.logoIndex||1)+'">'+directorRange('logoSize','Tamaño logo',directorLogoCfg(p,p.logoIndex||1).logoSize,5,45,'%')+directorRange('logoOpacity','Opacidad logo',directorLogoCfg(p,p.logoIndex||1).logoOpacity,10,100,'%')+directorRange('logoMargin','Margen logo',directorLogoCfg(p,p.logoIndex||1).logoMargin,0,80,'px')+'<div class="field"><label>Posición logo</label><select id="dir_logoPos"><option value="br">Abajo derecha</option><option value="bc">Abajo centro</option><option value="bl">Abajo izquierda</option><option value="tr">Arriba derecha</option><option value="tl">Arriba izquierda</option></select></div><div class="director-checks"><label><input type="checkbox" id="dir_logoDurante"> Mostrar logos del evento</label></div><div class="director-help-warn">Cargá las URLs en Admin &gt; Eventos. Director solo ajusta tamaño, posición y opacidad.</div></div></details><details class="director-details"><summary>Historias / cortes 9:16</summary><div class="director-details-body"><label class="director-checks" style="display:block"><span><input type="checkbox" id="dir_historia"> Generar versión historia vertical 9:16</span></label><div class="director-history-grid"><div class="field"><label>Inicio historia</label><input id="dir_histInicio" value="'+esc(p.histInicio||'00:00')+'" placeholder="00:35"></div><div class="field"><label>Fin historia</label><input id="dir_histFin" value="'+esc(p.histFin||'00:15')+'" placeholder="01:02"></div></div>'+directorRange('histZoom','Zoom historia',p.histZoom||0,0,160,'%')+directorRange('histPosX','Mover historia horizontal',p.histPosX||0,-80,80,'%')+directorRange('histPosY','Mover historia vertical',p.histPosY||0,-80,80,'%')+'<div class="director-help-warn">Este bloque prepara cortes para historias/reels. Después lo conectamos al exportador por lote.</div></div></details><details class="director-details"><summary>Exportación / futuro</summary><div class="director-details-body"><div class="director-checks"><label><input type="checkbox" id="dir_normalizarLuz"> Normalizar luz experimental</label><label><input type="checkbox" id="dir_normalizarAudio"> Normalizar audio</label></div><div class="field" style="margin-top:10px"><label>Carpeta salida local</label><input id="dir_outDir" value="'+esc(p.outDir||'C:\\TOMAUNO\\ENTREGAS')+'"></div><div class="director-source-note">Procesar desde web queda como prueba futura. Para archivos grandes conviene FFmpeg local o BAT por lote.</div></div></details><div class="director-actions"><button class="btn red" id="dir_save">'+(state.directorScope==='video'?'Guardar ajuste video':'Guardar preset evento')+'</button><span id="dir_saved_msg" class="director-saved-msg">✅ Preset guardado</span><button class="btn gray" id="dir_copycmd">Copiar comando FFmpeg</button><button class="btn gray director-btn-disabled" disabled>Procesar web próximamente</button></div></div></div><details class="director-details command-details" style="margin-top:16px"><summary>Comando local / avanzado</summary><div class="director-details-body"><textarea id="dir_cmd" class="director-cmd" readonly></textarea><p class="director-note">Usá el comando como base local. Después generamos BAT para carpeta completa y cortes desde archivos largos.</p></div></details>';$('tabBody').innerHTML=html;$('dir_rotacion').value=String(p.rotacion||'0');directorEnsureLogos(p);if($('dir_logoIndex'))$('dir_logoIndex').value=String(p.logoIndex||1);directorApplyLogoCfgToControls(p,p.logoIndex||1);$('dir_normalizarLuz').checked=!!p.normalizarLuz;$('dir_normalizarAudio').checked=p.normalizarAudio!==false;$('dir_logoDurante').checked=!!p.logoDurante;if($('dir_logoFinal'))$('dir_logoFinal').checked=!!p.logoFinal;if($('dir_historia'))$('dir_historia').checked=!!p.historia;if($('dir_histInicio'))$('dir_histInicio').value=p.histInicio||'00:00';if($('dir_histFin'))$('dir_histFin').value=p.histFin||'00:15';bindDirector(ev);updateDirectorPreview();}
+function adminDirector(){
+  let events=state.data.eventos||[];
+  let ev=events.find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||events[0];
+  if(!ev){$('tabBody').innerHTML='<div class="empty">No hay eventos.</div>';return;}
+  state.directorEventId=ev.id;
+  if(!state.directorScope)state.directorScope='event';
+  let p=directorActivePreset(ev);
+  state.directorDraftPreset=JSON.parse(JSON.stringify(p||directorDefaultPreset()));
+  p=state.directorDraftPreset;
+  p.logoIndex=Number(p.logoIndex||1);
+  directorEnsureLogos(p);
+  let vids=(ev.videos||[]).filter(v=>v.youtubeId);
+  let sample=vids.find(v=>String(v.id)===String(state.directorVideoId))||vids[0]||{};
+  let yt=cleanYouTube(state.directorSample||sample.youtubeId||'');
+  let opts=events.map(e=>`<option value="${esc(e.id)}" ${e.id===ev.id?'selected':''}>${esc((e.numero?'#'+e.numero+' ':'')+e.titulo)}</option>`).join('');
+  let vopts=vids.map(v=>`<option value="${esc(v.id)}" ${String(v.id)===String(sample.id)?'selected':''}>${esc((v.id?('#'+v.id+' - '):'')+(v.titulo||'Sin título')+(v.subtitulo?(' · '+v.subtitulo):''))}</option>`).join('');
+  let cfg=directorLogoCfg(p,p.logoIndex||1);
+  let html=`
+  <div class="director-mode-switch">
+    <button class="btn small ${state.directorMode==='full'?'active':''}" id="dir_mode_full">⛶ Director completo</button>
+    <button class="btn small ${state.directorMode==='dock'||!state.directorMode?'active':''}" id="dir_mode_dock">⇲ Ver grilla al lado</button>
+  </div>
+  <div class="director-panel v84">
+    <div class="director-card director-preview-sticky">
+      <h3>Vista Director</h3>
+      <p class="director-note">Ajustá un video de referencia. La imagen se aplica en vivo a la grilla del evento abierto. Audio y exportación quedan preparados para FFmpeg local.</p>
+      <div class="director-live-badge">● Vista web activa</div>
+      <div class="field"><label>Evento</label><select id="dir_event">${opts}</select></div>
+      <div class="director-select-row">
+        <div class="field"><label>Video de referencia</label><select id="dir_video_select">${vopts||'<option value="">Sin videos YouTube</option>'}</select></div>
+        <div class="field"><label>YouTube / ID manual</label><input id="dir_sample" value="${esc(yt)}" placeholder="Pegar link o ID de YouTube"></div>
+      </div>
+      <div class="director-scope-switch">
+        <button class="btn small ${state.directorScope==='video'?'':'active'}" id="dir_scope_event" type="button">Evento completo</button>
+        <button class="btn small ${state.directorScope==='video'?'active':''}" id="dir_scope_video" type="button">Solo este video</button>
+        ${state.directorScope==='video'?'<button class="btn small warn" id="dir_use_event" type="button">↩ Usar ajuste evento</button>':''}
+      </div>
+      <div class="director-preview-wrap" style="margin-top:12px">
+        <iframe id="dir_frame" allow="autoplay; encrypted-media" src="${yt?'https://www.youtube.com/embed/'+esc(yt)+'?rel=0&modestbranding=1&vq=hd1080':'about:blank'}"></iframe>
+        <img id="dir_logo_overlay_1" class="director-logo-overlay pos-br" alt="Logo 1">
+        <img id="dir_logo_overlay_2" class="director-logo-overlay pos-bl" alt="Logo 2">
+        <img id="dir_logo_overlay_3" class="director-logo-overlay pos-bc" alt="Logo 3">
+        <div id="dir_story_frame" class="director-story-frame"></div>
+      </div>
+      <div class="director-actions">
+        <button class="btn gray small" id="dir_big">⛶ Ver grande</button>
+        <button class="btn gray small" id="dir_natural">Natural</button>
+        <button class="btn gray small" id="dir_oscuro">Escenario oscuro</button>
+        <button class="btn gray small" id="dir_color">Color potente</button>
+        <button class="btn gray small" id="dir_reset">Reset</button>
+      </div>
+      <div class="director-memories"><small>Memorias:</small><button class="btn gray small director-memory-btn" id="dir_mem_1" type="button">M1</button><button class="btn gray small director-memory-btn" id="dir_mem_2" type="button">M2</button><button class="btn gray small director-memory-btn" id="dir_mem_3" type="button">M3</button><small>clic aplica · doble clic guarda</small></div>
+      <div class="director-source-note"><b>Base futura:</b> Director queda preparado para fuente YouTube, Drive o archivo local.</div>
+    </div>
+    <div class="director-card">
+      <h3>Controles</h3>
+      <details class="director-details" open><summary>Imagen</summary><div class="director-details-body">
+        ${directorRange('exposicion','Exposición suave',p.exposicion,-70,120,'%')}
+        ${directorRange('sombras','Sombras / zonas oscuras',p.sombras,-50,180,'%')}
+        ${directorRange('brillo','Brillo fino',p.brillo,-50,90,'%')}
+        ${directorRange('contraste','Contraste',p.contraste,-40,90,'%')}
+        ${directorRange('saturacion','Saturación',p.saturacion,-50,110,'%')}
+        ${directorRange('calidez','Frío ❄️ / Cálido 🔥',p.calidez,-70,100,'')}
+        ${directorRange('nitidez','Nitidez',p.nitidez,0,70,'')}
+        ${directorRange('ruidoImagen','Reducir ruido imagen',p.ruidoImagen||0,0,100,'%')}
+      </div></details>
+      <details class="director-details"><summary>Audio para exportar</summary><div class="director-details-body">
+        ${directorRange('volumen','Volumen exportación',p.volumen,40,280,'%')}
+        ${directorRange('graves','Graves exportación',p.graves,-18,18,'dB')}
+        ${directorRange('agudos','Agudos exportación',p.agudos,-18,18,'dB')}
+        ${directorRange('ruidoAudio','Reducción de ruido audio',p.ruidoAudio,0,100,'%')}
+        <div class="director-help-warn">El audio no se escucha modificado en YouTube. Se aplica al procesar con FFmpeg.</div>
+      </div></details>
+      <details class="director-details" open><summary>Encuadre</summary><div class="director-details-body">
+        ${directorRange('zoom','Zoom / acercar',p.zoom,0,100,'%')}
+        ${directorRange('posX','Mover horizontal',p.posX,-50,50,'%')}
+        ${directorRange('posY','Mover vertical',p.posY,-50,50,'%')}
+        <div class="field"><label>Rotación</label><select id="dir_rotacion"><option value="0">Sin rotar</option><option value="90">↻ 90° derecha</option><option value="-90">↺ 90° izquierda</option><option value="180">180°</option></select></div>
+      </div></details>
+      <details class="director-details" open><summary>Logos del evento</summary><div class="director-details-body">
+        <div class="director-logo-source" id="dir_logo_source"></div>
+        <div class="director-logo-picker">
+          <button class="btn gray small" id="dir_logo_pick_1" type="button">Logo 1</button>
+          <button class="btn gray small" id="dir_logo_pick_2" type="button">Logo 2</button>
+          <button class="btn gray small" id="dir_logo_pick_3" type="button">Logo 3</button>
+        </div>
+        <input type="hidden" id="dir_logoIndex" value="${esc(p.logoIndex||1)}">
+        ${directorRange('logoSize','Tamaño logo',cfg.logoSize,5,45,'%')}
+        ${directorRange('logoOpacity','Opacidad logo',cfg.logoOpacity,10,100,'%')}
+        ${directorRange('logoMargin','Margen logo',cfg.logoMargin,0,80,'px')}
+        <div class="field"><label>Posición logo</label><select id="dir_logoPos"><option value="br">Abajo derecha</option><option value="bc">Abajo centro</option><option value="bl">Abajo izquierda</option><option value="tr">Arriba derecha</option><option value="tl">Arriba izquierda</option></select></div>
+        <div class="director-checks"><label><input type="checkbox" id="dir_logoDurante"> Mostrar logos del evento</label></div>
+        <div class="director-help-warn">Las URLs se cargan en Admin &gt; Eventos. Director solo ajusta el logo seleccionado.</div>
+      </div></details>
+      <details class="director-details"><summary>Historias / cortes 9:16</summary><div class="director-details-body">
+        <label class="director-checks" style="display:block"><span><input type="checkbox" id="dir_historia"> Generar versión historia vertical 9:16</span></label>
+        <div class="director-history-grid"><div class="field"><label>Inicio historia</label><input id="dir_histInicio" value="${esc(p.histInicio||'00:00')}" placeholder="00:35"></div><div class="field"><label>Fin historia</label><input id="dir_histFin" value="${esc(p.histFin||'00:15')}" placeholder="01:02"></div></div>
+        ${directorRange('histZoom','Zoom historia',p.histZoom||0,0,160,'%')}
+        ${directorRange('histPosX','Mover historia horizontal',p.histPosX||0,-80,80,'%')}
+        ${directorRange('histPosY','Mover historia vertical',p.histPosY||0,-80,80,'%')}
+      </div></details>
+      <details class="director-details"><summary>Exportación / futuro</summary><div class="director-details-body">
+        <div class="director-checks"><label><input type="checkbox" id="dir_normalizarLuz"> Normalizar luz experimental</label><label><input type="checkbox" id="dir_normalizarAudio"> Normalizar audio</label></div>
+        <div class="field" style="margin-top:10px"><label>Carpeta salida local</label><input id="dir_outDir" value="${esc(p.outDir||'C:\\TOMAUNO\\ENTREGAS')}"></div>
+      </div></details>
+      <div class="director-actions"><button class="btn red" id="dir_save">${state.directorScope==='video'?'Guardar ajuste video':'Guardar preset evento'}</button><span id="dir_saved_msg" class="director-saved-msg">✅ Preset guardado</span><button class="btn gray" id="dir_copycmd">Copiar comando FFmpeg</button><button class="btn gray director-btn-disabled" disabled>Procesar web próximamente</button></div>
+    </div>
+  </div>
+  <details class="director-details command-details" style="margin-top:16px"><summary>Comando local / avanzado</summary><div class="director-details-body"><textarea id="dir_cmd" class="director-cmd" readonly></textarea><p class="director-note">Usá el comando como base local. Después generamos BAT para carpeta completa y cortes desde archivos largos.</p></div></details>`;
+  $('tabBody').innerHTML=html;
+  $('dir_rotacion').value=String(p.rotacion||'0');
+  directorApplyLogoCfgToControls(p,p.logoIndex||1);
+  $('dir_normalizarLuz').checked=!!p.normalizarLuz;
+  $('dir_normalizarAudio').checked=p.normalizarAudio!==false;
+  $('dir_logoDurante').checked=!!p.logoDurante;
+  if($('dir_historia'))$('dir_historia').checked=!!p.historia;
+  if($('dir_histInicio'))$('dir_histInicio').value=p.histInicio||'00:00';
+  if($('dir_histFin'))$('dir_histFin').value=p.histFin||'00:15';
+  bindDirector(ev);
+  updateDirectorPreview();
+}
 function readDirectorPreset(){let evNow=(state.data.eventos||[]).find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||{};let base=state.directorDraftPreset||directorActivePreset(evNow)||directorDefaultPreset();let p=JSON.parse(JSON.stringify(base||{}));let ids=['brillo','exposicion','sombras','contraste','saturacion','calidez','nitidez','ruidoImagen','volumen','graves','agudos','ruidoAudio','zoom','posX','posY','histZoom','histPosX','histPosY'];ids.forEach(id=>{let el=$('dir_'+id);p[id]=Number(el&&el.value||0);});p.rotacion=$('dir_rotacion').value;p.normalizarLuz=$('dir_normalizarLuz').checked;p.normalizarAudio=$('dir_normalizarAudio').checked;p.logoDurante=$('dir_logoDurante').checked;p.logoFinal=false;p.logoIndex=Number(($('dir_logoIndex')&&$('dir_logoIndex').value)||p.logoIndex||1);p.logos=p.logos||{};p.logos[p.logoIndex]={logoPos:$('dir_logoPos').value,logoSize:Number($('dir_logoSize')&&$('dir_logoSize').value||16),logoOpacity:Number($('dir_logoOpacity')&&$('dir_logoOpacity').value||78),logoMargin:Number($('dir_logoMargin')&&$('dir_logoMargin').value||18)};let c=directorLogoCfg(p,p.logoIndex);p.logoPos=c.logoPos;p.logoSize=c.logoSize;p.logoOpacity=c.logoOpacity;p.logoMargin=c.logoMargin;p.historia=$('dir_historia')?$('dir_historia').checked:false;p.histInicio=$('dir_histInicio')?$('dir_histInicio').value:'00:00';p.histFin=$('dir_histFin')?$('dir_histFin').value:'00:15';p.outDir=$('dir_outDir').value;p.fuenteTipo='youtube';state.directorDraftPreset=p;return p;}
 function directorMemoryKey(n){return 'tomauno_director_memory_'+String(n||1);}
 function refreshDirectorMemoryButtons(){[1,2,3].forEach(n=>{let b=$('dir_mem_'+n);if(b)b.classList.toggle('saved',!!localStorage.getItem(directorMemoryKey(n)));});}
@@ -1811,7 +1950,34 @@ function directorMemoryClick(n){
 
 function bindDirector(ev){$('dir_mode_full').onclick=()=>{state.directorMode='full';renderAdmin();};$('dir_mode_dock').onclick=()=>{state.directorMode='dock';renderAdmin();};$('dir_event').onchange=()=>{state.directorScope='event';state.directorEventId=$('dir_event').value;state.directorSample='';state.directorVideoId='';adminDirector();};let dse=$('dir_scope_event');if(dse)dse.onclick=()=>{state.directorScope='event';adminDirector();};let dsv=$('dir_scope_video');if(dsv)dsv.onclick=()=>{state.directorScope='video';let sel=$('dir_video_select');if(sel&&sel.value)state.directorVideoId=sel.value;adminDirector();};let due=$('dir_use_event');if(due)due.onclick=()=>{let evNow=(state.data.eventos||[]).find(e=>e.id===state.directorEventId)||ev;let v=directorVideoById(evNow,state.directorVideoId);if(v)delete v.directorPreset;try{localStorage.removeItem('tomauno_director_video_'+evNow.id+'_'+String(state.directorVideoId||''));}catch(_e){}state.directorScope='event';applyDirectorPresetToView();renderVideos();toast('Ajuste individual quitado','Este video vuelve a usar el ajuste del evento.');adminDirector();};let vsel=$('dir_video_select');if(vsel){vsel.onchange=()=>{state.directorVideoId=vsel.value;let evNow=(state.data.eventos||[]).find(e=>e.id===state.directorEventId)||ev;let vv=(evNow.videos||[]).find(v=>String(v.id)===String(vsel.value));state.directorSample=cleanYouTube(vv&&vv.youtubeId||'');let inp=$('dir_sample');if(inp)inp.value=state.directorSample;let fr=$('dir_frame');if(fr&&state.directorSample)fr.src='https://www.youtube.com/embed/'+encodeURIComponent(state.directorSample)+'?rel=0&modestbranding=1&vq=hd1080';updateDirectorPreview();};}$('dir_sample').onchange=()=>{state.directorSample=cleanYouTube($('dir_sample').value);let evNow=(state.data.eventos||[]).find(e=>e.id===state.directorEventId)||ev;let match=(evNow.videos||[]).find(v=>cleanYouTube(v.youtubeId||'')===state.directorSample);if(match){state.directorVideoId=String(match.id);let sel=$('dir_video_select');if(sel)sel.value=String(match.id);}let fr=$('dir_frame');if(fr&&state.directorSample)fr.src='https://www.youtube.com/embed/'+encodeURIComponent(state.directorSample)+'?rel=0&modestbranding=1&vq=hd1080';updateDirectorPreview();};['brillo','exposicion','sombras','contraste','saturacion','calidez','nitidez','ruidoImagen','volumen','graves','agudos','ruidoAudio','zoom','posX','posY','logoSize','logoOpacity','logoMargin','histZoom','histPosX','histPosY'].forEach(id=>{let el=$('dir_'+id);if(el){el.oninput=()=>updateDirectorPreview();el.ondblclick=()=>directorResetRange(id);}});['dir_rotacion','dir_normalizarLuz','dir_normalizarAudio','dir_logoDurante','dir_logoFinal','dir_outDir','dir_logoPos','dir_historia','dir_histInicio','dir_histFin'].forEach(id=>{let el=$(id);if(el)el.onchange=()=>updateDirectorPreview();});[1,2,3].forEach(n=>{let b=$('dir_logo_pick_'+n);if(b)b.onclick=()=>directorLogoSwitch(n);});$('dir_big').onclick=()=>openDirectorFullscreen();$('dir_natural').onclick=()=>setDirectorPreset({brillo:4,exposicion:0,sombras:4,contraste:8,saturacion:8,calidez:0,nitidez:10,ruidoImagen:0,volumen:115,graves:0,agudos:1,ruidoAudio:0,normalizarAudio:true});$('dir_oscuro').onclick=()=>setDirectorPreset({brillo:10,exposicion:24,sombras:28,contraste:16,saturacion:22,calidez:28,nitidez:14,ruidoImagen:8,volumen:135,graves:1,agudos:2,ruidoAudio:15,normalizarAudio:true});$('dir_color').onclick=()=>setDirectorPreset({brillo:8,exposicion:18,sombras:14,contraste:24,saturacion:42,calidez:30,nitidez:16,ruidoImagen:4,volumen:125,graves:1,agudos:3,ruidoAudio:8,normalizarAudio:true});$('dir_reset').onclick=()=>setDirectorPreset(directorDefaultPreset());[1,2,3].forEach(n=>{let b=$('dir_mem_'+n);if(b){b.onclick=(ev)=>{ev.preventDefault();directorMemoryClick(n);};b.ondblclick=(ev)=>{ev.preventDefault();};}});refreshDirectorMemoryButtons();$('dir_save').onclick=()=>saveDirectorPreset(ev);$('dir_copycmd').onclick=async()=>{let cmd=$('dir_cmd').value;if(navigator.clipboard){await navigator.clipboard.writeText(cmd);toast('Copiado','Comando FFmpeg copiado.');}else toast('Comando listo','Copialo desde el cuadro.');};}
 function setDirectorPreset(p){state.directorDraftPreset=JSON.parse(JSON.stringify(Object.assign({},directorActivePreset((state.data.eventos||[]).find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||{}),p)));Object.keys(p).forEach(k=>{let el=$('dir_'+k);if(!el)return;if(el.type==='checkbox')el.checked=!!p[k];else el.value=p[k];});updateDirectorPreview();}
-function updateDirectorLogoOverlay(p){let ev=(state.data.eventos||[]).find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||{};directorLogoSourceText(ev,p);for(let i=1;i<=3;i++){let ov=$('dir_logo_overlay_'+i);if(!ov)continue;let url=(eventLogosEnabled(ev)&&p.logoDurante)?eventLogoUrl(ev,i):'';let cfg=directorLogoCfg(p,i);ov.className='director-logo-overlay pos-'+String(cfg.logoPos||'br')+(url?' show':'');ov.style.width=String(cfg.logoSize||16)+'%';ov.style.opacity=String((Number(cfg.logoOpacity||78)/100).toFixed(2));ov.style.setProperty('--director-logo-margin',String(Number(cfg.logoMargin||18))+'px');if(url){ov.onload=()=>{ov.style.display='block';};ov.onerror=()=>{ov.style.display='none';};if(ov.src!==url)ov.src=url;}else{ov.removeAttribute('src');ov.style.display='none';}}document.querySelectorAll('.director-logo-picker button').forEach(b=>b.classList.remove('active'));let ab=$('dir_logo_pick_'+(p.logoIndex||1));if(ab)ab.classList.add('active');let cfg=directorLogoCfg(p,p.logoIndex||1);document.documentElement.style.setProperty('--director-logo-opacity',String((Number(cfg.logoOpacity||78)/100).toFixed(2)));document.documentElement.style.setProperty('--director-logo-margin',String(Number(cfg.logoMargin||18))+'px');}
+function updateDirectorLogoOverlay(p){
+  let ev=(state.data.eventos||[]).find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||{};
+  directorLogoSourceText(ev,p);
+  for(let i=1;i<=3;i++){
+    let ov=$('dir_logo_overlay_'+i); if(!ov)continue;
+    let url=(eventLogosEnabled(ev)&&p.logoDurante)?eventLogoUrl(ev,i):'';
+    let cfg=directorLogoCfg(p,i);
+    ov.className='director-logo-overlay pos-'+String(cfg.logoPos||'br')+(url?' show':'');
+    ov.style.width=String(cfg.logoSize||16)+'%';
+    ov.style.opacity=String((Number(cfg.logoOpacity||78)/100).toFixed(2));
+    ov.style.setProperty('--director-logo-margin',String(Number(cfg.logoMargin||18))+'px');
+    ov.style.zIndex='20';
+    if(url){
+      if(ov.getAttribute('src')!==url)ov.setAttribute('src',url);
+      ov.style.display='block';
+      ov.onerror=()=>{ov.style.display='none';};
+      ov.onload=()=>{ov.style.display='block';};
+    }else{
+      ov.removeAttribute('src');
+      ov.style.display='none';
+    }
+  }
+  document.querySelectorAll('.director-logo-picker button').forEach(b=>b.classList.remove('active'));
+  let ab=$('dir_logo_pick_'+(p.logoIndex||1)); if(ab)ab.classList.add('active');
+  let cfg=directorLogoCfg(p,p.logoIndex||1);
+  document.documentElement.style.setProperty('--director-logo-opacity',String((Number(cfg.logoOpacity||78)/100).toFixed(2)));
+  document.documentElement.style.setProperty('--director-logo-margin',String(Number(cfg.logoMargin||18))+'px');
+}
 function syncDirectorGridLogos(p,ev){try{document.querySelectorAll('.director-grid-logo-overlay').forEach(x=>x.remove());if(!p.logoDurante||!eventLogosEnabled(ev)||!state.currentEvent||!ev||String(ev.id)!==String(state.currentEvent.id))return;let cards=[];if(state.directorScope==='video'){let c=document.querySelector('[data-card-video="'+String(state.directorVideoId).replace(/[^a-zA-Z0-9_-]/g,'')+'"]');if(c)cards=[c];}else{cards=[...document.querySelectorAll('.video-card')];}cards.forEach(card=>{let th=card.querySelector('.thumb');if(!th)return;for(let i=1;i<=3;i++){let url=eventLogoUrl(ev,i);if(!url)continue;let cfg=directorLogoCfg(p,i);let img=document.createElement('img');img.className='director-grid-logo-overlay pos-'+String(cfg.logoPos||'br');img.src=url;img.onerror=()=>{img.style.display='none';};img.style.width=String(Math.max(6,Math.min(45,Number(cfg.logoSize||16))))+'%';img.style.opacity=String((Number(cfg.logoOpacity||78)/100).toFixed(2));th.appendChild(img);}});}catch(e){console.warn('sync logos',e);}}
 function updateDirectorPreview(){let p=readDirectorPreset();let css=directorCssFilter(p);document.documentElement.style.setProperty('--director-preview-filter',css);document.documentElement.style.setProperty('--director-preview-transform',directorFrameTransform(p,true));document.documentElement.style.setProperty('--director-video-transform',directorFrameTransform(p,false));document.documentElement.style.setProperty('--director-final-transform',directorCombinedTransform(p,true));document.documentElement.style.setProperty('--director-bg-size',(100+Number(p.zoom||0))+'% auto');document.documentElement.style.setProperty('--director-bg-position',(50+Number(p.posX||0))+'% '+(50+Number(p.posY||0))+'%');let ev=(state.data.eventos||[]).find(e=>e.id===state.directorEventId)||state.currentEvent||{};if(state.currentEvent&&ev&&String(ev.id)===String(state.currentEvent.id)){if(state.directorScope==='video'){let raw=String(state.directorVideoId||'');let card=document.querySelector('[data-card-video="'+raw.replace(/[^a-zA-Z0-9_-]/g,'')+'"]')||document.querySelector('[data-card-video="'+CSS.escape(raw)+'"]');if(card){card.style.setProperty('--director-card-filter',css);card.style.setProperty('--director-card-bg-size',(100+Number(p.zoom||0))+'% auto');card.style.setProperty('--director-card-bg-position',(50+Number(p.posX||0))+'% '+(50+Number(p.posY||0))+'%');let th=card.querySelector('.thumb');if(th){th.style.setProperty('filter',css,'important');th.style.setProperty('background-size',(100+Number(p.zoom||0))+'% auto','important');th.style.setProperty('background-position',(50+Number(p.posX||0))+'% '+(50+Number(p.posY||0))+'%','important');}}}else{document.documentElement.style.setProperty('--tomauno-event-filter',css);document.querySelectorAll('.video-card').forEach(c=>{c.style.removeProperty('--director-card-filter');c.style.removeProperty('--director-card-bg-size');c.style.removeProperty('--director-card-bg-position');let th=c.querySelector('.thumb');if(th){th.style.removeProperty('filter');th.style.removeProperty('background-size');th.style.removeProperty('background-position');}});}}document.documentElement.style.setProperty('--director-hist-x',String(Number(p.histPosX||0))+'%');document.documentElement.style.setProperty('--director-hist-y',String(Number(p.histPosY||0))+'%');document.documentElement.style.setProperty('--director-hist-scale','1');let story=$('dir_story_frame');if(story)story.classList.toggle('show',!!p.historia);['brillo','exposicion','sombras','contraste','saturacion','calidez','nitidez','ruidoImagen','volumen','graves','agudos','ruidoAudio','zoom','posX','posY','logoSize','logoOpacity','logoMargin','histZoom','histPosX','histPosY'].forEach(id=>{let el=$('dir_'+id),v=$('dir_'+id+'_val');if(el&&v){let suf=(id==='volumen'||id==='brillo'||id==='exposicion'||id==='sombras'||id==='contraste'||id==='saturacion'||id==='ruidoAudio'||id==='ruidoImagen'||id==='zoom'||id==='posX'||id==='posY'||id==='logoSize'||id==='logoOpacity'||id==='histZoom'||id==='histPosX'||id==='histPosY')?'%':((id==='graves'||id==='agudos')?'dB':(id==='logoMargin'?'px':''));v.textContent=el.value+suf;}});updateDirectorLogoOverlay(p);syncDirectorGridLogos(p,ev);let cmd=$('dir_cmd');if(cmd)cmd.value=directorCommandForEvent(ev,p);}
 function openDirectorFullscreen(){let p=readDirectorPreset();let yt=cleanYouTube(state.directorSample||($('dir_sample')&&$('dir_sample').value)||'');try{let fr=$('dir_frame');if(fr){state.directorPausedSrc=fr.src;fr.src='about:blank';}}catch(_e){}let start=Number(state.directorBigStart||0)||0;let ev=(state.data.eventos||[]).find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||{};let logo=directorBuildLogoOverlays(ev,p);let src=yt?'https://www.youtube.com/embed/'+esc(yt)+'?rel=0&modestbranding=1&controls=1&disablekb=0&fs=0&vq=hd1080&start='+encodeURIComponent(start):'about:blank';openModal('Vista Director grande','<div class="director-fullscreen-box"><iframe id="dir_big_frame" allow="autoplay; encrypted-media" src="'+src+'"></iframe>'+logo+'<div class="director-story-frame '+(p.historia?'show':'')+'"></div></div><div class="director-fullscreen-seek"><span class="muted">Ir a segundo</span><input type="range" id="dir_big_seek" min="0" max="1800" step="1" value="'+esc(start)+'"><input type="number" id="dir_big_sec" min="0" value="'+esc(start)+'"><button class="btn small red" id="dir_big_go">Ir</button></div>','director-fullscreen-modal');let go=()=>{let sec=Number(($('dir_big_sec')&&$('dir_big_sec').value)||($('dir_big_seek')&&$('dir_big_seek').value)||0)||0;state.directorBigStart=sec;let f=$('dir_big_frame');if(f&&yt)f.src='https://www.youtube.com/embed/'+encodeURIComponent(yt)+'?rel=0&modestbranding=1&controls=1&disablekb=0&fs=0&vq=hd1080&start='+encodeURIComponent(sec);};let seek=$('dir_big_seek'),num=$('dir_big_sec'),btn=$('dir_big_go');if(seek)seek.oninput=()=>{if(num)num.value=seek.value;};if(num)num.onkeydown=e=>{if(e.key==='Enter')go();};if(btn)btn.onclick=go;setTimeout(()=>{document.documentElement.style.setProperty('--director-final-transform',directorCombinedTransform(p,true));document.querySelectorAll('#modal .director-story-frame').forEach(st=>st.classList.toggle('show',!!p.historia));},30);}
