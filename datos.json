@@ -1865,7 +1865,7 @@
           "driveId": "https://drive.google.com/file/d/1H5tYVLusHW_v6Pyn69vR1NPdXB49OIS-/view?usp=drive_link",
           "directorPreset": {
             "brillo": -37,
-            "exposicion": 120,
+            "exposicion": -47,
             "sombras": 26,
             "contraste": 30,
             "saturacion": 23,
