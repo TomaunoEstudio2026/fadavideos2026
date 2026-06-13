@@ -118,7 +118,7 @@
             "rotacion": "0",
             "normalizarLuz": false,
             "normalizarAudio": false,
-            "logoDurante": false,
+            "logoDurante": true,
             "logoFinal": false,
             "logoPos": "br",
             "logoPath": "logo1_clasico.png",
