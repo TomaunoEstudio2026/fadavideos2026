@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v112 AJUSTES DIRECTOR - base v110 rollback estable -->
+<!-- TOMAUNO VIDEOS - VERSION v113 AJUSTES DIRECTOR - base v110 rollback estable -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1062,7 +1062,7 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .video-card .thumb{overflow:hidden;}
 
 
-/* ===== v112 limpieza Director sobre rollback estable ===== */
+/* ===== v113 limpieza Director sobre rollback estable ===== */
 /* Quita marca ficticia Tomauno del reproductor; quedan solo logos reales/temporales si se configuran */
 .iframe-brand-block,.iframe-brand-block:before,.iframe-brand-block:after{display:none!important;content:none!important;}
 /* Oculta la mini imagen vieja bajo Examinar para evitar confusión; el overlay del video sigue funcionando */
@@ -1774,8 +1774,9 @@ function adminDirector(){let events=state.data.eventos||[];let ev=events.find(e=
 function readDirectorPreset(){let ids=['brillo','exposicion','sombras','contraste','saturacion','calidez','nitidez','ruidoImagen','volumen','graves','agudos','ruidoAudio','zoom','posX','posY','logoSize','logoOpacity','logoMargin','histZoom','histPosX','histPosY'];let p={};ids.forEach(id=>{let el=$('dir_'+id);p[id]=Number(el&&el.value||0);});p.rotacion=$('dir_rotacion').value;p.normalizarLuz=$('dir_normalizarLuz').checked;p.normalizarAudio=$('dir_normalizarAudio').checked;p.logoDurante=$('dir_logoDurante').checked;p.logoFinal=$('dir_logoFinal').checked;p.logoPos=$('dir_logoPos').value;p.logoPath=state.directorLogoName||'logo_tomauno.png';p.historia=$('dir_historia')?$('dir_historia').checked:false;p.histInicio=$('dir_histInicio')?$('dir_histInicio').value:'00:00';p.histFin=$('dir_histFin')?$('dir_histFin').value:'00:15';p.outDir=$('dir_outDir').value;p.fuenteTipo='youtube';return p;}
 function directorMemoryKey(n){return 'tomauno_director_memory_'+String(n||1);}
 function refreshDirectorMemoryButtons(){[1,2,3].forEach(n=>{let b=$('dir_mem_'+n);if(b)b.classList.toggle('saved',!!localStorage.getItem(directorMemoryKey(n)));});}
-function saveDirectorMemory(n){localStorage.setItem(directorMemoryKey(n),JSON.stringify(readDirectorPreset()));refreshDirectorMemoryButtons();toast('Memoria guardada','M'+n+' quedó cargada y resaltada. Un clic la aplica en otros videos.');}
-function applyDirectorMemory(n){let raw=localStorage.getItem(directorMemoryKey(n));if(!raw){toast('Memoria vacía','Doble clic en M'+n+' para guardar el ajuste actual.');return;}try{setDirectorPreset(JSON.parse(raw));toast('Memoria aplicada','M'+n+' aplicada al modo actual.');}catch(e){toast('Memoria inválida','No se pudo aplicar M'+n+'.');}}
+function directorFlash(msg){let el=$('dir_saved_msg');if(el){el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200);}else if(window.console){console.log(msg);}}
+function saveDirectorMemory(n){localStorage.setItem(directorMemoryKey(n),JSON.stringify(readDirectorPreset()));refreshDirectorMemoryButtons();directorFlash('✅ M'+n+' guardada');}
+function applyDirectorMemory(n){let raw=localStorage.getItem(directorMemoryKey(n));if(!raw){directorFlash('M'+n+' vacía · doble clic guarda');return;}try{setDirectorPreset(JSON.parse(raw));directorFlash('✅ Preset M'+n+' aplicado');}catch(e){directorFlash('No se pudo aplicar M'+n);}}
 function directorMemoryClick(n){
   state._directorMemoryTimers=state._directorMemoryTimers||{};
   if(state._directorMemoryTimers[n]){
@@ -1803,16 +1804,25 @@ async function saveDirectorPreset(ev){let p=readDirectorPreset();let ok=false;if
 function cleanYouTube(input){let s=String(input||'').trim();if(!s)return '';try{if(s.indexOf('http')===0){let u=new URL(s);if(u.hostname.indexOf('youtu.be')>-1)return (u.pathname.split('/')[1]||'').split('?')[0];if(u.searchParams.get('v'))return u.searchParams.get('v');let m=u.pathname.match(/\/(embed|shorts)\/([^/?#]+)/);if(m)return m[2];}}catch(e){}let mm=s.match(/([A-Za-z0-9_-]{11})/);return mm?mm[1]:s;}
 function formatTime(sec){sec=Number(sec||0);let m=Math.floor(sec/60),s=sec%60;return m+':'+(s<10?'0':'')+s;}
 $('btnEvents').onclick=renderEvents;$('btnVideos').onclick=renderVideos;$('modalClose').onclick=closeModal;$('modal').onclick=e=>{if(e.target===$('modal'))closeModal();};$('adminTrigger').ondblclick=askAdmin; $('adminTrigger').addEventListener('click',function(e){ if(e.altKey||e.ctrlKey){askAdmin();return;} window.scrollTo({top:0,behavior:'smooth'}); }); $('adminTrigger').setAttribute('title','Clic: volver arriba · Doble clic: admin · Ctrl+clic: admin');$('adminClose').onclick=()=>{$('adminModal').style.display='none';if(state.currentEvent){try{ if(state.tab==='director'){updateDirectorPreview();}else{renderVideos();} }catch(_e){}}};$('chatBtn').onclick=()=>{$('chatFrame').src=CHAT_URL;$('chatModal').style.display='flex';};$('chatClose').onclick=()=>{$('chatModal').style.display='none';$('chatFrame').src='about:blank';};$('chatOpen').onclick=()=>window.open(CHAT_URL,'_blank');let fp=$('familyPrivacyBtn');if(fp)fp.onclick=openFamilyPrivacy;$('cartBuy').onclick=buyCart;$('cartClear').onclick=()=>{state.cart={};renderVideos();};document.addEventListener('contextmenu',e=>{if(e.target&&e.target.closest&&e.target.closest('.admin-modal,.modal:not(.video-preview)'))return; e.preventDefault();e.stopPropagation();if(!state._lastCtx||Date.now()-state._lastCtx>1500){state._lastCtx=Date.now();toast('Contenido protegido','La vista previa no permite copiar enlaces desde la web.');}return false;},{capture:true});document.addEventListener('dragstart',e=>{if(e.target&&e.target.closest&&e.target.closest('[data-rowv]'))return;e.preventDefault();},{capture:true});window.addEventListener('hashchange',afterLoad);
-document.addEventListener('keydown',function(e){
-  if((e.ctrlKey||e.metaKey)&&String(e.key).toLowerCase()==='m'){
-    e.preventDefault();
-    if(sessionStorage.getItem(SS_ADMIN)!=='1'){toast('Solo administrador','Ingresá como ADM para abrir Director.');return;}
+function openDirectorShortcut(){
+  let go=()=>{
     let id=state.currentPreviewVideoId||'';
     state.tab='director';
     state.directorMode='full';
     if(id&&state.currentEvent){state.directorScope='video';state.directorEventId=state.currentEvent.id;state.directorVideoId=id;let vv=findVideo(id);state.directorSample=cleanYouTube(vv&&vv.youtubeId||'');}
     else{state.directorScope='event';if(state.currentEvent)state.directorEventId=state.currentEvent.id;}
     openAdmin();
+  };
+  if(sessionStorage.getItem(SS_ADMIN)==='1'){go();return;}
+  openModal('Acceso Director','<p>Ingresá el PIN de administración para abrir Director.</p><div class="field"><input id="directorPin" type="password" placeholder="PIN"></div><div class="modal-actions" style="padding-top:14px"><button class="btn red" id="directorPinOk">Entrar</button></div>');
+  let ok=$('directorPinOk'), inp=$('directorPin');
+  if(ok)ok.onclick=()=>{if(inp&&inp.value===ADMIN_PASS){sessionStorage.setItem(SS_ADMIN,'1');closeModal();go();}else toast('PIN incorrecto','No se pudo abrir Director.');};
+  if(inp){inp.addEventListener('keydown',ev=>{if(ev.key==='Enter'&&ok)ok.click();});setTimeout(()=>inp.focus(),60);}
+}
+document.addEventListener('keydown',function(e){
+  if((e.ctrlKey||e.metaKey)&&String(e.key).toLowerCase()==='m'){
+    e.preventDefault();
+    openDirectorShortcut();
     return;
   }
   if(e.key!=='Escape')return;
