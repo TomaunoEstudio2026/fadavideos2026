@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v113 AJUSTES DIRECTOR - base v110 rollback estable -->
+<!-- TOMAUNO VIDEOS - VERSION v121 DELETE + LOGO FADE - base v120 -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1084,6 +1084,12 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .logo-pick-v120{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;}
 .logo-pick-v120 button.active{background:linear-gradient(135deg,#e00000,#ff2020)!important;border-color:#ff4545!important;color:#fff!important;box-shadow:0 0 0 2px rgba(255,32,32,.28)!important;}
 .logo-current-v120{font-size:12px;color:#ffd04d;font-weight:900;margin:6px 0 8px;}
+
+/* v121: ocultar marca ficticia y mostrar logos reales con fundido en reproductores */
+.iframe-brand-block{display:none!important;}
+.modal.video-preview .director-logo-layer-v120{opacity:0;animation:tomaunoLogoFadeV121 .9s ease 5s forwards;pointer-events:none;}
+.director-preview-wrap .director-logo-layer-v120,.director-fullscreen-box .director-logo-layer-v120{opacity:1;animation:none;pointer-events:none;}
+@keyframes tomaunoLogoFadeV121{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
@@ -1870,9 +1876,33 @@ updateBackTopBtn();
 
 
 function confirmDeleteVideoFromGrid(id){
-  try{ delVid(String(id)); }catch(e){ console.warn('confirmDeleteVideoFromGrid',e); toast('Error','No se pudo abrir la confirmación para eliminar.'); }
+  try{
+    const ev=state.currentEvent;
+    if(!ev||!Array.isArray(ev.videos)){toast('Error','No hay evento abierto.');return;}
+    const vid=ev.videos.find(v=>String(v.id)===String(id));
+    if(!vid){toast('Error','No encontré ese video en la grilla.');return;}
+    openModal('Eliminar video','<p>¿Seguro que querés eliminar este video?</p><p class="muted"><b>'+esc(vid.titulo||('Video '+id))+'</b></p><div class="modal-actions right-red"><button class="btn gray" id="cancelDelVidGrid">Cancelar</button><button class="btn red" id="confirmDelVidGrid">Eliminar</button></div>');
+    const cancel=$('cancelDelVidGrid'), ok=$('confirmDelVidGrid');
+    if(cancel)cancel.onclick=closeModal;
+    if(ok)ok.onclick=async()=>{
+      closeModal();
+      ev.videos=ev.videos.filter(v=>String(v.id)!==String(id));
+      try{localStorage.removeItem('tomauno_director_video_'+ev.id+'_'+String(id));}catch(_e){}
+      const saved=await ghSave('Eliminar video '+(vid.titulo||id),true);
+      renderVideos();
+      if($('adminModal')&&$('adminModal').style.display==='flex'){try{renderAdmin();}catch(_e){}}
+      toast(saved?'Video eliminado':'Eliminado local','Se quitó de la grilla.');
+    };
+    setTimeout(()=>{if(ok)ok.focus();},30);
+    const handler=function(e){
+      if(!$('modal')||$('modal').style.display!=='flex'){document.removeEventListener('keydown',handler);return;}
+      if(e.key==='Enter'&&ok){e.preventDefault();ok.click();document.removeEventListener('keydown',handler);}
+      if(e.key==='Escape'&&cancel){e.preventDefault();cancel.click();document.removeEventListener('keydown',handler);}
+    };
+    document.addEventListener('keydown',handler);
+  }catch(e){ console.warn('confirmDeleteVideoFromGrid',e); toast('Error','No se pudo abrir la confirmación para eliminar.'); }
 }
-(async()=>{await fbReady; await fbGetConfig(); await console.log("TOMAUNO VIDEOS v99");
+(async()=>{await fbReady; await fbGetConfig(); await console.log("TOMAUNO VIDEOS v121");
 ghLoad(); await Promise.all([fbGetOrders(),fbGetStats(),fbGetReactions()]); fbListenReactions(); updateTopStats();})();
 
 
