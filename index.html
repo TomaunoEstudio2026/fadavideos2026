@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v118 AJUSTES DIRECTOR - base v110 rollback estable -->
+<!-- TOMAUNO VIDEOS - VERSION v119 AJUSTES DIRECTOR - base v110 rollback estable -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1062,7 +1062,7 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .video-card .thumb{overflow:hidden;}
 
 
-/* ===== v118 limpieza Director sobre rollback estable ===== */
+/* ===== v119 limpieza Director sobre rollback estable ===== */
 /* Quita marca ficticia Tomauno del reproductor; quedan solo logos reales/temporales si se configuran */
 .iframe-brand-block,.iframe-brand-block:before,.iframe-brand-block:after{display:none!important;content:none!important;}
 /* Oculta la mini imagen vieja bajo Examinar para evitar confusión; el overlay del video sigue funcionando */
@@ -1073,19 +1073,19 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .director-fullscreen-seek input[type=range]{flex:1;accent-color:#e30000}
 .director-fullscreen-seek input[type=number]{width:82px;background:#111;color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:8px}
 
-/* ===== v118 logos por URL estables ===== */
+/* ===== v119 logos por URL estables ===== */
 .director-logo-overlay.pos-bc{left:50%;bottom:var(--director-logo-margin,18px);transform:translateX(-50%)}
 .director-logo-source{border:1px solid rgba(255,255,255,.10);background:#0d0d0d;border-radius:12px;padding:10px;margin-bottom:10px;font-size:12px;color:#ddd;line-height:1.35}
 .director-logo-source b{color:#fff}.director-logo-source code{font-size:11px;color:#ffb3b3;word-break:break-all}.director-logo-source .empty-logo{color:#aaa}
 .director-logo-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 10px}
 .director-logo-picker button.active{border-color:#ff2020!important;background:rgba(255,32,32,.18)!important;color:#fff!important}
 
-/* v118 logo preview/director cleanup */
+/* v119 logo preview/director cleanup */
 .director-logo-overlay{z-index:20!important;max-width:45%;max-height:35%;}
 .director-logo-picker .btn.active{background:linear-gradient(135deg,#e00000,#ff2020)!important;border-color:#ff4545!important;color:#fff!important;box-shadow:0 0 0 2px rgba(255,32,32,.28)!important;}
 .director-logo-source{font-size:12px;color:#ddd;margin:6px 0 8px;display:none;}
 
-/* ===== v118 logo preview real ===== */
+/* ===== v119 logo preview real ===== */
 .director-preview-wrap{position:relative!important;}
 .director-preview-wrap iframe{position:relative!important;z-index:1!important;}
 .director-logo-layer{position:absolute;inset:0;z-index:60;pointer-events:none;}
@@ -1096,6 +1096,12 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .director-logo-layer .pos-tr{right:var(--director-logo-margin,18px);top:var(--director-logo-margin,18px);}
 .director-logo-layer .pos-tl{left:var(--director-logo-margin,18px);top:var(--director-logo-margin,18px);}
 .director-logo-picker .btn.active,.director-logo-picker button.active{background:linear-gradient(135deg,#e00000,#ff2020)!important;border-color:#ff4b4b!important;color:#fff!important;box-shadow:0 0 0 2px rgba(255,32,32,.28)!important;}
+
+/* v119 override logo director */
+.director-logo-picker .logo-pick.active{background:linear-gradient(135deg,#e00000,#ff2020)!important;border-color:#ff4b4b!important;color:#fff!important;box-shadow:0 0 0 2px rgba(255,32,32,.28)!important;}
+.director-logo-current{font-size:11px;color:#ffd04d;font-weight:900;margin:6px 0 10px;}
+.director-logo-layer{position:absolute!important;inset:0!important;z-index:90!important;pointer-events:none!important;}
+.director-logo-layer .director-logo-overlay{display:block!important;position:absolute!important;object-fit:contain!important;max-width:45%;max-height:35%;filter:drop-shadow(0 4px 14px rgba(0,0,0,.65));}
 </style>
 </head>
 <body>
@@ -2052,6 +2058,81 @@ document.addEventListener('keydown',function(e){
   if(admin&&admin.style.display==='flex'){admin.style.display='none';return;}
 });
 
+
+
+
+/* v119: reconexión simple y robusta de logos del evento en Director */
+function t119LogoUrl(ev,idx){
+  if(!ev)return '';
+  idx=Number(idx||1);
+  let keys=idx===1?['logoUrl1','logo1Url','logoEvento','logoPrincipal','logoUrl']:(idx===2?['logoUrl2','logo2Url','logoEvento2']:['logoUrl3','logo3Url','logoEvento3']);
+  for(let k of keys){if(ev[k])return logoNormalizeUrl?logoNormalizeUrl(ev[k]):String(ev[k]).trim();}
+  return '';
+}
+function t119LogosEnabled(ev){return !!(ev&&(ev.mostrarLogo||ev.showLogo||ev.logoDuranteEvento));}
+function t119EnsureLayer(){
+  let layer=document.getElementById('dir_logo_layer');
+  let wrap=document.querySelector('.director-preview-wrap');
+  if(!layer&&wrap){layer=document.createElement('div');layer.id='dir_logo_layer';layer.className='director-logo-layer';wrap.appendChild(layer);}
+  return layer;
+}
+function t119EnsureLogoData(p){
+  p=p||{};p.logos=p.logos||{};
+  for(let i=1;i<=3;i++){p.logos[i]=Object.assign({logoPos:i===1?'br':(i===2?'bl':'bc'),logoSize:16,logoOpacity:78,logoMargin:18},p.logos[i]||{});}
+  p.logoIndex=Number(p.logoIndex||1);
+  return p;
+}
+function t119LogoCfg(p,idx){p=t119EnsureLogoData(p||{});idx=Number(idx||p.logoIndex||1);return Object.assign({logoPos:'br',logoSize:16,logoOpacity:78,logoMargin:18},p.logos[idx]||{});}
+function t119SetActiveLogoButton(idx,ev){
+  document.querySelectorAll('.director-logo-picker button,[id^="dir_logo_pick_"]').forEach(b=>{b.classList.remove('active');b.style.removeProperty('background');b.style.removeProperty('border-color');b.style.removeProperty('color');b.style.removeProperty('box-shadow');});
+  let b=document.getElementById('dir_logo_pick_'+idx);
+  if(b){b.classList.add('active');b.style.background='linear-gradient(135deg,#e00000,#ff2020)';b.style.borderColor='#ff4b4b';b.style.color='#fff';b.style.boxShadow='0 0 0 2px rgba(255,32,32,.28)';}
+  let picker=document.querySelector('.director-logo-picker');
+  let cur=document.getElementById('dir_logo_current');
+  if(!cur&&picker){cur=document.createElement('div');cur.id='dir_logo_current';cur.className='director-logo-current';picker.parentNode.insertBefore(cur,picker);}
+  if(cur){cur.textContent='Editando: Logo '+idx+(t119LogoUrl(ev,idx)?'':' · sin URL cargada en Evento');}
+}
+function t119ApplyLogoControls(p,idx){
+  let cfg=t119LogoCfg(p,idx);
+  if(document.getElementById('dir_logoSize'))document.getElementById('dir_logoSize').value=cfg.logoSize;
+  if(document.getElementById('dir_logoOpacity'))document.getElementById('dir_logoOpacity').value=cfg.logoOpacity;
+  if(document.getElementById('dir_logoMargin'))document.getElementById('dir_logoMargin').value=cfg.logoMargin;
+  if(document.getElementById('dir_logoPos'))document.getElementById('dir_logoPos').value=cfg.logoPos;
+}
+directorLogoSwitch=function(idx){
+  let p=readDirectorPreset();
+  p=t119EnsureLogoData(p);
+  p.logoIndex=Number(idx||1);
+  state.directorDraftPreset=p;
+  t119ApplyLogoControls(p,p.logoIndex);
+  updateDirectorPreview();
+};
+updateDirectorLogoOverlay=function(p){
+  let ev=(state.data.eventos||[]).find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||{};
+  p=t119EnsureLogoData(p||{});
+  let enabled=!!(t119LogosEnabled(ev)&&p.logoDurante);
+  let layer=t119EnsureLayer();
+  if(layer){
+    layer.innerHTML='';
+    if(enabled){
+      for(let i=1;i<=3;i++){
+        let url=t119LogoUrl(ev,i); if(!url)continue;
+        let cfg=t119LogoCfg(p,i);
+        let img=document.createElement('img');
+        img.src=url; img.alt=''; img.className='director-logo-overlay pos-'+String(cfg.logoPos||'br');
+        img.onerror=function(){this.style.display='none';};
+        img.style.width=Math.max(5,Math.min(45,Number(cfg.logoSize||16)))+'%';
+        img.style.opacity=(Number(cfg.logoOpacity||78)/100).toFixed(2);
+        img.style.setProperty('--director-logo-margin',String(Number(cfg.logoMargin||18))+'px');
+        layer.appendChild(img);
+      }
+    }
+  }
+  t119SetActiveLogoButton(Number(p.logoIndex||1),ev);
+  let cfg=t119LogoCfg(p,Number(p.logoIndex||1));
+  document.documentElement.style.setProperty('--director-logo-opacity',(Number(cfg.logoOpacity||78)/100).toFixed(2));
+  document.documentElement.style.setProperty('--director-logo-margin',String(Number(cfg.logoMargin||18))+'px');
+};
 
 function tomaunoScrollTopSmooth(){
   let start=window.scrollY||document.documentElement.scrollTop||0;
