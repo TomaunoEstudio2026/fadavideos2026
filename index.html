@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v117 AJUSTES DIRECTOR - base v110 rollback estable -->
+<!-- TOMAUNO VIDEOS - VERSION v118 AJUSTES DIRECTOR - base v110 rollback estable -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1062,7 +1062,7 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .video-card .thumb{overflow:hidden;}
 
 
-/* ===== v117 limpieza Director sobre rollback estable ===== */
+/* ===== v118 limpieza Director sobre rollback estable ===== */
 /* Quita marca ficticia Tomauno del reproductor; quedan solo logos reales/temporales si se configuran */
 .iframe-brand-block,.iframe-brand-block:before,.iframe-brand-block:after{display:none!important;content:none!important;}
 /* Oculta la mini imagen vieja bajo Examinar para evitar confusión; el overlay del video sigue funcionando */
@@ -1073,17 +1073,29 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .director-fullscreen-seek input[type=range]{flex:1;accent-color:#e30000}
 .director-fullscreen-seek input[type=number]{width:82px;background:#111;color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:8px}
 
-/* ===== v117 logos por URL estables ===== */
+/* ===== v118 logos por URL estables ===== */
 .director-logo-overlay.pos-bc{left:50%;bottom:var(--director-logo-margin,18px);transform:translateX(-50%)}
 .director-logo-source{border:1px solid rgba(255,255,255,.10);background:#0d0d0d;border-radius:12px;padding:10px;margin-bottom:10px;font-size:12px;color:#ddd;line-height:1.35}
 .director-logo-source b{color:#fff}.director-logo-source code{font-size:11px;color:#ffb3b3;word-break:break-all}.director-logo-source .empty-logo{color:#aaa}
 .director-logo-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 10px}
 .director-logo-picker button.active{border-color:#ff2020!important;background:rgba(255,32,32,.18)!important;color:#fff!important}
 
-/* v117 logo preview/director cleanup */
+/* v118 logo preview/director cleanup */
 .director-logo-overlay{z-index:20!important;max-width:45%;max-height:35%;}
 .director-logo-picker .btn.active{background:linear-gradient(135deg,#e00000,#ff2020)!important;border-color:#ff4545!important;color:#fff!important;box-shadow:0 0 0 2px rgba(255,32,32,.28)!important;}
 .director-logo-source{font-size:12px;color:#ddd;margin:6px 0 8px;display:none;}
+
+/* ===== v118 logo preview real ===== */
+.director-preview-wrap{position:relative!important;}
+.director-preview-wrap iframe{position:relative!important;z-index:1!important;}
+.director-logo-layer{position:absolute;inset:0;z-index:60;pointer-events:none;}
+.director-logo-layer .director-logo-overlay{display:block!important;position:absolute!important;object-fit:contain!important;filter:drop-shadow(0 4px 14px rgba(0,0,0,.65));}
+.director-logo-layer .pos-br{right:var(--director-logo-margin,18px);bottom:var(--director-logo-margin,18px);}
+.director-logo-layer .pos-bl{left:var(--director-logo-margin,18px);bottom:var(--director-logo-margin,18px);}
+.director-logo-layer .pos-bc{left:50%;bottom:var(--director-logo-margin,18px);transform:translateX(-50%);}
+.director-logo-layer .pos-tr{right:var(--director-logo-margin,18px);top:var(--director-logo-margin,18px);}
+.director-logo-layer .pos-tl{left:var(--director-logo-margin,18px);top:var(--director-logo-margin,18px);}
+.director-logo-picker .btn.active,.director-logo-picker button.active{background:linear-gradient(135deg,#e00000,#ff2020)!important;border-color:#ff4b4b!important;color:#fff!important;box-shadow:0 0 0 2px rgba(255,32,32,.28)!important;}
 </style>
 </head>
 <body>
@@ -1817,7 +1829,7 @@ function adminDirector(){
   p=state.directorDraftPreset;
   p.logoIndex=Number(p.logoIndex||1);
   directorEnsureLogos(p);
-  if(eventLogosEnabled(ev) && (eventLogoUrl(ev,1)||eventLogoUrl(ev,2)||eventLogoUrl(ev,3)) && p.logoDurante==null){p.logoDurante=true;}
+  if(eventLogosEnabled(ev) && (eventLogoUrl(ev,1)||eventLogoUrl(ev,2)||eventLogoUrl(ev,3)) && p.logoDurante!==false){p.logoDurante=true;}
   let vids=(ev.videos||[]).filter(v=>v.youtubeId);
   let sample=vids.find(v=>String(v.id)===String(state.directorVideoId))||vids[0]||{};
   let yt=cleanYouTube(state.directorSample||sample.youtubeId||'');
@@ -1846,9 +1858,7 @@ function adminDirector(){
       </div>
       <div class="director-preview-wrap" style="margin-top:12px">
         <iframe id="dir_frame" allow="autoplay; encrypted-media" src="${yt?'https://www.youtube.com/embed/'+esc(yt)+'?rel=0&modestbranding=1&vq=hd1080':'about:blank'}"></iframe>
-        <img id="dir_logo_overlay_1" class="director-logo-overlay pos-br" alt="">
-        <img id="dir_logo_overlay_2" class="director-logo-overlay pos-bl" alt="">
-        <img id="dir_logo_overlay_3" class="director-logo-overlay pos-bc" alt="">
+        <div id="dir_logo_layer" class="director-logo-layer"></div>
         <div id="dir_story_frame" class="director-story-frame"></div>
       </div>
       <div class="director-actions">
@@ -1955,33 +1965,52 @@ function updateDirectorLogoOverlay(p){
   directorLogoSourceText(ev,p);
   p=directorEnsureLogos(p||{});
   let enabled=!!(eventLogosEnabled(ev)&&p.logoDurante);
-  for(let i=1;i<=3;i++){
-    let ov=$('dir_logo_overlay_'+i); if(!ov)continue;
-    let url=enabled?eventLogoUrl(ev,i):'';
-    let cfg=directorLogoCfg(p,i);
-    ov.alt='';
-    ov.className='director-logo-overlay pos-'+String(cfg.logoPos||'br');
-    ov.style.width=String(Math.max(5,Math.min(45,Number(cfg.logoSize||16))))+'%';
-    ov.style.opacity=String((Number(cfg.logoOpacity||78)/100).toFixed(2));
-    ov.style.setProperty('--director-logo-margin',String(Number(cfg.logoMargin||18))+'px');
-    ov.style.zIndex='30';
-    ov.style.pointerEvents='none';
-    ov.style.display='none';
-    if(url){
-      ov.onload=function(){ this.classList.add('show'); this.style.display='block'; };
-      ov.onerror=function(){ this.classList.remove('show'); this.style.display='none'; this.removeAttribute('src'); };
-      if(ov.getAttribute('src')!==url) ov.setAttribute('src',url);
-      // Si ya está en caché y completo, mostrarlo sin esperar otro onload.
-      if(ov.complete && ov.naturalWidth>0){ov.classList.add('show');ov.style.display='block';}
-    }else{
-      ov.classList.remove('show');
-      ov.removeAttribute('src');
+  let layer=$('dir_logo_layer');
+  if(layer){
+    let h='';
+    if(enabled){
+      for(let i=1;i<=3;i++){
+        let url=eventLogoUrl(ev,i);
+        if(!url)continue;
+        let cfg=directorLogoCfg(p,i);
+        let w=Math.max(5,Math.min(45,Number(cfg.logoSize||16)));
+        let op=(Number(cfg.logoOpacity||78)/100).toFixed(2);
+        let margin=Number(cfg.logoMargin||18);
+        h+='<img src="'+esc(url)+'" class="director-logo-overlay pos-'+esc(cfg.logoPos||'br')+'" style="width:'+w+'%;opacity:'+op+';--director-logo-margin:'+margin+'px" onerror="this.remove()" alt="">';
+      }
+    }
+    layer.innerHTML=h;
+  }else{
+    // Compatibilidad si alguna plantilla antigua todavía tiene img sueltos.
+    for(let i=1;i<=3;i++){
+      let ov=$('dir_logo_overlay_'+i); if(!ov)continue;
+      let url=enabled?eventLogoUrl(ev,i):'';
+      let cfg=directorLogoCfg(p,i);
+      ov.alt='';
+      ov.className='director-logo-overlay pos-'+String(cfg.logoPos||'br');
+      ov.style.width=String(Math.max(5,Math.min(45,Number(cfg.logoSize||16))))+'%';
+      ov.style.opacity=String((Number(cfg.logoOpacity||78)/100).toFixed(2));
+      ov.style.setProperty('--director-logo-margin',String(Number(cfg.logoMargin||18))+'px');
+      ov.style.display=url?'block':'none';
+      if(url)ov.src=url;else ov.removeAttribute('src');
     }
   }
-  document.querySelectorAll('.director-logo-picker button').forEach(b=>{b.classList.remove('active');b.style.removeProperty('background');b.style.removeProperty('border-color');b.style.removeProperty('color');});
+  document.querySelectorAll('.director-logo-picker button').forEach(b=>{
+    b.classList.remove('active');
+    b.style.removeProperty('background');
+    b.style.removeProperty('border-color');
+    b.style.removeProperty('color');
+    b.style.removeProperty('box-shadow');
+  });
   let idx=Number(p.logoIndex||1);
   let ab=$('dir_logo_pick_'+idx);
-  if(ab){ab.classList.add('active');ab.style.background='linear-gradient(135deg,#e00000,#ff2020)';ab.style.borderColor='#ff4545';ab.style.color='#fff';}
+  if(ab){
+    ab.classList.add('active');
+    ab.style.background='linear-gradient(135deg,#e00000,#ff2020)';
+    ab.style.borderColor='#ff4b4b';
+    ab.style.color='#fff';
+    ab.style.boxShadow='0 0 0 2px rgba(255,32,32,.28)';
+  }
   let cfg=directorLogoCfg(p,idx);
   document.documentElement.style.setProperty('--director-logo-opacity',String((Number(cfg.logoOpacity||78)/100).toFixed(2)));
   document.documentElement.style.setProperty('--director-logo-margin',String(Number(cfg.logoMargin||18))+'px');
