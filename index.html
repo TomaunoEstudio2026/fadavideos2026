@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v122 HISTORIAS PULIDAS - base v121 -->
+<!-- TOMAUNO VIDEOS - VERSION v124 CORTES DIRECTOR REAL - base v120 -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1024,7 +1024,7 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 
 
 /* ===== v97 fixes: versión, botones compactos, Director global/individual ===== */
-:root{--tomauno-version:'v122';}
+:root{--tomauno-version:'v97';}
 .admin-video-inline{display:grid!important;grid-template-columns:minmax(0,1fr) 40px!important;gap:7px!important;align-items:center!important;width:100%!important}
 .admin-video-inline input{width:100%!important;min-width:0!important;max-width:100%!important}
 .admin-video-inline .apply-all-mini{width:38px!important;height:38px!important;min-width:38px!important;padding:0!important;border-radius:50%!important;display:grid!important;place-items:center!important;font-size:14px!important;line-height:1!important;margin:0!important}
@@ -1090,35 +1090,10 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .modal.video-preview .director-logo-layer-v120{opacity:0;animation:tomaunoLogoFadeV121 .9s ease 5s forwards;pointer-events:none;}
 .director-preview-wrap .director-logo-layer-v120,.director-fullscreen-box .director-logo-layer-v120{opacity:1;animation:none;pointer-events:none;}
 @keyframes tomaunoLogoFadeV121{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-
-/* v122 historias: herramientas de recorte 9:16 */
-.director-story-frame.show{display:block!important;animation:storyPulse122 1.4s ease-in-out infinite alternate}
-@keyframes storyPulse122{from{box-shadow:0 0 0 999px rgba(0,0,0,.26),0 0 18px rgba(224,0,0,.30)}to{box-shadow:0 0 0 999px rgba(0,0,0,.34),0 0 30px rgba(224,0,0,.62)}}
-.director-story-tools-v122{margin-top:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.035);border-radius:14px;padding:10px;display:grid;gap:10px}
-.director-story-tools-v122 .story-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.director-story-tools-v122 .story-duration{font-size:12px;color:#ffd0d0;font-weight:900;letter-spacing:.3px}
-.director-story-tools-v122 .story-mini{font-size:11px;color:#aaa;line-height:1.35}
-.director-story-tools-v122 button{white-space:nowrap}
-.director-fullscreen-story-buttons{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px;justify-content:center}
-.director-fullscreen-story-buttons .btn{padding:8px 12px;font-size:11px}
-
-
-/* ===== v123 Cortes Director: normal/vertical, tarjeta y exportación ===== */
-.director-cut-v123{border:1px solid rgba(255,255,255,.12);background:#111;border-radius:16px;padding:12px;margin-top:12px}
-.director-cut-v123 h4{margin:0 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.8px}
-.cut-grid-v123{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:end}
-.cut-grid-v123 .field input,.cut-grid-v123 .field select{width:100%}
-.cut-row-v123{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
-.cut-status-v123{font-size:12px;color:#ddd;margin-top:8px;border-left:3px solid var(--red2);padding-left:9px}
-.cut-web-v123{margin-top:10px;padding:10px;background:#171717;border:1px solid rgba(255,255,255,.1);border-radius:12px}
-.cut-web-v123 input[type=file]{font-size:11px;color:#ccc;max-width:100%}
-.cut-progress-v123{font-size:11px;color:#aaa;margin-top:6px;white-space:pre-wrap;max-height:90px;overflow:auto}
-.director-fullscreen-cut-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;justify-content:center}
-@media(max-width:900px){.cut-grid-v123{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<div class="bggrid"></div><div class="version-mini">v122</div>
+<div class="bggrid"></div><div class="version-mini">v97</div>
 <header>
   <div class="brand" id="adminTrigger"><img id="logoImg" alt="Tomauno"><div class="wordmark"><strong>TOMA<span>UNO</span></strong><small>VIDEOS</small></div></div>
   <div class="nav"><button class="pill" id="btnEvents">Eventos</button><button class="pill" id="btnVideos">Videos</button><span class="status"><i class="dot" id="statusDot"></i><span id="statusText">Conectando</span></span></div>
@@ -1647,8 +1622,294 @@ function reportTitle(){let ev=state.currentEvent||((state.data&&state.data.event
 function orderStateLabel(p){let st=String(p.estado||'pendiente').toLowerCase();if(p.archivado)return 'Archivado';if(st==='desbloqueado'||st==='entregado')return 'Entregado';if(st==='cancelado')return 'Cancelado';return 'Pendiente';}
 function orderItemsText(p,sep){return (p.items||[]).map(function(it,i){return (i+1)+'. '+(it.titulo||('Video '+(it.videoId||'')));}).join(sep||' | ');}
 function safeFileName(s){return String(s||'TOMAUNO').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'_').replace(/^_+|_+$/g,'').toUpperCase();}
-function exportVisibleOrdersCsv(){let rows=visibleOrders();let info=reportTitle();let total=rows.reduce((a,p)=>a+Number(p.totalARS||0),0);let generado=new Date().toLocaleString('es-AR');let trs='';trs+='<tr class="title"><td colspan="8">TOMAUNO VIDEOS</td></tr>';trs+='<tr class="subtitle"><td colspan="8">Evento: '+esc(info.evento)+'</td></tr>';trs+='<tr><td colspan="2"><b>Filtro</b></td><td colspan="6">'+esc(info.filtro)+'</td></tr>';trs+='<tr><td colspan="2"><b>Generado</b></td><td colspan="6">'+esc(generado)+'</td></tr>';trs+='<tr><td colspan="2"><b>Pedidos visibles</b></td><td>'+rows.length+'</td><td colspan="2"><b>Total visible</b></td><td colspan="3">'+money(total)+'</td></tr>';trs+='<tr class="blank"><td colspan="8"></td></tr>';trs+='<tr class="head"><td>Fecha</td><td>Cliente</td><td>WhatsApp</td><td>Videos</td><td>Estado</td><td>Clave</td><td>Cant.</td><td>Total</td></tr>';rows.forEach(function(p){trs+='<tr><td>'+esc(new Date(Number(p.creado||0)).toLocaleString('es-AR'))+'</td><td>'+esc(p.clienteNombre||'')+'</td><td>'+esc(p.clienteWhatsapp||'')+'</td><td>'+esc(orderItemsText(p,' | '))+'</td><td>'+esc(orderStateLabel(p))+'</td><td>'+esc(p.clave||'')+'</td><td>'+((p.items||[]).length||0)+'</td><td>'+Number(p.totalARS||0)+'</td></tr>';});trs+='<tr class="total"><td colspan="7">TOTAL</td><td>'+Number(total||0)+'</td></tr>';let html='<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif}table{border-collapse:collapse;width:100%}td{border:1px solid #999;padding:8px;font-size:12px;vertical-align:top}.title td,.title{background:#050505;color:#fff;font-size:24px;font-weight:bold;text-align:center}.subtitle td,.subtitle{background:#e00000;color:#fff;font-size:16px;font-weight:bold;text-align:center}.head td,.head{background:#222;color:#fff;font-weight:bold;text-transform:uppercase}.blank td{border:0;height:10px}.total td,.total{background:#f2f2f2;font-weight:bold}</style></head><body><table>'+trs+'</table></body></html>';let blob=new Blob(['\ufeff'+html],{type:'application/vnd.ms-excel;charset=utf-8;'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='TOMAUNO_'+safeFileName(info.evento)+'_'+safeFileName(info.filtro)+'_'+todayKey()+'.xls';a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},1000);}
-function exportVisibleOrdersPdf(){let rows=visibleOrders();let info=reportTitle();let total=rows.reduce((a,p)=>a+Number(p.totalARS||0),0);let pendientes=rows.filter(function(p){return orderStateLabel(p)==='Pendiente';}).length;let entregados=rows.filter(function(p){return orderStateLabel(p)==='Entregado';}).length;let archivados=rows.filter(function(p){return orderStateLabel(p)==='Archivado';}).length;let body=rows.map(function(p){return '<tr><td class="date">'+esc(new Date(Number(p.creado||0)).toLocaleString('es-AR'))+'</td><td><b>'+esc(p.clienteNombre||'')+'</b><br><small>'+esc(p.clienteWhatsapp||'Sin WhatsApp')+'</small></td><td>'+esc(orderItemsText(p,' | '))+'</td><td><span class="state '+esc(orderStateLabel(p).toLowerCase())+'">'+esc(orderStateLabel(p))+'</span></td><td><b>'+esc(p.clave||'-')+'</b></td><td class="qty">'+((p.items||[]).length||0)+'</td><td class="money">'+money(p.totalARS||0)+'</td></tr>';}).join('');if(!body)body='<tr><td colspan="7" class="empty">No hay pedidos visibles para este filtro.</td></tr>';let html='<!doctype html><html><head><meta charset="utf-8"><title>Tomauno Reporte '+esc(info.filtro)+'</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{margin:0;background:#080808;color:#fff;font-family:Inter,Arial,sans-serif}.page{max-width:1180px;margin:0 auto;padding:26px}.head{position:relative;overflow:hidden;background:radial-gradient(circle at 88% 20%,rgba(224,0,0,.50),transparent 28%),linear-gradient(135deg,#050505 0%,#0b0b0b 58%,#210000 100%);border:1px solid rgba(224,0,0,.45);border-radius:24px;padding:24px 26px;margin-bottom:16px}.brand{font-size:44px;font-weight:900;letter-spacing:1.5px;line-height:1}.brand .uno{color:#ff1919}.tag{display:inline-block;margin-top:8px;background:#e00000;color:#fff;border-radius:999px;padding:7px 12px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px}.meta{margin-top:12px;color:#d6d6d6;font-size:13px;line-height:1.6}.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0 16px}.box{border:1px solid #303030;background:#141414;border-radius:16px;padding:13px}.box span{display:block;color:#999;font-size:10px;text-transform:uppercase;font-weight:900;letter-spacing:1px}.box b{display:block;font-size:25px;color:#ff1919;margin-top:3px}.report-table{width:100%;border-collapse:separate;border-spacing:0 7px}.report-table th{text-align:left;color:#ff3333;font-size:10px;text-transform:uppercase;letter-spacing:.9px;padding:7px 10px}.report-table td{background:#151515;border-top:1px solid #2d2d2d;border-bottom:1px solid #2d2d2d;padding:9px 10px;font-size:12px;vertical-align:top}.report-table td:first-child{border-left:1px solid #2d2d2d;border-radius:12px 0 0 12px}.report-table td:last-child{border-right:1px solid #2d2d2d;border-radius:0 12px 12px 0}.date{white-space:nowrap;color:#ccc}.money{white-space:nowrap;font-weight:900;color:#fff}.qty{text-align:center}.state{display:inline-block;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase}.state.pendiente{background:#3a2500;color:#ffd04d}.state.entregado,.state.desbloqueado{background:#062b16;color:#00d46a}.state.archivado{background:#2a2a2a;color:#bbb}.state.cancelado{background:#330606;color:#ff7777}.total-line{text-align:right;margin-top:14px;font-size:22px;font-weight:900}.footer{display:flex;justify-content:space-between;gap:16px;margin-top:20px;color:#aaa;font-size:12px;border-top:1px solid #242424;padding-top:12px}.printbar{position:sticky;bottom:0;background:rgba(0,0,0,.78);backdrop-filter:blur(10px);padding:12px;text-align:right}.printbar button{background:#e00000;color:#fff;border:0;border-radius:999px;padding:11px 18px;font-weight:900;cursor:pointer}.empty{text-align:center;color:#aaa;padding:40px!important}@media print{body{background:#fff;color:#111}.page{padding:0}.head{color:#fff}.box{break-inside:avoid}.report-table td{background:#fff;color:#111;border-color:#bbb}.printbar{display:none}.footer{color:#333}.state{border:1px solid #999}}</style></head><body><div class="page"><div class="head"><div class="brand"><span>TOMA</span><span class="uno">UNO</span> VIDEOS</div><div class="tag">Reporte de pedidos</div><div class="meta"><b>Evento:</b> '+esc(info.evento)+'<br><b>Filtro:</b> '+esc(info.filtro)+' · <b>Generado:</b> '+esc(info.fecha)+' · <b>Versión:</b> v110 rollback</div></div><div class="summary"><div class="box"><span>Pedidos</span><b>'+rows.length+'</b></div><div class="box"><span>Pendientes</span><b>'+pendientes+'</b></div><div class="box"><span>Entregados</span><b>'+entregados+'</b></div><div class="box"><span>Archivados</span><b>'+archivados+'</b></div><div class="box"><span>Total</span><b>'+money(total)+'</b></div></div><table class="report-table"><thead><tr><th>Fecha</th><th>Cliente</th><th>Videos</th><th>Estado</th><th>Clave</th><th>Cant.</th><th>Total</th></tr></thead><tbody>'+body+'</tbody></table><div class="total-line">Total visible: <span style="color:#ff1919">'+money(total)+'</span></div><div class="footer"><div>@tomaunomodels · WhatsApp 3764354522</div><div>Tomauno Videos · Reporte operativo</div></div><div class="printbar"><button onclick="window.print()">Imprimir / guardar PDF</button></div></div></body></html>';let w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}else toast('Pop-up bloqueado','Permití ventanas emergentes para generar el PDF.');}
+function exportVisibleOrdersCsv(){let rows=visibleOrders();let info=reportTitle();let total=rows.reduce((a,p)=>a+Number(p.totalARS||0),0);let generado=new Date().toLocaleString('es-AR');let trs='';trs+='<tr class="title"><td colspan="8">TOMAUNO VIDEOS</td></tr>';trs+='<tr class="subtitle"><td colspan="8">Evento: '+esc(info.evento)+'</td></tr>';trs+='<tr><td colspan="2"><b>Filtro</b></td><td colspan="6">'+esc(info.filtro)+'</td></tr>';trs+='<tr><td colspan="2"><b>Generado</b></td><td colspan="6">'+esc(generado)+'</td></tr>';trs+='<tr><td colspan="2"><b>Pedidos visibles</b></td><td>'+rows.length+'</td><td colspan="2"><b>Total visible</b></td><td colspan="3">'+money(total)+'</td></tr>';trs+='<tr class="blank"><td colspan="8"></td></tr>';trs+='<tr class="head"><td>Fecha</td><td>Cliente</td><td>WhatsApp</td><td>Videos</td><td>Estado</td><td>Clave</td><td>Cant.</td><td>Total</td></tr>';rows.forEach(function(p){trs+='<tr><td>'+esc(new Date(Number(p.creado||0)).toLocaleString('es-AR'))+'</td><td>'+esc(p.clienteNombre||'')+'</td><td>'+esc(p.clienteWhatsapp||'')+'</td><td>'+esc(orderItemsText(p,' | '))+'</td><td>'+esc(orderStateLabel(p))+'</td><td>'+esc(p.clave||'')+'</td><td>'+((p.items||[]).length||0)+'</td><td>'+Number(p.totalARS||0)+'</td></tr>';});trs+='<tr class="total"><td colspan="7">TOTAL</td><td>'+Number(total||0)+'</td></tr>';let html='<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif}table{border-collapse:collapse;width:100%}td{border:1px solid #999;padding:8px;font-size:12px;vertical-align:top}.title td,.title{background:#050505;color:#fff;font-size:24px;font-weight:bold;text-align:center}.subtitle td,.subtitle{background:#e00000;color:#fff;font-size:16px;font-weight:bold;text-align:center}.head td,.head{background:#222;color:#fff;font-weight:bold;text-transform:uppercase}.blank td{border:0;height:10px}.total td,.total{background:#f2f2f2;font-weight:bold}</style></head><body><table>'+trs+'</table>
+
+<style id="v124-cortes-director-css">
+.cut-v124-card{border:1px solid rgba(255,255,255,.12);background:#111;border-radius:16px;overflow:hidden;margin-top:10px}
+.cut-v124-card summary{cursor:pointer;padding:13px 14px;color:#fff;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:.6px;background:linear-gradient(90deg,rgba(224,0,0,.16),rgba(255,255,255,.025));}
+.cut-v124-body{padding:12px 14px 14px;display:grid;gap:10px}
+.cut-v124-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:end}
+.cut-v124-grid .span2{grid-column:1/-1}
+.cut-v124-grid label{display:block;color:#aaa;text-transform:uppercase;font-size:10px;font-weight:900;letter-spacing:.7px;margin-bottom:5px}
+.cut-v124-grid input,.cut-v124-grid select{width:100%;box-sizing:border-box;background:#181818;border:1px solid rgba(255,255,255,.14);border-radius:12px;color:#fff;padding:11px;outline:none}
+.cut-v124-current{display:grid;grid-template-columns:1fr 96px 56px;gap:8px;align-items:center}
+.cut-v124-current input[type=range]{accent-color:#e00000;width:100%}
+.cut-v124-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.cut-v124-status{border:1px solid rgba(255,208,77,.22);background:rgba(255,208,77,.055);border-radius:13px;padding:10px 12px;color:#ddd;font-size:12px;line-height:1.45}
+.cut-v124-mode{display:flex;gap:8px;flex-wrap:wrap}.cut-v124-mode button.active{background:linear-gradient(135deg,var(--red),var(--red2));border-color:rgba(255,0,0,.55)}
+.cut-v124-cmd{display:none;width:100%;min-height:84px;background:#080808!important;color:#eee!important;font-family:Consolas,monospace;font-size:11px;line-height:1.4;border-radius:12px;border:1px solid rgba(255,255,255,.12);padding:10px;box-sizing:border-box}
+.cut-v124-cmd.show{display:block}
+.cut-v124-title-modal .field{margin-top:10px}.cut-v124-title-modal input{width:100%;box-sizing:border-box;background:#181818;border:1px solid rgba(255,255,255,.14);border-radius:12px;color:#fff;padding:12px}
+@media(max-width:700px){.cut-v124-grid{grid-template-columns:1fr}.cut-v124-current{grid-template-columns:1fr 80px}.cut-v124-current .cut-go{grid-column:1/-1}}
+</style>
+<script id="v124-cortes-director-js">
+(function(){
+  const VERSION_V124='v124';
+  function getEl(id){return document.getElementById(id)}
+  function secFromTimeV124(v){
+    v=String(v||'').trim(); if(!v)return 0;
+    if(/^\d+$/.test(v))return Number(v)||0;
+    var parts=v.split(':').map(x=>Number(x)||0);
+    if(parts.length===2)return parts[0]*60+parts[1];
+    if(parts.length===3)return parts[0]*3600+parts[1]*60+parts[2];
+    return 0;
+  }
+  function fmtV124(sec){
+    sec=Math.max(0,Math.round(Number(sec)||0));
+    var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
+    if(h>0)return h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  }
+  function currentDirectorEventV124(){
+    return (state.data.eventos||[]).find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||(state.data.eventos||[])[0]||null;
+  }
+  function currentDirectorVideoV124(ev){
+    ev=ev||currentDirectorEventV124(); if(!ev)return null;
+    var id=state.directorVideoId || (getEl('dir_video_select')&&getEl('dir_video_select').value) || '';
+    return (ev.videos||[]).find(v=>String(v.id)===String(id)) || (ev.videos||[]).find(v=>v.youtubeId) || (ev.videos||[])[0] || null;
+  }
+  function cutReadV124(){
+    var tipo=(getEl('dir_cut_tipo_v124')&&getEl('dir_cut_tipo_v124').value)||'normal';
+    var rot=(getEl('dir_cut_rot_v124')&&getEl('dir_cut_rot_v124').value)||'0';
+    var start=secFromTimeV124(getEl('dir_cut_start_v124')&&getEl('dir_cut_start_v124').value);
+    var end=secFromTimeV124(getEl('dir_cut_end_v124')&&getEl('dir_cut_end_v124').value);
+    if(end<start)end=start;
+    return {tipo:tipo,rotacion:rot,start:start,end:end,duracion:Math.max(0,end-start)};
+  }
+  function cutVideoFiltersV124(c){
+    var vf=[];
+    if(c.rotacion==='90')vf.push('transpose=1');
+    if(c.rotacion==='-90')vf.push('transpose=2');
+    if(c.rotacion==='180')vf.push('transpose=1,transpose=1');
+    if(c.tipo==='vertical')vf.push('scale=-2:1920,crop=1080:1920');
+    if(c.tipo==='cuadrado')vf.push('scale=-2:1080,crop=1080:1080');
+    return vf.join(',');
+  }
+  function cutCommandV124(){
+    var ev=currentDirectorEventV124(), v=currentDirectorVideoV124(ev), c=cutReadV124();
+    var outName=(v&&v.titulo?v.titulo:'corte').replace(/[\\/:*?"<>|]+/g,'_').trim()||'corte';
+    var vf=cutVideoFiltersV124(c);
+    var ss=fmtV124(c.start), to=fmtV124(c.end);
+    var cmd='ffmpeg -y -ss '+ss+' -to '+to+' -i "%INPUT%"';
+    if(vf)cmd+=' -vf "'+vf+'"';
+    cmd+=' -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -c:a aac -b:a 192k "C:\\TOMAUNO\\ENTREGAS\\'+outName+'_CORTE_TOMAUNO.mp4"';
+    return cmd;
+  }
+  function cutUpdateV124(){
+    var c=cutReadV124();
+    var info=getEl('dir_cut_info_v124');
+    if(info){info.innerHTML='Inicio: <b>'+fmtV124(c.start)+'</b> &nbsp; Fin: <b>'+fmtV124(c.end)+'</b> &nbsp; Duración: <b>'+fmtV124(c.duracion)+'</b><br>Salida: <b>'+(c.tipo==='normal'?'Normal / vendible':c.tipo==='vertical'?'Vertical 9:16':'Cuadrado 1:1')+'</b> · Rotación: <b>'+(c.rotacion==='0'?'sin rotar':c.rotacion+'°')+'</b>';}
+    var cmd=getEl('dir_cut_cmd_v124'); if(cmd)cmd.value=cutCommandV124();
+  }
+  function cutSeekV124(sec){
+    sec=Math.max(0,Math.round(Number(sec)||0)); state.directorBigStart=sec;
+    var r=getEl('dir_cut_current_v124'),n=getEl('dir_cut_current_num_v124'); if(r)r.value=sec; if(n)n.value=sec;
+    var fr=getEl('dir_frame'); var yt=cleanYouTube(state.directorSample||(getEl('dir_sample')&&getEl('dir_sample').value)||'');
+    if(fr&&yt)fr.src='https://www.youtube.com/embed/'+encodeURIComponent(yt)+'?rel=0&modestbranding=1&vq=hd1080&start='+encodeURIComponent(sec);
+  }
+  function makeCutCardV124(){
+    var ev=currentDirectorEventV124(), base=currentDirectorVideoV124(ev), c=cutReadV124();
+    if(!ev||!base){toast('Corte','No hay video base seleccionado.');return;}
+    if(c.duracion<=0){toast('Corte','Marcá un inicio y fin válido.');return;}
+    var suggested=(base.titulo||'Corte')+' · corte '+fmtV124(c.start)+'-'+fmtV124(c.end);
+    openModal('Crear tarjeta desde corte','<div class="cut-v124-title-modal"><p class="muted">La tarjeta usará el mismo YouTube/Drive del video base, pero reproducirá solo el fragmento indicado.</p><div class="field"><label>Título</label><input id="cutTitleV124" value="'+esc(suggested)+'"></div><div class="field"><label>Subtítulo</label><input id="cutSubV124" value="'+esc(base.subtitulo||'')+'"></div><div class="modal-actions right-red" style="padding-top:14px"><button class="btn gray" id="cutCancelV124">Cancelar</button><button class="btn red" id="cutOkV124">Crear tarjeta</button></div></div>');
+    var ok=getEl('cutOkV124'), cancel=getEl('cutCancelV124'); if(cancel)cancel.onclick=closeModal;
+    if(ok)ok.onclick=async function(){
+      var title=(getEl('cutTitleV124')&&getEl('cutTitleV124').value.trim())||suggested;
+      var sub=(getEl('cutSubV124')&&getEl('cutSubV124').value.trim())||'';
+      var nv={id:String(nextVid(ev)),titulo:title,subtitulo:sub,bailarina:sub,youtubeId:base.youtubeId||'',previewInicio:c.start,previewSegundos:c.duracion,precio:Number(base.precio||15000),driveId:base.driveId||'',codigo:randCode(),descargas:0,plays:0,corteDe:String(base.id||''),corteTipo:c.tipo,corteInicio:c.start,corteFin:c.end,corteRotacion:c.rotacion};
+      ev.videos.push(nv); closeModal();
+      var saved=await ghSave('Crear tarjeta corte '+title,true); state.currentEvent=ev; renderVideos(); toast(saved?'Tarjeta creada':'Tarjeta local','Se agregó el corte a la grilla.');
+    };
+    setTimeout(()=>{var inp=getEl('cutTitleV124'); if(inp)inp.focus();},50);
+  }
+  function downloadBatV124(){
+    var cmd=cutCommandV124();
+    var txt='@echo off\r\nREM TOMAUNO - Corte Director\r\nREM Reemplazá %INPUT% por el archivo original o arrastrá el archivo al BAT si lo adaptamos luego.\r\n'+cmd+'\r\npause\r\n';
+    var blob=new Blob([txt],{type:'application/x-msdos-program'}); var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='tomauno_corte_director.bat'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
+  }
+  function installCutsV124(){
+    var oldHist=getEl('dir_historia'); var oldDetails=oldHist&&oldHist.closest('details');
+    var anchor=oldDetails || getEl('dir_cmd') || getEl('dir_save');
+    if(!anchor || getEl('dir_cut_v124'))return;
+    if(oldDetails)oldDetails.style.display='none';
+    var p=readDirectorPreset?readDirectorPreset():{};
+    var box=document.createElement('details'); box.className='cut-v124-card'; box.id='dir_cut_v124'; box.open=true;
+    var start=secFromTimeV124(p.histInicio||'00:00'), end=secFromTimeV124(p.histFin||'00:15');
+    var cur=Number(state.directorBigStart||start||0)||0;
+    box.innerHTML='<summary>✂️ Cortes Director</summary><div class="cut-v124-body"><div class="cut-v124-grid"><div class="field"><label>Tipo salida</label><select id="dir_cut_tipo_v124"><option value="normal">Normal / tarjeta vendible</option><option value="vertical">Vertical 9:16 historia/reel</option><option value="cuadrado">Cuadrado 1:1</option></select></div><div class="field"><label>Rotar visualización/salida</label><select id="dir_cut_rot_v124"><option value="0">Sin rotar</option><option value="90">90° derecha</option><option value="-90">90° izquierda</option><option value="180">180°</option></select></div><div class="field"><label>Inicio</label><input id="dir_cut_start_v124" value="'+esc(fmtV124(start))+'"></div><div class="field"><label>Fin</label><input id="dir_cut_end_v124" value="'+esc(fmtV124(end))+'"></div><div class="span2"><label>Barra para ubicar el momento</label><div class="cut-v124-current"><input type="range" id="dir_cut_current_v124" min="0" max="7200" step="1" value="'+esc(cur)+'"><input type="number" id="dir_cut_current_num_v124" min="0" value="'+esc(cur)+'"><button class="btn gray small cut-go" id="dir_cut_go_v124" type="button">Ir</button></div></div></div><div class="cut-v124-actions"><button class="btn gray small" id="dir_cut_mark_start_v124" type="button">Marcar inicio</button><button class="btn gray small" id="dir_cut_mark_end_v124" type="button">Marcar fin</button><button class="btn gray small" id="dir_cut_view_start_v124" type="button">Ir al inicio</button><button class="btn gray small" id="dir_cut_view_end_v124" type="button">Ir al fin</button><button class="btn red small" id="dir_cut_create_v124" type="button">Crear tarjeta</button><button class="btn gray small" id="dir_cut_copy_v124" type="button">Copiar FFmpeg</button><button class="btn gray small" id="dir_cut_bat_v124" type="button">Descargar BAT</button></div><div class="cut-v124-status" id="dir_cut_info_v124"></div><textarea class="cut-v124-cmd" id="dir_cut_cmd_v124" readonly></textarea></div>';
+    anchor.parentNode.insertBefore(box, anchor);
+    var ids=['dir_cut_tipo_v124','dir_cut_rot_v124','dir_cut_start_v124','dir_cut_end_v124']; ids.forEach(id=>{var el=getEl(id); if(el)el.onchange=cutUpdateV124; if(el&&el.tagName==='INPUT')el.oninput=cutUpdateV124;});
+    var r=getEl('dir_cut_current_v124'), n=getEl('dir_cut_current_num_v124');
+    if(r)r.oninput=function(){if(n)n.value=r.value;}; if(n)n.oninput=function(){if(r)r.value=n.value;};
+    var go=getEl('dir_cut_go_v124'); if(go)go.onclick=function(){cutSeekV124(Number((n&&n.value)||(r&&r.value)||0)||0);};
+    getEl('dir_cut_mark_start_v124').onclick=function(){var sec=Number((n&&n.value)||(r&&r.value)||0)||0; getEl('dir_cut_start_v124').value=fmtV124(sec); cutUpdateV124(); toast('Corte','Inicio marcado en '+fmtV124(sec));};
+    getEl('dir_cut_mark_end_v124').onclick=function(){var sec=Number((n&&n.value)||(r&&r.value)||0)||0; getEl('dir_cut_end_v124').value=fmtV124(sec); cutUpdateV124(); toast('Corte','Fin marcado en '+fmtV124(sec));};
+    getEl('dir_cut_view_start_v124').onclick=function(){cutSeekV124(secFromTimeV124(getEl('dir_cut_start_v124').value));};
+    getEl('dir_cut_view_end_v124').onclick=function(){cutSeekV124(secFromTimeV124(getEl('dir_cut_end_v124').value));};
+    getEl('dir_cut_create_v124').onclick=makeCutCardV124;
+    getEl('dir_cut_copy_v124').onclick=async function(){var cmd=cutCommandV124(); var ta=getEl('dir_cut_cmd_v124'); if(ta){ta.value=cmd;ta.classList.add('show');} try{await navigator.clipboard.writeText(cmd); toast('Corte','Comando FFmpeg copiado.');}catch(e){toast('Corte','Comando listo en el cuadro.');}};
+    getEl('dir_cut_bat_v124').onclick=downloadBatV124;
+    cutUpdateV124();
+  }
+  var oldBind=window.bindDirector;
+  if(typeof oldBind==='function'){
+    window.bindDirector=function(ev){ oldBind(ev); setTimeout(installCutsV124,0); };
+  }
+  var oldAdminDirector=window.adminDirector;
+  if(typeof oldAdminDirector==='function'){
+    window.adminDirector=function(){ oldAdminDirector(); setTimeout(installCutsV124,0); };
+  }
+  window.installCutsV124=installCutsV124;
+  console.log('TOMAUNO VIDEOS v124 Cortes Director reales');
+})();
+</script>
+
+</body></html>';let blob=new Blob(['\ufeff'+html],{type:'application/vnd.ms-excel;charset=utf-8;'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='TOMAUNO_'+safeFileName(info.evento)+'_'+safeFileName(info.filtro)+'_'+todayKey()+'.xls';a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},1000);}
+function exportVisibleOrdersPdf(){let rows=visibleOrders();let info=reportTitle();let total=rows.reduce((a,p)=>a+Number(p.totalARS||0),0);let pendientes=rows.filter(function(p){return orderStateLabel(p)==='Pendiente';}).length;let entregados=rows.filter(function(p){return orderStateLabel(p)==='Entregado';}).length;let archivados=rows.filter(function(p){return orderStateLabel(p)==='Archivado';}).length;let body=rows.map(function(p){return '<tr><td class="date">'+esc(new Date(Number(p.creado||0)).toLocaleString('es-AR'))+'</td><td><b>'+esc(p.clienteNombre||'')+'</b><br><small>'+esc(p.clienteWhatsapp||'Sin WhatsApp')+'</small></td><td>'+esc(orderItemsText(p,' | '))+'</td><td><span class="state '+esc(orderStateLabel(p).toLowerCase())+'">'+esc(orderStateLabel(p))+'</span></td><td><b>'+esc(p.clave||'-')+'</b></td><td class="qty">'+((p.items||[]).length||0)+'</td><td class="money">'+money(p.totalARS||0)+'</td></tr>';}).join('');if(!body)body='<tr><td colspan="7" class="empty">No hay pedidos visibles para este filtro.</td></tr>';let html='<!doctype html><html><head><meta charset="utf-8"><title>Tomauno Reporte '+esc(info.filtro)+'</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{margin:0;background:#080808;color:#fff;font-family:Inter,Arial,sans-serif}.page{max-width:1180px;margin:0 auto;padding:26px}.head{position:relative;overflow:hidden;background:radial-gradient(circle at 88% 20%,rgba(224,0,0,.50),transparent 28%),linear-gradient(135deg,#050505 0%,#0b0b0b 58%,#210000 100%);border:1px solid rgba(224,0,0,.45);border-radius:24px;padding:24px 26px;margin-bottom:16px}.brand{font-size:44px;font-weight:900;letter-spacing:1.5px;line-height:1}.brand .uno{color:#ff1919}.tag{display:inline-block;margin-top:8px;background:#e00000;color:#fff;border-radius:999px;padding:7px 12px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px}.meta{margin-top:12px;color:#d6d6d6;font-size:13px;line-height:1.6}.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0 16px}.box{border:1px solid #303030;background:#141414;border-radius:16px;padding:13px}.box span{display:block;color:#999;font-size:10px;text-transform:uppercase;font-weight:900;letter-spacing:1px}.box b{display:block;font-size:25px;color:#ff1919;margin-top:3px}.report-table{width:100%;border-collapse:separate;border-spacing:0 7px}.report-table th{text-align:left;color:#ff3333;font-size:10px;text-transform:uppercase;letter-spacing:.9px;padding:7px 10px}.report-table td{background:#151515;border-top:1px solid #2d2d2d;border-bottom:1px solid #2d2d2d;padding:9px 10px;font-size:12px;vertical-align:top}.report-table td:first-child{border-left:1px solid #2d2d2d;border-radius:12px 0 0 12px}.report-table td:last-child{border-right:1px solid #2d2d2d;border-radius:0 12px 12px 0}.date{white-space:nowrap;color:#ccc}.money{white-space:nowrap;font-weight:900;color:#fff}.qty{text-align:center}.state{display:inline-block;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase}.state.pendiente{background:#3a2500;color:#ffd04d}.state.entregado,.state.desbloqueado{background:#062b16;color:#00d46a}.state.archivado{background:#2a2a2a;color:#bbb}.state.cancelado{background:#330606;color:#ff7777}.total-line{text-align:right;margin-top:14px;font-size:22px;font-weight:900}.footer{display:flex;justify-content:space-between;gap:16px;margin-top:20px;color:#aaa;font-size:12px;border-top:1px solid #242424;padding-top:12px}.printbar{position:sticky;bottom:0;background:rgba(0,0,0,.78);backdrop-filter:blur(10px);padding:12px;text-align:right}.printbar button{background:#e00000;color:#fff;border:0;border-radius:999px;padding:11px 18px;font-weight:900;cursor:pointer}.empty{text-align:center;color:#aaa;padding:40px!important}@media print{body{background:#fff;color:#111}.page{padding:0}.head{color:#fff}.box{break-inside:avoid}.report-table td{background:#fff;color:#111;border-color:#bbb}.printbar{display:none}.footer{color:#333}.state{border:1px solid #999}}</style></head><body><div class="page"><div class="head"><div class="brand"><span>TOMA</span><span class="uno">UNO</span> VIDEOS</div><div class="tag">Reporte de pedidos</div><div class="meta"><b>Evento:</b> '+esc(info.evento)+'<br><b>Filtro:</b> '+esc(info.filtro)+' · <b>Generado:</b> '+esc(info.fecha)+' · <b>Versión:</b> v110 rollback</div></div><div class="summary"><div class="box"><span>Pedidos</span><b>'+rows.length+'</b></div><div class="box"><span>Pendientes</span><b>'+pendientes+'</b></div><div class="box"><span>Entregados</span><b>'+entregados+'</b></div><div class="box"><span>Archivados</span><b>'+archivados+'</b></div><div class="box"><span>Total</span><b>'+money(total)+'</b></div></div><table class="report-table"><thead><tr><th>Fecha</th><th>Cliente</th><th>Videos</th><th>Estado</th><th>Clave</th><th>Cant.</th><th>Total</th></tr></thead><tbody>'+body+'</tbody></table><div class="total-line">Total visible: <span style="color:#ff1919">'+money(total)+'</span></div><div class="footer"><div>@tomaunomodels · WhatsApp 3764354522</div><div>Tomauno Videos · Reporte operativo</div></div><div class="printbar"><button onclick="window.print()">Imprimir / guardar PDF</button></div></div>
+
+<style id="v124-cortes-director-css">
+.cut-v124-card{border:1px solid rgba(255,255,255,.12);background:#111;border-radius:16px;overflow:hidden;margin-top:10px}
+.cut-v124-card summary{cursor:pointer;padding:13px 14px;color:#fff;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:.6px;background:linear-gradient(90deg,rgba(224,0,0,.16),rgba(255,255,255,.025));}
+.cut-v124-body{padding:12px 14px 14px;display:grid;gap:10px}
+.cut-v124-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:end}
+.cut-v124-grid .span2{grid-column:1/-1}
+.cut-v124-grid label{display:block;color:#aaa;text-transform:uppercase;font-size:10px;font-weight:900;letter-spacing:.7px;margin-bottom:5px}
+.cut-v124-grid input,.cut-v124-grid select{width:100%;box-sizing:border-box;background:#181818;border:1px solid rgba(255,255,255,.14);border-radius:12px;color:#fff;padding:11px;outline:none}
+.cut-v124-current{display:grid;grid-template-columns:1fr 96px 56px;gap:8px;align-items:center}
+.cut-v124-current input[type=range]{accent-color:#e00000;width:100%}
+.cut-v124-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.cut-v124-status{border:1px solid rgba(255,208,77,.22);background:rgba(255,208,77,.055);border-radius:13px;padding:10px 12px;color:#ddd;font-size:12px;line-height:1.45}
+.cut-v124-mode{display:flex;gap:8px;flex-wrap:wrap}.cut-v124-mode button.active{background:linear-gradient(135deg,var(--red),var(--red2));border-color:rgba(255,0,0,.55)}
+.cut-v124-cmd{display:none;width:100%;min-height:84px;background:#080808!important;color:#eee!important;font-family:Consolas,monospace;font-size:11px;line-height:1.4;border-radius:12px;border:1px solid rgba(255,255,255,.12);padding:10px;box-sizing:border-box}
+.cut-v124-cmd.show{display:block}
+.cut-v124-title-modal .field{margin-top:10px}.cut-v124-title-modal input{width:100%;box-sizing:border-box;background:#181818;border:1px solid rgba(255,255,255,.14);border-radius:12px;color:#fff;padding:12px}
+@media(max-width:700px){.cut-v124-grid{grid-template-columns:1fr}.cut-v124-current{grid-template-columns:1fr 80px}.cut-v124-current .cut-go{grid-column:1/-1}}
+</style>
+<script id="v124-cortes-director-js">
+(function(){
+  const VERSION_V124='v124';
+  function getEl(id){return document.getElementById(id)}
+  function secFromTimeV124(v){
+    v=String(v||'').trim(); if(!v)return 0;
+    if(/^\d+$/.test(v))return Number(v)||0;
+    var parts=v.split(':').map(x=>Number(x)||0);
+    if(parts.length===2)return parts[0]*60+parts[1];
+    if(parts.length===3)return parts[0]*3600+parts[1]*60+parts[2];
+    return 0;
+  }
+  function fmtV124(sec){
+    sec=Math.max(0,Math.round(Number(sec)||0));
+    var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
+    if(h>0)return h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  }
+  function currentDirectorEventV124(){
+    return (state.data.eventos||[]).find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||(state.data.eventos||[])[0]||null;
+  }
+  function currentDirectorVideoV124(ev){
+    ev=ev||currentDirectorEventV124(); if(!ev)return null;
+    var id=state.directorVideoId || (getEl('dir_video_select')&&getEl('dir_video_select').value) || '';
+    return (ev.videos||[]).find(v=>String(v.id)===String(id)) || (ev.videos||[]).find(v=>v.youtubeId) || (ev.videos||[])[0] || null;
+  }
+  function cutReadV124(){
+    var tipo=(getEl('dir_cut_tipo_v124')&&getEl('dir_cut_tipo_v124').value)||'normal';
+    var rot=(getEl('dir_cut_rot_v124')&&getEl('dir_cut_rot_v124').value)||'0';
+    var start=secFromTimeV124(getEl('dir_cut_start_v124')&&getEl('dir_cut_start_v124').value);
+    var end=secFromTimeV124(getEl('dir_cut_end_v124')&&getEl('dir_cut_end_v124').value);
+    if(end<start)end=start;
+    return {tipo:tipo,rotacion:rot,start:start,end:end,duracion:Math.max(0,end-start)};
+  }
+  function cutVideoFiltersV124(c){
+    var vf=[];
+    if(c.rotacion==='90')vf.push('transpose=1');
+    if(c.rotacion==='-90')vf.push('transpose=2');
+    if(c.rotacion==='180')vf.push('transpose=1,transpose=1');
+    if(c.tipo==='vertical')vf.push('scale=-2:1920,crop=1080:1920');
+    if(c.tipo==='cuadrado')vf.push('scale=-2:1080,crop=1080:1080');
+    return vf.join(',');
+  }
+  function cutCommandV124(){
+    var ev=currentDirectorEventV124(), v=currentDirectorVideoV124(ev), c=cutReadV124();
+    var outName=(v&&v.titulo?v.titulo:'corte').replace(/[\\/:*?"<>|]+/g,'_').trim()||'corte';
+    var vf=cutVideoFiltersV124(c);
+    var ss=fmtV124(c.start), to=fmtV124(c.end);
+    var cmd='ffmpeg -y -ss '+ss+' -to '+to+' -i "%INPUT%"';
+    if(vf)cmd+=' -vf "'+vf+'"';
+    cmd+=' -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -c:a aac -b:a 192k "C:\\TOMAUNO\\ENTREGAS\\'+outName+'_CORTE_TOMAUNO.mp4"';
+    return cmd;
+  }
+  function cutUpdateV124(){
+    var c=cutReadV124();
+    var info=getEl('dir_cut_info_v124');
+    if(info){info.innerHTML='Inicio: <b>'+fmtV124(c.start)+'</b> &nbsp; Fin: <b>'+fmtV124(c.end)+'</b> &nbsp; Duración: <b>'+fmtV124(c.duracion)+'</b><br>Salida: <b>'+(c.tipo==='normal'?'Normal / vendible':c.tipo==='vertical'?'Vertical 9:16':'Cuadrado 1:1')+'</b> · Rotación: <b>'+(c.rotacion==='0'?'sin rotar':c.rotacion+'°')+'</b>';}
+    var cmd=getEl('dir_cut_cmd_v124'); if(cmd)cmd.value=cutCommandV124();
+  }
+  function cutSeekV124(sec){
+    sec=Math.max(0,Math.round(Number(sec)||0)); state.directorBigStart=sec;
+    var r=getEl('dir_cut_current_v124'),n=getEl('dir_cut_current_num_v124'); if(r)r.value=sec; if(n)n.value=sec;
+    var fr=getEl('dir_frame'); var yt=cleanYouTube(state.directorSample||(getEl('dir_sample')&&getEl('dir_sample').value)||'');
+    if(fr&&yt)fr.src='https://www.youtube.com/embed/'+encodeURIComponent(yt)+'?rel=0&modestbranding=1&vq=hd1080&start='+encodeURIComponent(sec);
+  }
+  function makeCutCardV124(){
+    var ev=currentDirectorEventV124(), base=currentDirectorVideoV124(ev), c=cutReadV124();
+    if(!ev||!base){toast('Corte','No hay video base seleccionado.');return;}
+    if(c.duracion<=0){toast('Corte','Marcá un inicio y fin válido.');return;}
+    var suggested=(base.titulo||'Corte')+' · corte '+fmtV124(c.start)+'-'+fmtV124(c.end);
+    openModal('Crear tarjeta desde corte','<div class="cut-v124-title-modal"><p class="muted">La tarjeta usará el mismo YouTube/Drive del video base, pero reproducirá solo el fragmento indicado.</p><div class="field"><label>Título</label><input id="cutTitleV124" value="'+esc(suggested)+'"></div><div class="field"><label>Subtítulo</label><input id="cutSubV124" value="'+esc(base.subtitulo||'')+'"></div><div class="modal-actions right-red" style="padding-top:14px"><button class="btn gray" id="cutCancelV124">Cancelar</button><button class="btn red" id="cutOkV124">Crear tarjeta</button></div></div>');
+    var ok=getEl('cutOkV124'), cancel=getEl('cutCancelV124'); if(cancel)cancel.onclick=closeModal;
+    if(ok)ok.onclick=async function(){
+      var title=(getEl('cutTitleV124')&&getEl('cutTitleV124').value.trim())||suggested;
+      var sub=(getEl('cutSubV124')&&getEl('cutSubV124').value.trim())||'';
+      var nv={id:String(nextVid(ev)),titulo:title,subtitulo:sub,bailarina:sub,youtubeId:base.youtubeId||'',previewInicio:c.start,previewSegundos:c.duracion,precio:Number(base.precio||15000),driveId:base.driveId||'',codigo:randCode(),descargas:0,plays:0,corteDe:String(base.id||''),corteTipo:c.tipo,corteInicio:c.start,corteFin:c.end,corteRotacion:c.rotacion};
+      ev.videos.push(nv); closeModal();
+      var saved=await ghSave('Crear tarjeta corte '+title,true); state.currentEvent=ev; renderVideos(); toast(saved?'Tarjeta creada':'Tarjeta local','Se agregó el corte a la grilla.');
+    };
+    setTimeout(()=>{var inp=getEl('cutTitleV124'); if(inp)inp.focus();},50);
+  }
+  function downloadBatV124(){
+    var cmd=cutCommandV124();
+    var txt='@echo off\r\nREM TOMAUNO - Corte Director\r\nREM Reemplazá %INPUT% por el archivo original o arrastrá el archivo al BAT si lo adaptamos luego.\r\n'+cmd+'\r\npause\r\n';
+    var blob=new Blob([txt],{type:'application/x-msdos-program'}); var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='tomauno_corte_director.bat'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
+  }
+  function installCutsV124(){
+    var oldHist=getEl('dir_historia'); var oldDetails=oldHist&&oldHist.closest('details');
+    var anchor=oldDetails || getEl('dir_cmd') || getEl('dir_save');
+    if(!anchor || getEl('dir_cut_v124'))return;
+    if(oldDetails)oldDetails.style.display='none';
+    var p=readDirectorPreset?readDirectorPreset():{};
+    var box=document.createElement('details'); box.className='cut-v124-card'; box.id='dir_cut_v124'; box.open=true;
+    var start=secFromTimeV124(p.histInicio||'00:00'), end=secFromTimeV124(p.histFin||'00:15');
+    var cur=Number(state.directorBigStart||start||0)||0;
+    box.innerHTML='<summary>✂️ Cortes Director</summary><div class="cut-v124-body"><div class="cut-v124-grid"><div class="field"><label>Tipo salida</label><select id="dir_cut_tipo_v124"><option value="normal">Normal / tarjeta vendible</option><option value="vertical">Vertical 9:16 historia/reel</option><option value="cuadrado">Cuadrado 1:1</option></select></div><div class="field"><label>Rotar visualización/salida</label><select id="dir_cut_rot_v124"><option value="0">Sin rotar</option><option value="90">90° derecha</option><option value="-90">90° izquierda</option><option value="180">180°</option></select></div><div class="field"><label>Inicio</label><input id="dir_cut_start_v124" value="'+esc(fmtV124(start))+'"></div><div class="field"><label>Fin</label><input id="dir_cut_end_v124" value="'+esc(fmtV124(end))+'"></div><div class="span2"><label>Barra para ubicar el momento</label><div class="cut-v124-current"><input type="range" id="dir_cut_current_v124" min="0" max="7200" step="1" value="'+esc(cur)+'"><input type="number" id="dir_cut_current_num_v124" min="0" value="'+esc(cur)+'"><button class="btn gray small cut-go" id="dir_cut_go_v124" type="button">Ir</button></div></div></div><div class="cut-v124-actions"><button class="btn gray small" id="dir_cut_mark_start_v124" type="button">Marcar inicio</button><button class="btn gray small" id="dir_cut_mark_end_v124" type="button">Marcar fin</button><button class="btn gray small" id="dir_cut_view_start_v124" type="button">Ir al inicio</button><button class="btn gray small" id="dir_cut_view_end_v124" type="button">Ir al fin</button><button class="btn red small" id="dir_cut_create_v124" type="button">Crear tarjeta</button><button class="btn gray small" id="dir_cut_copy_v124" type="button">Copiar FFmpeg</button><button class="btn gray small" id="dir_cut_bat_v124" type="button">Descargar BAT</button></div><div class="cut-v124-status" id="dir_cut_info_v124"></div><textarea class="cut-v124-cmd" id="dir_cut_cmd_v124" readonly></textarea></div>';
+    anchor.parentNode.insertBefore(box, anchor);
+    var ids=['dir_cut_tipo_v124','dir_cut_rot_v124','dir_cut_start_v124','dir_cut_end_v124']; ids.forEach(id=>{var el=getEl(id); if(el)el.onchange=cutUpdateV124; if(el&&el.tagName==='INPUT')el.oninput=cutUpdateV124;});
+    var r=getEl('dir_cut_current_v124'), n=getEl('dir_cut_current_num_v124');
+    if(r)r.oninput=function(){if(n)n.value=r.value;}; if(n)n.oninput=function(){if(r)r.value=n.value;};
+    var go=getEl('dir_cut_go_v124'); if(go)go.onclick=function(){cutSeekV124(Number((n&&n.value)||(r&&r.value)||0)||0);};
+    getEl('dir_cut_mark_start_v124').onclick=function(){var sec=Number((n&&n.value)||(r&&r.value)||0)||0; getEl('dir_cut_start_v124').value=fmtV124(sec); cutUpdateV124(); toast('Corte','Inicio marcado en '+fmtV124(sec));};
+    getEl('dir_cut_mark_end_v124').onclick=function(){var sec=Number((n&&n.value)||(r&&r.value)||0)||0; getEl('dir_cut_end_v124').value=fmtV124(sec); cutUpdateV124(); toast('Corte','Fin marcado en '+fmtV124(sec));};
+    getEl('dir_cut_view_start_v124').onclick=function(){cutSeekV124(secFromTimeV124(getEl('dir_cut_start_v124').value));};
+    getEl('dir_cut_view_end_v124').onclick=function(){cutSeekV124(secFromTimeV124(getEl('dir_cut_end_v124').value));};
+    getEl('dir_cut_create_v124').onclick=makeCutCardV124;
+    getEl('dir_cut_copy_v124').onclick=async function(){var cmd=cutCommandV124(); var ta=getEl('dir_cut_cmd_v124'); if(ta){ta.value=cmd;ta.classList.add('show');} try{await navigator.clipboard.writeText(cmd); toast('Corte','Comando FFmpeg copiado.');}catch(e){toast('Corte','Comando listo en el cuadro.');}};
+    getEl('dir_cut_bat_v124').onclick=downloadBatV124;
+    cutUpdateV124();
+  }
+  var oldBind=window.bindDirector;
+  if(typeof oldBind==='function'){
+    window.bindDirector=function(ev){ oldBind(ev); setTimeout(installCutsV124,0); };
+  }
+  var oldAdminDirector=window.adminDirector;
+  if(typeof oldAdminDirector==='function'){
+    window.adminDirector=function(){ oldAdminDirector(); setTimeout(installCutsV124,0); };
+  }
+  window.installCutsV124=installCutsV124;
+  console.log('TOMAUNO VIDEOS v124 Cortes Director reales');
+})();
+</script>
+
+</body></html>';let w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}else toast('Pop-up bloqueado','Permití ventanas emergentes para generar el PDF.');}
 
 async function deleteOrder(id){try{if(!db){await fbReady;} if(!db||!remove){toast('Sin conexión','No se pudo conectar a la base.');return;} await remove(ref(db,FB_BASE+'/pedidos/'+id));await adminOrders();updateTopStats();}catch(e){console.warn(e);toast('Error','No se pudo eliminar el pedido.');}}
 function receiptText(p){let fecha=new Date(Number(p.desbloqueado||p.creado||Date.now())).toLocaleString('es-AR');let lines=[];lines.push('🧾 *TOMAUNO - TICKET PAGADO*');lines.push('');lines.push('👤 *Cliente:* '+(p.clienteNombre||''));if(p.clienteWhatsapp)lines.push('📲 *WhatsApp:* '+p.clienteWhatsapp);lines.push('📅 *Fecha:* '+fecha);lines.push('🔓 *Clave:* '+(p.clave||'-'));lines.push('');lines.push('🎬 *Videos:*');(p.items||[]).forEach((it,i)=>lines.push((i+1)+'️⃣ '+(it.titulo||('Video '+it.videoId))+' - '+money(it.precio||0)));lines.push('');lines.push('💵 *Total:* '+money(p.totalARS||0));lines.push('');lines.push('📸 @tomaunomodels');lines.push('📲 3764354522');return lines.join('\n');}
@@ -1927,7 +2188,7 @@ function confirmDeleteVideoFromGrid(id){
     document.addEventListener('keydown',handler);
   }catch(e){ console.warn('confirmDeleteVideoFromGrid',e); toast('Error','No se pudo abrir la confirmación para eliminar.'); }
 }
-(async()=>{await fbReady; await fbGetConfig(); await console.log("TOMAUNO VIDEOS v122");
+(async()=>{await fbReady; await fbGetConfig(); await console.log("TOMAUNO VIDEOS v124");
 ghLoad(); await Promise.all([fbGetOrders(),fbGetStats(),fbGetReactions()]); fbListenReactions(); updateTopStats();})();
 
 
@@ -2002,240 +2263,148 @@ openDirectorFullscreen=function(){
   openModal('Vista Director grande','<div class="director-fullscreen-box"><iframe allow="autoplay; encrypted-media" src="'+(yt?'https://www.youtube.com/embed/'+esc(yt)+'?rel=0&modestbranding=1&controls=0&disablekb=1&fs=0&vq=hd1080':'about:blank')+'"></iframe>'+logo+'<div class="director-story-frame '+(p.historia?'show':'')+'"></div></div>','director-fullscreen-modal');
 };
 
-/* v122: bloque historias/cortes 9:16 pulido */
-(function(){
-  function parseTimeV122(t){
-    t=String(t||'').trim(); if(!t)return 0;
-    if(/^\d+(\.\d+)?$/.test(t))return Math.max(0,Math.floor(Number(t)||0));
-    var a=t.split(':').map(function(x){return Number(x)||0;});
-    if(a.length===2)return Math.max(0,Math.floor(a[0]*60+a[1]));
-    if(a.length>=3)return Math.max(0,Math.floor(a[a.length-3]*3600+a[a.length-2]*60+a[a.length-1]));
-    return 0;
-  }
-  function fmtTimeV122(sec){
-    sec=Math.max(0,Math.floor(Number(sec)||0)); var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
-    function pad(n){return String(n).padStart(2,'0');}
-    return h? (pad(h)+':'+pad(m)+':'+pad(s)) : (pad(m)+':'+pad(s));
-  }
-  function selectedYtV122(){return cleanYouTube((state.directorSample||((document.getElementById('dir_sample')||{}).value)||''));}
-  function setDirectorPreviewSecondV122(sec){
-    sec=parseTimeV122(sec); state.directorBigStart=sec;
-    var yt=selectedYtV122(); var fr=document.getElementById('dir_frame');
-    if(fr&&yt)fr.src='https://www.youtube.com/embed/'+encodeURIComponent(yt)+'?rel=0&modestbranding=1&controls=1&disablekb=0&fs=0&vq=hd1080&start='+encodeURIComponent(sec);
-  }
-  function storyCommandV122(ev,p){
-    var sample=(typeof directorCurrentVideo==='function')?directorCurrentVideo(ev):null;
-    var name=(sample&&sample.titulo?String(sample.titulo).replace(/[\\/:*?"<>|]+/g,'_'):'%NAME%');
-    var out=(p.outDir||'C:\\TOMAUNO\\ENTREGAS')+'\\'+name+'_HISTORIA_9x16.mp4';
-    var start=fmtTimeV122(parseTimeV122(p.histInicio||'00:00'));
-    var end=fmtTimeV122(parseTimeV122(p.histFin||'00:15'));
-    var zoom=(1+Number(p.histZoom||0)/100).toFixed(3);
-    var hx=Number(p.histPosX||0), hy=Number(p.histPosY||0);
-    var vf=(typeof directorFfmpegFilters==='function'?directorFfmpegFilters(p):'eq=brightness=0:contrast=1:saturation=1');
-    var crop='scale=iw*'+zoom+':ih*'+zoom+',crop=ih*9/16:ih:(iw-ow)/2'+(hx?((hx>0?'+':'')+'('+hx+'*iw/200)'):'')+':(ih-oh)/2'+(hy?((hy>0?'+':'')+'('+hy+'*ih/200)'):'')+',scale=1080:1920';
-    return 'ffmpeg -y -ss '+start+' -to '+end+' -i "%INPUT%" -vf "'+vf+','+crop+'" -af "'+(typeof directorAudioFilters==='function'?directorAudioFilters(p):'volume=1')+'" -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -c:a aac -b:a 192k "'+out+'"';
-  }
-  var oldCmd=directorCommandForEvent;
-  directorCommandForEvent=function(ev,p){
-    var base=oldCmd(ev,p);
-    if(p&&p.historia){base+='\n\nREM ===== HISTORIA 9:16 LISTA PARA EXPORTAR =====\n'+storyCommandV122(ev,p);}
-    return base;
-  };
-  function updateStoryDurationV122(){
-    var a=document.getElementById('dir_histInicio'),b=document.getElementById('dir_histFin'),out=document.getElementById('dir_story_duration_v122');
-    if(!a||!b||!out)return;
-    var dur=Math.max(0,parseTimeV122(b.value)-parseTimeV122(a.value));
-    out.textContent='Duración: '+fmtTimeV122(dur)+' · salida vertical 1080×1920';
-  }
-  function injectStoryToolsV122(){
-    var hist=document.getElementById('dir_historia'); if(!hist||document.getElementById('dir_story_tools_v122'))return;
-    var body=hist.closest('.director-details-body')||hist.parentElement; if(!body)return;
-    var box=document.createElement('div'); box.id='dir_story_tools_v122'; box.className='director-story-tools-v122';
-    box.innerHTML='<div class="story-row"><button class="btn gray small" id="dir_story_preview_start" type="button">▶ Ver inicio</button><button class="btn gray small" id="dir_story_preview_end" type="button">▶ Ver fin</button><button class="btn gray small" id="dir_story_plus15" type="button">Fin +15s</button><button class="btn red small" id="dir_story_copy_cmd" type="button">Copiar comando historia</button></div><div class="story-duration" id="dir_story_duration_v122"></div><div class="story-mini">El marco rojo 9:16 queda fijo. Zoom y posición mueven la imagen dentro del recorte, no agrandan el cuadro.</div>';
-    body.appendChild(box);
-    var start=document.getElementById('dir_histInicio'), fin=document.getElementById('dir_histFin');
-    function bindInput(el){if(el){el.addEventListener('input',function(){updateStoryDurationV122(); updateDirectorPreview();});el.addEventListener('change',function(){updateStoryDurationV122(); updateDirectorPreview();});}}
-    bindInput(start); bindInput(fin);
-    var ps=document.getElementById('dir_story_preview_start'); if(ps)ps.onclick=function(){setDirectorPreviewSecondV122(start&&start.value);};
-    var pe=document.getElementById('dir_story_preview_end'); if(pe)pe.onclick=function(){setDirectorPreviewSecondV122(fin&&fin.value);};
-    var p15=document.getElementById('dir_story_plus15'); if(p15)p15.onclick=function(){var s=parseTimeV122(start&&start.value); if(fin)fin.value=fmtTimeV122(s+15); updateStoryDurationV122(); updateDirectorPreview();};
-    var cc=document.getElementById('dir_story_copy_cmd'); if(cc)cc.onclick=async function(){var ev=(state.data.eventos||[]).find(function(e){return String(e.id)===String(state.directorEventId);})||state.currentEvent||{};var cmd=storyCommandV122(ev,readDirectorPreset());try{await navigator.clipboard.writeText(cmd); toast('Historia copiada','Comando 9:16 copiado.');}catch(e){toast('Comando historia',cmd.slice(0,120)+'...');}};
-    updateStoryDurationV122();
-  }
-  var oldAdmin=adminDirector;
-  adminDirector=function(){oldAdmin(); injectStoryToolsV122(); updateStoryDurationV122();};
-  var oldUpdate=updateDirectorPreview;
-  updateDirectorPreview=function(){oldUpdate(); updateStoryDurationV122(); var p=readDirectorPreset(); var story=document.getElementById('dir_story_frame'); if(story)story.classList.toggle('show',!!p.historia);};
-  openDirectorFullscreen=function(){
-    var p=readDirectorPreset(); var yt=selectedYtV122();
-    try{var fr=document.getElementById('dir_frame'); if(fr){state.directorPausedSrc=fr.src;fr.src='about:blank';}}catch(_e){}
-    var start=Number(state.directorBigStart||parseTimeV122(p.histInicio||0)||0)||0;
-    var logo=(typeof logoHtmlV120==='function')?'<div class="director-logo-layer-v120">'+logoHtmlV120((typeof logoEvV120==='function'?logoEvV120():state.currentEvent),p)+'</div>':(state.directorLogoUrl?'<img src="'+esc(state.directorLogoUrl)+'" class="director-logo-overlay pos-'+esc(p.logoPos||'br')+' show" style="width:'+esc(p.logoSize||16)+'%;opacity:'+(Number(p.logoOpacity||78)/100).toFixed(2)+'">':'');
-    var src=yt?'https://www.youtube.com/embed/'+encodeURIComponent(yt)+'?rel=0&modestbranding=1&controls=1&disablekb=0&fs=0&vq=hd1080&start='+encodeURIComponent(start):'about:blank';
-    openModal('Vista Director grande','<div class="director-fullscreen-box"><iframe id="dir_big_frame" allow="autoplay; encrypted-media" src="'+src+'"></iframe>'+logo+'<div class="director-story-frame '+(p.historia?'show':'')+'"></div></div><div class="director-fullscreen-seek"><span class="muted">Ir a segundo</span><input type="range" id="dir_big_seek" min="0" max="7200" step="1" value="'+esc(start)+'"><input type="number" id="dir_big_sec" min="0" value="'+esc(start)+'"><button class="btn small red" id="dir_big_go">Ir</button></div><div class="director-fullscreen-story-buttons"><button class="btn gray small" id="dir_big_set_start" type="button">Marcar inicio historia</button><button class="btn gray small" id="dir_big_set_end" type="button">Marcar fin historia</button><button class="btn gray small" id="dir_big_close" type="button">Cerrar y seguir editando</button></div>','director-fullscreen-modal');
-    var go=function(){var sec=Number(((document.getElementById('dir_big_sec')||{}).value)||((document.getElementById('dir_big_seek')||{}).value)||0)||0;state.directorBigStart=sec;var f=document.getElementById('dir_big_frame');if(f&&yt)f.src='https://www.youtube.com/embed/'+encodeURIComponent(yt)+'?rel=0&modestbranding=1&controls=1&disablekb=0&fs=0&vq=hd1080&start='+encodeURIComponent(sec);};
-    var seek=document.getElementById('dir_big_seek'),num=document.getElementById('dir_big_sec'),btn=document.getElementById('dir_big_go');
-    if(seek)seek.oninput=function(){if(num)num.value=seek.value;}; if(num)num.onkeydown=function(e){if(e.key==='Enter')go();}; if(btn)btn.onclick=go;
-    var setS=document.getElementById('dir_big_set_start'); if(setS)setS.onclick=function(){var v=fmtTimeV122(Number((document.getElementById('dir_big_sec')||{}).value||0)); var el=document.getElementById('dir_histInicio'); if(el)el.value=v; updateStoryDurationV122(); updateDirectorPreview(); toast('Historia','Inicio marcado en '+v);};
-    var setE=document.getElementById('dir_big_set_end'); if(setE)setE.onclick=function(){var v=fmtTimeV122(Number((document.getElementById('dir_big_sec')||{}).value||0)); var el=document.getElementById('dir_histFin'); if(el)el.value=v; updateStoryDurationV122(); updateDirectorPreview(); toast('Historia','Fin marcado en '+v);};
-    var cls=document.getElementById('dir_big_close'); if(cls)cls.onclick=function(){closeModal();};
-    setTimeout(function(){document.documentElement.style.setProperty('--director-final-transform',directorCombinedTransform(p,true));document.querySelectorAll('#modal .director-story-frame').forEach(function(st){st.classList.toggle('show',!!p.historia);});},30);
-  };
-})();
-
 </script>
 
-<script>
-/* ===== v123 Cortes Director: corte normal/vertical + tarjeta + BAT + web beta ===== */
+
+<style id="v124-cortes-director-css">
+.cut-v124-card{border:1px solid rgba(255,255,255,.12);background:#111;border-radius:16px;overflow:hidden;margin-top:10px}
+.cut-v124-card summary{cursor:pointer;padding:13px 14px;color:#fff;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:.6px;background:linear-gradient(90deg,rgba(224,0,0,.16),rgba(255,255,255,.025));}
+.cut-v124-body{padding:12px 14px 14px;display:grid;gap:10px}
+.cut-v124-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:end}
+.cut-v124-grid .span2{grid-column:1/-1}
+.cut-v124-grid label{display:block;color:#aaa;text-transform:uppercase;font-size:10px;font-weight:900;letter-spacing:.7px;margin-bottom:5px}
+.cut-v124-grid input,.cut-v124-grid select{width:100%;box-sizing:border-box;background:#181818;border:1px solid rgba(255,255,255,.14);border-radius:12px;color:#fff;padding:11px;outline:none}
+.cut-v124-current{display:grid;grid-template-columns:1fr 96px 56px;gap:8px;align-items:center}
+.cut-v124-current input[type=range]{accent-color:#e00000;width:100%}
+.cut-v124-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.cut-v124-status{border:1px solid rgba(255,208,77,.22);background:rgba(255,208,77,.055);border-radius:13px;padding:10px 12px;color:#ddd;font-size:12px;line-height:1.45}
+.cut-v124-mode{display:flex;gap:8px;flex-wrap:wrap}.cut-v124-mode button.active{background:linear-gradient(135deg,var(--red),var(--red2));border-color:rgba(255,0,0,.55)}
+.cut-v124-cmd{display:none;width:100%;min-height:84px;background:#080808!important;color:#eee!important;font-family:Consolas,monospace;font-size:11px;line-height:1.4;border-radius:12px;border:1px solid rgba(255,255,255,.12);padding:10px;box-sizing:border-box}
+.cut-v124-cmd.show{display:block}
+.cut-v124-title-modal .field{margin-top:10px}.cut-v124-title-modal input{width:100%;box-sizing:border-box;background:#181818;border:1px solid rgba(255,255,255,.14);border-radius:12px;color:#fff;padding:12px}
+@media(max-width:700px){.cut-v124-grid{grid-template-columns:1fr}.cut-v124-current{grid-template-columns:1fr 80px}.cut-v124-current .cut-go{grid-column:1/-1}}
+</style>
+<script id="v124-cortes-director-js">
 (function(){
-  function q(id){return document.getElementById(id);} 
-  function parseTimeV123(t){
-    t=String(t||'').trim(); if(!t)return 0;
-    if(/^\d+(\.\d+)?$/.test(t))return Math.max(0,Math.floor(Number(t)||0));
-    var a=t.split(':').map(function(x){return Number(x)||0;});
-    if(a.length===2)return Math.max(0,Math.floor(a[0]*60+a[1]));
-    if(a.length>=3)return Math.max(0,Math.floor(a[a.length-3]*3600+a[a.length-2]*60+a[a.length-1]));
+  const VERSION_V124='v124';
+  function getEl(id){return document.getElementById(id)}
+  function secFromTimeV124(v){
+    v=String(v||'').trim(); if(!v)return 0;
+    if(/^\d+$/.test(v))return Number(v)||0;
+    var parts=v.split(':').map(x=>Number(x)||0);
+    if(parts.length===2)return parts[0]*60+parts[1];
+    if(parts.length===3)return parts[0]*3600+parts[1]*60+parts[2];
     return 0;
   }
-  function fmtTimeV123(sec){
-    sec=Math.max(0,Math.floor(Number(sec)||0)); var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
-    function pad(n){return String(n).padStart(2,'0');}
-    return h?(pad(h)+':'+pad(m)+':'+pad(s)):(pad(m)+':'+pad(s));
+  function fmtV124(sec){
+    sec=Math.max(0,Math.round(Number(sec)||0));
+    var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
+    if(h>0)return h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
   }
-  function cutEvV123(){return (state.data.eventos||[]).find(function(e){return String(e.id)===String(state.directorEventId);})||state.currentEvent||(state.data.eventos||[])[0]||{};}
-  function cutVideoV123(ev){
-    if(typeof directorCurrentVideo==='function'){var v=directorCurrentVideo(ev); if(v)return v;}
-    return (ev.videos||[]).find(function(v){return String(v.id)===String(state.directorVideoId);})||(ev.videos||[])[0]||{};
+  function currentDirectorEventV124(){
+    return (state.data.eventos||[]).find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||(state.data.eventos||[])[0]||null;
   }
-  function selectedYtV123(){return cleanYouTube((state.directorSample||(q('dir_sample')&&q('dir_sample').value)||''));}
-  function currentCutPresetV123(){
-    var p=(typeof readDirectorPreset==='function')?readDirectorPreset():{};
-    p.cutTipo=(q('dir_cut_tipo')&&q('dir_cut_tipo').value)||'normal';
-    p.cutRotacion=(q('dir_cut_rotacion')&&q('dir_cut_rotacion').value)||'0';
-    p.cutInicio=(q('dir_cut_start')&&q('dir_cut_start').value)||p.histInicio||'00:00';
-    p.cutFin=(q('dir_cut_end')&&q('dir_cut_end').value)||p.histFin||'00:15';
-    return p;
+  function currentDirectorVideoV124(ev){
+    ev=ev||currentDirectorEventV124(); if(!ev)return null;
+    var id=state.directorVideoId || (getEl('dir_video_select')&&getEl('dir_video_select').value) || '';
+    return (ev.videos||[]).find(v=>String(v.id)===String(id)) || (ev.videos||[]).find(v=>v.youtubeId) || (ev.videos||[])[0] || null;
   }
-  function videoFilterForCutV123(p){
-    var vf=(typeof directorFfmpegFilters==='function'?directorFfmpegFilters(p):'eq=brightness=0:contrast=1:saturation=1');
-    var chain=[vf].filter(Boolean);
-    var rot=String(p.cutRotacion||p.rotacion||'0');
-    if(rot==='90')chain.push('transpose=1');
-    if(rot==='-90')chain.push('transpose=2');
-    if(rot==='180')chain.push('hflip,vflip');
-    if(p.cutTipo==='vertical'){
-      var zoom=(1+Number(p.histZoom||0)/100).toFixed(3);
-      var hx=Number(p.histPosX||0),hy=Number(p.histPosY||0);
-      chain.push('scale=iw*'+zoom+':ih*'+zoom);
-      chain.push('crop=ih*9/16:ih:(iw-ow)/2'+(hx?((hx>0?'+':'')+'('+hx+'*iw/200)'):'')+':(ih-oh)/2'+(hy?((hy>0?'+':'')+'('+hy+'*ih/200)'):'') );
-      chain.push('scale=1080:1920');
-    }else if(p.cutTipo==='cuadrado'){
-      chain.push('crop=min(iw\\,ih):min(iw\\,ih):(iw-min(iw\\,ih))/2:(ih-min(iw\\,ih))/2,scale=1080:1080');
-    }
-    return chain.join(',');
+  function cutReadV124(){
+    var tipo=(getEl('dir_cut_tipo_v124')&&getEl('dir_cut_tipo_v124').value)||'normal';
+    var rot=(getEl('dir_cut_rot_v124')&&getEl('dir_cut_rot_v124').value)||'0';
+    var start=secFromTimeV124(getEl('dir_cut_start_v124')&&getEl('dir_cut_start_v124').value);
+    var end=secFromTimeV124(getEl('dir_cut_end_v124')&&getEl('dir_cut_end_v124').value);
+    if(end<start)end=start;
+    return {tipo:tipo,rotacion:rot,start:start,end:end,duracion:Math.max(0,end-start)};
   }
-  function cutCommandV123(ev,p){
-    var v=cutVideoV123(ev);
-    var title=(v&&v.titulo?String(v.titulo):'CORTE_TOMAUNO').replace(/[\\/:*?"<>|]+/g,'_');
-    var suffix=p.cutTipo==='vertical'?'_HISTORIA_9x16':(p.cutTipo==='cuadrado'?'_CUADRADO':'_CORTE');
-    var out=(p.outDir||'C:\\TOMAUNO\\ENTREGAS')+'\\'+title+suffix+'.mp4';
-    var st=fmtTimeV123(parseTimeV123(p.cutInicio));
-    var en=fmtTimeV123(parseTimeV123(p.cutFin));
-    var af=(typeof directorAudioFilters==='function'?directorAudioFilters(p):'volume=1');
-    return 'ffmpeg -y -ss '+st+' -to '+en+' -i "%INPUT%" -vf "'+videoFilterForCutV123(p)+'" -af "'+af+'" -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -c:a aac -b:a 192k "'+out+'"';
+  function cutVideoFiltersV124(c){
+    var vf=[];
+    if(c.rotacion==='90')vf.push('transpose=1');
+    if(c.rotacion==='-90')vf.push('transpose=2');
+    if(c.rotacion==='180')vf.push('transpose=1,transpose=1');
+    if(c.tipo==='vertical')vf.push('scale=-2:1920,crop=1080:1920');
+    if(c.tipo==='cuadrado')vf.push('scale=-2:1080,crop=1080:1080');
+    return vf.join(',');
   }
-  function updateCutInfoV123(){
-    var out=q('dir_cut_info'); if(!out)return;
-    var s=parseTimeV123(q('dir_cut_start')&&q('dir_cut_start').value), e=parseTimeV123(q('dir_cut_end')&&q('dir_cut_end').value);
-    var tipo=(q('dir_cut_tipo')&&q('dir_cut_tipo').value)||'normal';
-    out.textContent='Duración: '+fmtTimeV123(Math.max(0,e-s))+' · salida '+(tipo==='vertical'?'vertical 1080×1920':tipo==='cuadrado'?'cuadrada 1080×1080':'normal / formato original');
-    var cmd=q('dir_cut_cmd_v123'); if(cmd)cmd.value=cutCommandV123(cutEvV123(),currentCutPresetV123());
+  function cutCommandV124(){
+    var ev=currentDirectorEventV124(), v=currentDirectorVideoV124(ev), c=cutReadV124();
+    var outName=(v&&v.titulo?v.titulo:'corte').replace(/[\\/:*?"<>|]+/g,'_').trim()||'corte';
+    var vf=cutVideoFiltersV124(c);
+    var ss=fmtV124(c.start), to=fmtV124(c.end);
+    var cmd='ffmpeg -y -ss '+ss+' -to '+to+' -i "%INPUT%"';
+    if(vf)cmd+=' -vf "'+vf+'"';
+    cmd+=' -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -c:a aac -b:a 192k "C:\\TOMAUNO\\ENTREGAS\\'+outName+'_CORTE_TOMAUNO.mp4"';
+    return cmd;
   }
-  function setPreviewSecondV123(sec){
-    sec=parseTimeV123(sec); state.directorBigStart=sec;
-    var yt=selectedYtV123(), fr=q('dir_frame');
-    if(fr&&yt)fr.src='https://www.youtube.com/embed/'+encodeURIComponent(yt)+'?rel=0&modestbranding=1&controls=1&disablekb=0&fs=0&vq=hd1080&start='+encodeURIComponent(sec);
-    var cur=q('dir_cut_current'); if(cur)cur.value=sec;
-    var curn=q('dir_cut_current_num'); if(curn)curn.value=sec;
+  function cutUpdateV124(){
+    var c=cutReadV124();
+    var info=getEl('dir_cut_info_v124');
+    if(info){info.innerHTML='Inicio: <b>'+fmtV124(c.start)+'</b> &nbsp; Fin: <b>'+fmtV124(c.end)+'</b> &nbsp; Duración: <b>'+fmtV124(c.duracion)+'</b><br>Salida: <b>'+(c.tipo==='normal'?'Normal / vendible':c.tipo==='vertical'?'Vertical 9:16':'Cuadrado 1:1')+'</b> · Rotación: <b>'+(c.rotacion==='0'?'sin rotar':c.rotacion+'°')+'</b>';}
+    var cmd=getEl('dir_cut_cmd_v124'); if(cmd)cmd.value=cutCommandV124();
   }
-  function injectCutsV123(){
-    if(q('dir_cut_panel_v123')){updateCutInfoV123();return;}
-    var anchor=q('dir_story_tools_v122') || q('dir_historia');
-    if(!anchor)return;
-    var body=anchor.closest('.director-details-body')||anchor.parentElement; if(!body)return;
-    var p=(typeof readDirectorPreset==='function')?readDirectorPreset():{};
-    var panel=document.createElement('div'); panel.id='dir_cut_panel_v123'; panel.className='director-cut-v123';
-    panel.innerHTML='<h4>✂️ Cortes Director</h4><div class="cut-grid-v123"><div class="field"><label>Tipo salida</label><select id="dir_cut_tipo"><option value="normal">Normal / vendible</option><option value="vertical">Vertical 9:16</option><option value="cuadrado">Cuadrado 1:1</option></select></div><div class="field"><label>Rotar salida</label><select id="dir_cut_rotacion"><option value="0">Sin rotar</option><option value="90">90° derecha</option><option value="-90">90° izquierda</option><option value="180">180°</option></select></div><div class="field"><label>Inicio corte</label><input id="dir_cut_start" value="'+esc(p.histInicio||'00:00')+'"></div><div class="field"><label>Fin corte</label><input id="dir_cut_end" value="'+esc(p.histFin||'00:15')+'"></div><div class="field span2"><label>Segundo actual para marcar</label><input type="range" id="dir_cut_current" min="0" max="7200" step="1" value="'+esc(Number(state.directorBigStart||0)||0)+'"></div><div class="field"><label>Segundo</label><input type="number" id="dir_cut_current_num" min="0" value="'+esc(Number(state.directorBigStart||0)||0)+'"></div><div class="field"><label>&nbsp;</label><button class="btn gray small" id="dir_cut_go" type="button">Ir</button></div></div><div class="cut-row-v123"><button class="btn gray small" id="dir_cut_mark_start" type="button">Marcar inicio</button><button class="btn gray small" id="dir_cut_mark_end" type="button">Marcar fin</button><button class="btn gray small" id="dir_cut_view_start" type="button">Ver inicio</button><button class="btn gray small" id="dir_cut_view_end" type="button">Ver fin</button><button class="btn red small" id="dir_cut_create_card" type="button">Crear tarjeta</button><button class="btn gray small" id="dir_cut_copy" type="button">Copiar comando</button><button class="btn gray small" id="dir_cut_bat" type="button">Descargar BAT</button></div><div class="cut-status-v123" id="dir_cut_info"></div><textarea id="dir_cut_cmd_v123" class="director-cmd" readonly style="margin-top:8px;min-height:78px"></textarea><div class="cut-web-v123"><b>Procesar web beta</b><p class="muted" style="margin:6px 0 8px;font-size:11px">Para descargar un MP4 procesado desde la web tenés que elegir el archivo original local. En videos grandes puede ser lento; FFmpeg local sigue siendo más seguro.</p><input type="file" id="dir_cut_local_file" accept="video/*"><button class="btn red small" id="dir_cut_web_process" type="button">Procesar y descargar MP4</button><div class="cut-progress-v123" id="dir_cut_web_log"></div></div>';
-    body.appendChild(panel);
-    bindCutToolsV123(); updateCutInfoV123();
+  function cutSeekV124(sec){
+    sec=Math.max(0,Math.round(Number(sec)||0)); state.directorBigStart=sec;
+    var r=getEl('dir_cut_current_v124'),n=getEl('dir_cut_current_num_v124'); if(r)r.value=sec; if(n)n.value=sec;
+    var fr=getEl('dir_frame'); var yt=cleanYouTube(state.directorSample||(getEl('dir_sample')&&getEl('dir_sample').value)||'');
+    if(fr&&yt)fr.src='https://www.youtube.com/embed/'+encodeURIComponent(yt)+'?rel=0&modestbranding=1&vq=hd1080&start='+encodeURIComponent(sec);
   }
-  function bindCutToolsV123(){
-    ['dir_cut_tipo','dir_cut_rotacion','dir_cut_start','dir_cut_end'].forEach(function(id){var el=q(id); if(el){el.addEventListener('input',updateCutInfoV123); el.addEventListener('change',updateCutInfoV123);}});
-    var range=q('dir_cut_current'), num=q('dir_cut_current_num');
-    if(range)range.oninput=function(){if(num)num.value=range.value;};
-    if(num)num.oninput=function(){if(range)range.value=num.value;};
-    if(q('dir_cut_go'))q('dir_cut_go').onclick=function(){setPreviewSecondV123(num&&num.value||range&&range.value||0);};
-    if(q('dir_cut_mark_start'))q('dir_cut_mark_start').onclick=function(){var v=fmtTimeV123(num&&num.value||range&&range.value||0); if(q('dir_cut_start'))q('dir_cut_start').value=v; if(q('dir_histInicio'))q('dir_histInicio').value=v; updateCutInfoV123(); if(typeof updateDirectorPreview==='function')updateDirectorPreview();};
-    if(q('dir_cut_mark_end'))q('dir_cut_mark_end').onclick=function(){var v=fmtTimeV123(num&&num.value||range&&range.value||0); if(q('dir_cut_end'))q('dir_cut_end').value=v; if(q('dir_histFin'))q('dir_histFin').value=v; updateCutInfoV123(); if(typeof updateDirectorPreview==='function')updateDirectorPreview();};
-    if(q('dir_cut_view_start'))q('dir_cut_view_start').onclick=function(){setPreviewSecondV123(q('dir_cut_start')&&q('dir_cut_start').value);};
-    if(q('dir_cut_view_end'))q('dir_cut_view_end').onclick=function(){setPreviewSecondV123(q('dir_cut_end')&&q('dir_cut_end').value);};
-    if(q('dir_cut_copy'))q('dir_cut_copy').onclick=async function(){var cmd=cutCommandV123(cutEvV123(),currentCutPresetV123()); try{await navigator.clipboard.writeText(cmd); toast('Corte copiado','Comando FFmpeg copiado.');}catch(e){toast('Comando corte',cmd.slice(0,140)+'...');}};
-    if(q('dir_cut_bat'))q('dir_cut_bat').onclick=function(){var cmd='@echo off\r\nREM Reemplazá %INPUT% por el archivo original si no lo definís como variable.\r\nset INPUT=%~1\r\nif "%INPUT%"=="" echo Arrastrá el video original sobre este BAT o pasá la ruta como parámetro.\r\n'+cutCommandV123(cutEvV123(),currentCutPresetV123())+'\r\npause\r\n';var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([cmd],{type:'text/plain'}));a.download='tomauno_corte_director.bat';a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},1200);};
-    if(q('dir_cut_create_card'))q('dir_cut_create_card').onclick=createCutCardV123;
-    if(q('dir_cut_web_process'))q('dir_cut_web_process').onclick=processWebCutV123;
+  function makeCutCardV124(){
+    var ev=currentDirectorEventV124(), base=currentDirectorVideoV124(ev), c=cutReadV124();
+    if(!ev||!base){toast('Corte','No hay video base seleccionado.');return;}
+    if(c.duracion<=0){toast('Corte','Marcá un inicio y fin válido.');return;}
+    var suggested=(base.titulo||'Corte')+' · corte '+fmtV124(c.start)+'-'+fmtV124(c.end);
+    openModal('Crear tarjeta desde corte','<div class="cut-v124-title-modal"><p class="muted">La tarjeta usará el mismo YouTube/Drive del video base, pero reproducirá solo el fragmento indicado.</p><div class="field"><label>Título</label><input id="cutTitleV124" value="'+esc(suggested)+'"></div><div class="field"><label>Subtítulo</label><input id="cutSubV124" value="'+esc(base.subtitulo||'')+'"></div><div class="modal-actions right-red" style="padding-top:14px"><button class="btn gray" id="cutCancelV124">Cancelar</button><button class="btn red" id="cutOkV124">Crear tarjeta</button></div></div>');
+    var ok=getEl('cutOkV124'), cancel=getEl('cutCancelV124'); if(cancel)cancel.onclick=closeModal;
+    if(ok)ok.onclick=async function(){
+      var title=(getEl('cutTitleV124')&&getEl('cutTitleV124').value.trim())||suggested;
+      var sub=(getEl('cutSubV124')&&getEl('cutSubV124').value.trim())||'';
+      var nv={id:String(nextVid(ev)),titulo:title,subtitulo:sub,bailarina:sub,youtubeId:base.youtubeId||'',previewInicio:c.start,previewSegundos:c.duracion,precio:Number(base.precio||15000),driveId:base.driveId||'',codigo:randCode(),descargas:0,plays:0,corteDe:String(base.id||''),corteTipo:c.tipo,corteInicio:c.start,corteFin:c.end,corteRotacion:c.rotacion};
+      ev.videos.push(nv); closeModal();
+      var saved=await ghSave('Crear tarjeta corte '+title,true); state.currentEvent=ev; renderVideos(); toast(saved?'Tarjeta creada':'Tarjeta local','Se agregó el corte a la grilla.');
+    };
+    setTimeout(()=>{var inp=getEl('cutTitleV124'); if(inp)inp.focus();},50);
   }
-  async function createCutCardV123(){
-    var ev=cutEvV123(), src=cutVideoV123(ev); if(!ev||!ev.videos||!src){toast('Sin video','Elegí un video de referencia.');return;}
-    var p=currentCutPresetV123(); var s=parseTimeV123(p.cutInicio), e=parseTimeV123(p.cutFin); if(e<=s){toast('Corte inválido','El fin debe ser mayor al inicio.');return;}
-    var title=prompt('Título de la nueva tarjeta', (src.titulo||'Video')+' · corte'); if(!title)return;
-    var sub=prompt('Subtítulo / diseñador / grupo', src.subtitulo||'')||'';
-    var next=Math.max(0,...(ev.videos||[]).map(function(v){return Number(v.id)||0;}))+1;
-    var nv=JSON.parse(JSON.stringify(src));
-    nv.id=String(next); nv.titulo=title; nv.subtitulo=sub; nv.previewInicio=s; nv.previewSegundos=e-s; nv.corteOrigenId=src.id; nv.corteInicio=p.cutInicio; nv.corteFin=p.cutFin; nv.corteTipo=p.cutTipo; nv.corteRotacion=p.cutRotacion; nv.creado=Date.now();
-    delete nv.directorPreset;
-    ev.videos.push(nv);
-    var ok=await ghSave('Crear tarjeta de corte '+title,true);
-    toast(ok?'Tarjeta creada':'Tarjeta local creada', 'Corte '+fmtTimeV123(e-s)+' · '+(p.cutTipo==='vertical'?'Vertical':'Normal'));
-    if(state.currentEvent&&String(state.currentEvent.id)===String(ev.id))renderVideos();
+  function downloadBatV124(){
+    var cmd=cutCommandV124();
+    var txt='@echo off\r\nREM TOMAUNO - Corte Director\r\nREM Reemplazá %INPUT% por el archivo original o arrastrá el archivo al BAT si lo adaptamos luego.\r\n'+cmd+'\r\npause\r\n';
+    var blob=new Blob([txt],{type:'application/x-msdos-program'}); var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='tomauno_corte_director.bat'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
   }
-  function loadFfmpegScriptV123(){
-    return new Promise(function(resolve,reject){
-      if(window.FFmpeg&&window.FFmpeg.createFFmpeg)return resolve();
-      var s=document.createElement('script'); s.src='https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js'; s.onload=function(){resolve();}; s.onerror=function(){reject(new Error('No se pudo cargar FFmpeg web.'));}; document.head.appendChild(s);
-    });
+  function installCutsV124(){
+    var oldHist=getEl('dir_historia'); var oldDetails=oldHist&&oldHist.closest('details');
+    var anchor=oldDetails || getEl('dir_cmd') || getEl('dir_save');
+    if(!anchor || getEl('dir_cut_v124'))return;
+    if(oldDetails)oldDetails.style.display='none';
+    var p=readDirectorPreset?readDirectorPreset():{};
+    var box=document.createElement('details'); box.className='cut-v124-card'; box.id='dir_cut_v124'; box.open=true;
+    var start=secFromTimeV124(p.histInicio||'00:00'), end=secFromTimeV124(p.histFin||'00:15');
+    var cur=Number(state.directorBigStart||start||0)||0;
+    box.innerHTML='<summary>✂️ Cortes Director</summary><div class="cut-v124-body"><div class="cut-v124-grid"><div class="field"><label>Tipo salida</label><select id="dir_cut_tipo_v124"><option value="normal">Normal / tarjeta vendible</option><option value="vertical">Vertical 9:16 historia/reel</option><option value="cuadrado">Cuadrado 1:1</option></select></div><div class="field"><label>Rotar visualización/salida</label><select id="dir_cut_rot_v124"><option value="0">Sin rotar</option><option value="90">90° derecha</option><option value="-90">90° izquierda</option><option value="180">180°</option></select></div><div class="field"><label>Inicio</label><input id="dir_cut_start_v124" value="'+esc(fmtV124(start))+'"></div><div class="field"><label>Fin</label><input id="dir_cut_end_v124" value="'+esc(fmtV124(end))+'"></div><div class="span2"><label>Barra para ubicar el momento</label><div class="cut-v124-current"><input type="range" id="dir_cut_current_v124" min="0" max="7200" step="1" value="'+esc(cur)+'"><input type="number" id="dir_cut_current_num_v124" min="0" value="'+esc(cur)+'"><button class="btn gray small cut-go" id="dir_cut_go_v124" type="button">Ir</button></div></div></div><div class="cut-v124-actions"><button class="btn gray small" id="dir_cut_mark_start_v124" type="button">Marcar inicio</button><button class="btn gray small" id="dir_cut_mark_end_v124" type="button">Marcar fin</button><button class="btn gray small" id="dir_cut_view_start_v124" type="button">Ir al inicio</button><button class="btn gray small" id="dir_cut_view_end_v124" type="button">Ir al fin</button><button class="btn red small" id="dir_cut_create_v124" type="button">Crear tarjeta</button><button class="btn gray small" id="dir_cut_copy_v124" type="button">Copiar FFmpeg</button><button class="btn gray small" id="dir_cut_bat_v124" type="button">Descargar BAT</button></div><div class="cut-v124-status" id="dir_cut_info_v124"></div><textarea class="cut-v124-cmd" id="dir_cut_cmd_v124" readonly></textarea></div>';
+    anchor.parentNode.insertBefore(box, anchor);
+    var ids=['dir_cut_tipo_v124','dir_cut_rot_v124','dir_cut_start_v124','dir_cut_end_v124']; ids.forEach(id=>{var el=getEl(id); if(el)el.onchange=cutUpdateV124; if(el&&el.tagName==='INPUT')el.oninput=cutUpdateV124;});
+    var r=getEl('dir_cut_current_v124'), n=getEl('dir_cut_current_num_v124');
+    if(r)r.oninput=function(){if(n)n.value=r.value;}; if(n)n.oninput=function(){if(r)r.value=n.value;};
+    var go=getEl('dir_cut_go_v124'); if(go)go.onclick=function(){cutSeekV124(Number((n&&n.value)||(r&&r.value)||0)||0);};
+    getEl('dir_cut_mark_start_v124').onclick=function(){var sec=Number((n&&n.value)||(r&&r.value)||0)||0; getEl('dir_cut_start_v124').value=fmtV124(sec); cutUpdateV124(); toast('Corte','Inicio marcado en '+fmtV124(sec));};
+    getEl('dir_cut_mark_end_v124').onclick=function(){var sec=Number((n&&n.value)||(r&&r.value)||0)||0; getEl('dir_cut_end_v124').value=fmtV124(sec); cutUpdateV124(); toast('Corte','Fin marcado en '+fmtV124(sec));};
+    getEl('dir_cut_view_start_v124').onclick=function(){cutSeekV124(secFromTimeV124(getEl('dir_cut_start_v124').value));};
+    getEl('dir_cut_view_end_v124').onclick=function(){cutSeekV124(secFromTimeV124(getEl('dir_cut_end_v124').value));};
+    getEl('dir_cut_create_v124').onclick=makeCutCardV124;
+    getEl('dir_cut_copy_v124').onclick=async function(){var cmd=cutCommandV124(); var ta=getEl('dir_cut_cmd_v124'); if(ta){ta.value=cmd;ta.classList.add('show');} try{await navigator.clipboard.writeText(cmd); toast('Corte','Comando FFmpeg copiado.');}catch(e){toast('Corte','Comando listo en el cuadro.');}};
+    getEl('dir_cut_bat_v124').onclick=downloadBatV124;
+    cutUpdateV124();
   }
-  async function processWebCutV123(){
-    var log=q('dir_cut_web_log'), fileInput=q('dir_cut_local_file');
-    function say(t){if(log)log.textContent+=t+'\n';}
-    if(log)log.textContent='';
-    var file=fileInput&&fileInput.files&&fileInput.files[0]; if(!file){toast('Falta archivo','Elegí el video original local.');return;}
-    try{
-      say('Cargando FFmpeg web...'); await loadFfmpegScriptV123();
-      var ffmpeg=FFmpeg.createFFmpeg({log:false,corePath:'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js'});
-      await ffmpeg.load(); say('Leyendo archivo local...');
-      var p=currentCutPresetV123(); var args=['-ss',fmtTimeV123(parseTimeV123(p.cutInicio)),'-to',fmtTimeV123(parseTimeV123(p.cutFin)),'-i','input.mp4','-vf',videoFilterForCutV123(p),'-af',(typeof directorAudioFilters==='function'?directorAudioFilters(p):'volume=1'),'-c:v','libx264','-preset','veryfast','-crf','23','-pix_fmt','yuv420p','-c:a','aac','-b:a','160k','out.mp4'];
-      ffmpeg.FS('writeFile','input.mp4',await FFmpeg.fetchFile(file)); say('Procesando. Puede tardar bastante...');
-      await ffmpeg.run.apply(ffmpeg,args); say('Generando descarga...');
-      var data=ffmpeg.FS('readFile','out.mp4'); var a=document.createElement('a');
-      a.href=URL.createObjectURL(new Blob([data.buffer],{type:'video/mp4'})); a.download='TOMAUNO_CORTE_PROCESADO.mp4'; a.click(); say('Listo.');
-    }catch(err){console.error(err); say('ERROR: '+(err&&err.message?err.message:err)); toast('Procesamiento web falló','Usá el comando FFmpeg local para este video.');}
+  var oldBind=window.bindDirector;
+  if(typeof oldBind==='function'){
+    window.bindDirector=function(ev){ oldBind(ev); setTimeout(installCutsV124,0); };
   }
-  var oldAdminV123=adminDirector;
-  adminDirector=function(){oldAdminV123(); injectCutsV123();};
-  var oldUpdateV123=updateDirectorPreview;
-  updateDirectorPreview=function(){oldUpdateV123(); updateCutInfoV123();};
-  var oldFullV123=openDirectorFullscreen;
-  openDirectorFullscreen=function(){
-    oldFullV123();
-    setTimeout(function(){
-      var box=document.querySelector('#modal .director-fullscreen-seek'); if(!box||q('dir_big_set_cut_start'))return;
-      var row=document.createElement('div'); row.className='director-fullscreen-cut-buttons';
-      row.innerHTML='<button class="btn gray small" id="dir_big_set_cut_start" type="button">Marcar inicio corte</button><button class="btn gray small" id="dir_big_set_cut_end" type="button">Marcar fin corte</button>';
-      box.parentNode.insertBefore(row,box.nextSibling);
-      q('dir_big_set_cut_start').onclick=function(){var v=fmtTimeV123(Number((q('dir_big_sec')||{}).value||0)); if(q('dir_cut_start'))q('dir_cut_start').value=v; if(q('dir_histInicio'))q('dir_histInicio').value=v; updateCutInfoV123(); if(typeof updateDirectorPreview==='function')updateDirectorPreview(); toast('Corte','Inicio marcado en '+v);};
-      q('dir_big_set_cut_end').onclick=function(){var v=fmtTimeV123(Number((q('dir_big_sec')||{}).value||0)); if(q('dir_cut_end'))q('dir_cut_end').value=v; if(q('dir_histFin'))q('dir_histFin').value=v; updateCutInfoV123(); if(typeof updateDirectorPreview==='function')updateDirectorPreview(); toast('Corte','Fin marcado en '+v);};
-    },80);
-  };
+  var oldAdminDirector=window.adminDirector;
+  if(typeof oldAdminDirector==='function'){
+    window.adminDirector=function(){ oldAdminDirector(); setTimeout(installCutsV124,0); };
+  }
+  window.installCutsV124=installCutsV124;
+  console.log('TOMAUNO VIDEOS v124 Cortes Director reales');
 })();
 </script>
+
 </body></html>
