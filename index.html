@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v116 AJUSTES DIRECTOR - base v110 rollback estable -->
+<!-- TOMAUNO VIDEOS - VERSION v117 AJUSTES DIRECTOR - base v110 rollback estable -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1062,7 +1062,7 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .video-card .thumb{overflow:hidden;}
 
 
-/* ===== v116 limpieza Director sobre rollback estable ===== */
+/* ===== v117 limpieza Director sobre rollback estable ===== */
 /* Quita marca ficticia Tomauno del reproductor; quedan solo logos reales/temporales si se configuran */
 .iframe-brand-block,.iframe-brand-block:before,.iframe-brand-block:after{display:none!important;content:none!important;}
 /* Oculta la mini imagen vieja bajo Examinar para evitar confusión; el overlay del video sigue funcionando */
@@ -1073,17 +1073,17 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .director-fullscreen-seek input[type=range]{flex:1;accent-color:#e30000}
 .director-fullscreen-seek input[type=number]{width:82px;background:#111;color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:8px}
 
-/* ===== v116 logos por URL estables ===== */
+/* ===== v117 logos por URL estables ===== */
 .director-logo-overlay.pos-bc{left:50%;bottom:var(--director-logo-margin,18px);transform:translateX(-50%)}
 .director-logo-source{border:1px solid rgba(255,255,255,.10);background:#0d0d0d;border-radius:12px;padding:10px;margin-bottom:10px;font-size:12px;color:#ddd;line-height:1.35}
 .director-logo-source b{color:#fff}.director-logo-source code{font-size:11px;color:#ffb3b3;word-break:break-all}.director-logo-source .empty-logo{color:#aaa}
 .director-logo-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 10px}
 .director-logo-picker button.active{border-color:#ff2020!important;background:rgba(255,32,32,.18)!important;color:#fff!important}
 
-/* v116 logo preview/director cleanup */
+/* v117 logo preview/director cleanup */
 .director-logo-overlay{z-index:20!important;max-width:45%;max-height:35%;}
-.director-logo-picker .btn.active{background:linear-gradient(135deg,#e00000,#ff2020)!important;border-color:#ff4545!important;color:#fff!important;}
-.director-logo-source{font-size:12px;color:#ddd;margin:6px 0 8px;}
+.director-logo-picker .btn.active{background:linear-gradient(135deg,#e00000,#ff2020)!important;border-color:#ff4545!important;color:#fff!important;box-shadow:0 0 0 2px rgba(255,32,32,.28)!important;}
+.director-logo-source{font-size:12px;color:#ddd;margin:6px 0 8px;display:none;}
 </style>
 </head>
 <body>
@@ -1791,12 +1791,11 @@ function directorLogoCfg(p,idx){p=directorEnsureLogos(p||{});idx=Number(idx||p.l
 function directorApplyLogoCfgToControls(p,idx){let cfg=directorLogoCfg(p,idx);if($('dir_logoSize'))$('dir_logoSize').value=cfg.logoSize;if($('dir_logoOpacity'))$('dir_logoOpacity').value=cfg.logoOpacity;if($('dir_logoMargin'))$('dir_logoMargin').value=cfg.logoMargin;if($('dir_logoPos'))$('dir_logoPos').value=cfg.logoPos;}
 function directorBuildLogoOverlays(ev,p){p=directorEnsureLogos(p||{});if(!eventLogosEnabled(ev)||!p.logoDurante)return '';let h='';for(let i=1;i<=3;i++){let url=eventLogoUrl(ev,i);if(!url)continue;let cfg=directorLogoCfg(p,i);h+='<img src="'+esc(url)+'" class="director-logo-overlay pos-'+esc(cfg.logoPos||'br')+' show" style="width:'+esc(cfg.logoSize||16)+'%;opacity:'+(Number(cfg.logoOpacity||78)/100).toFixed(2)+'" onerror="this.style.display=\'none\'">';}return h;}
 function directorLogoSourceText(ev,p){
-  let box=$('dir_logo_source'); if(!box)return;
-  let idx=Number((p&&p.logoIndex)||1);
-  if(!eventLogosEnabled(ev)){box.innerHTML='<span class="empty-logo">Logos desactivados en este evento.</span>';return;}
-  let url=eventLogoUrl(ev,idx);
-  if(!url){box.innerHTML='Logo '+idx+': <span class="empty-logo">sin URL cargada</span>';return;}
-  box.innerHTML='Editando <b>Logo '+idx+'</b>';
+  let box=$('dir_logo_source');
+  if(!box)return;
+  // Se oculta para no ocupar espacio ni mostrar estados técnicos.
+  box.innerHTML='';
+  box.style.display='none';
 }
 function directorLogoSwitch(idx){
   let p=readDirectorPreset();
@@ -1818,6 +1817,7 @@ function adminDirector(){
   p=state.directorDraftPreset;
   p.logoIndex=Number(p.logoIndex||1);
   directorEnsureLogos(p);
+  if(eventLogosEnabled(ev) && (eventLogoUrl(ev,1)||eventLogoUrl(ev,2)||eventLogoUrl(ev,3)) && p.logoDurante==null){p.logoDurante=true;}
   let vids=(ev.videos||[]).filter(v=>v.youtubeId);
   let sample=vids.find(v=>String(v.id)===String(state.directorVideoId))||vids[0]||{};
   let yt=cleanYouTube(state.directorSample||sample.youtubeId||'');
@@ -1846,9 +1846,9 @@ function adminDirector(){
       </div>
       <div class="director-preview-wrap" style="margin-top:12px">
         <iframe id="dir_frame" allow="autoplay; encrypted-media" src="${yt?'https://www.youtube.com/embed/'+esc(yt)+'?rel=0&modestbranding=1&vq=hd1080':'about:blank'}"></iframe>
-        <img id="dir_logo_overlay_1" class="director-logo-overlay pos-br" alt="Logo 1">
-        <img id="dir_logo_overlay_2" class="director-logo-overlay pos-bl" alt="Logo 2">
-        <img id="dir_logo_overlay_3" class="director-logo-overlay pos-bc" alt="Logo 3">
+        <img id="dir_logo_overlay_1" class="director-logo-overlay pos-br" alt="">
+        <img id="dir_logo_overlay_2" class="director-logo-overlay pos-bl" alt="">
+        <img id="dir_logo_overlay_3" class="director-logo-overlay pos-bc" alt="">
         <div id="dir_story_frame" class="director-story-frame"></div>
       </div>
       <div class="director-actions">
@@ -1953,28 +1953,36 @@ function setDirectorPreset(p){state.directorDraftPreset=JSON.parse(JSON.stringif
 function updateDirectorLogoOverlay(p){
   let ev=(state.data.eventos||[]).find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||{};
   directorLogoSourceText(ev,p);
+  p=directorEnsureLogos(p||{});
+  let enabled=!!(eventLogosEnabled(ev)&&p.logoDurante);
   for(let i=1;i<=3;i++){
     let ov=$('dir_logo_overlay_'+i); if(!ov)continue;
-    let url=(eventLogosEnabled(ev)&&p.logoDurante)?eventLogoUrl(ev,i):'';
+    let url=enabled?eventLogoUrl(ev,i):'';
     let cfg=directorLogoCfg(p,i);
-    ov.className='director-logo-overlay pos-'+String(cfg.logoPos||'br')+(url?' show':'');
-    ov.style.width=String(cfg.logoSize||16)+'%';
+    ov.alt='';
+    ov.className='director-logo-overlay pos-'+String(cfg.logoPos||'br');
+    ov.style.width=String(Math.max(5,Math.min(45,Number(cfg.logoSize||16))))+'%';
     ov.style.opacity=String((Number(cfg.logoOpacity||78)/100).toFixed(2));
     ov.style.setProperty('--director-logo-margin',String(Number(cfg.logoMargin||18))+'px');
-    ov.style.zIndex='20';
+    ov.style.zIndex='30';
+    ov.style.pointerEvents='none';
+    ov.style.display='none';
     if(url){
-      if(ov.getAttribute('src')!==url)ov.setAttribute('src',url);
-      ov.style.display='block';
-      ov.onerror=()=>{ov.style.display='none';};
-      ov.onload=()=>{ov.style.display='block';};
+      ov.onload=function(){ this.classList.add('show'); this.style.display='block'; };
+      ov.onerror=function(){ this.classList.remove('show'); this.style.display='none'; this.removeAttribute('src'); };
+      if(ov.getAttribute('src')!==url) ov.setAttribute('src',url);
+      // Si ya está en caché y completo, mostrarlo sin esperar otro onload.
+      if(ov.complete && ov.naturalWidth>0){ov.classList.add('show');ov.style.display='block';}
     }else{
+      ov.classList.remove('show');
       ov.removeAttribute('src');
-      ov.style.display='none';
     }
   }
-  document.querySelectorAll('.director-logo-picker button').forEach(b=>b.classList.remove('active'));
-  let ab=$('dir_logo_pick_'+(p.logoIndex||1)); if(ab)ab.classList.add('active');
-  let cfg=directorLogoCfg(p,p.logoIndex||1);
+  document.querySelectorAll('.director-logo-picker button').forEach(b=>{b.classList.remove('active');b.style.removeProperty('background');b.style.removeProperty('border-color');b.style.removeProperty('color');});
+  let idx=Number(p.logoIndex||1);
+  let ab=$('dir_logo_pick_'+idx);
+  if(ab){ab.classList.add('active');ab.style.background='linear-gradient(135deg,#e00000,#ff2020)';ab.style.borderColor='#ff4545';ab.style.color='#fff';}
+  let cfg=directorLogoCfg(p,idx);
   document.documentElement.style.setProperty('--director-logo-opacity',String((Number(cfg.logoOpacity||78)/100).toFixed(2)));
   document.documentElement.style.setProperty('--director-logo-margin',String(Number(cfg.logoMargin||18))+'px');
 }
