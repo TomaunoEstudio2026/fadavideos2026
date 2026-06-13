@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v107 - Logo carga real robusta -->
+<!-- TOMAUNO VIDEOS - VERSION v108 - Logo URL robusto -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1030,7 +1030,7 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 
 
 /* ===== v97 fixes: versión, botones compactos, Director global/individual ===== */
-:root{--tomauno-version:'v106';}
+:root{--tomauno-version:'v108';}
 .admin-video-inline{display:grid!important;grid-template-columns:minmax(0,1fr) 40px!important;gap:7px!important;align-items:center!important;width:100%!important}
 .admin-video-inline input{width:100%!important;min-width:0!important;max-width:100%!important}
 .admin-video-inline .apply-all-mini{width:38px!important;height:38px!important;min-width:38px!important;padding:0!important;border-radius:50%!important;display:grid!important;place-items:center!important;font-size:14px!important;line-height:1!important;margin:0!important}
@@ -1110,7 +1110,7 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 </style>
 </head>
 <body>
-<div class="bggrid"></div><div class="version-mini">v106</div>
+<div class="bggrid"></div><div class="version-mini">v108</div>
 <header>
   <div class="brand" id="adminTrigger"><img id="logoImg" alt="Tomauno"><div class="wordmark"><strong>TOMA<span>UNO</span></strong><small>VIDEOS</small></div></div>
   <div class="nav"><button class="pill" id="btnEvents">Eventos</button><button class="pill" id="btnVideos">Videos</button><span class="status"><i class="dot" id="statusDot"></i><span id="statusText">Conectando</span></span></div>
@@ -1320,8 +1320,36 @@ function normalizeLogoUrlForDisplay(url){
   }catch(_e){}
   return s;
 }
+function logoCandidateUrls(url){
+  let s=normalizeLogoUrlForDisplay(url);
+  if(!s)return [];
+  let out=[s];
+  try{
+    let u=new URL(s);
+    let host=u.hostname.toLowerCase();
+    if(host==='i.imgur.com'){
+      let id=(u.pathname.split('/').filter(Boolean)[0]||'').replace(/\.(png|jpg|jpeg|webp|gif)$/i,'');
+      if(id){['png','jpg','jpeg','webp'].forEach(ext=>out.push('https://i.imgur.com/'+id+'.'+ext));}
+    }
+  }catch(_e){}
+  return Array.from(new Set(out.filter(Boolean)));
+}
+function tomaunoLogoFallback(img){
+  try{
+    let list=[];
+    try{list=JSON.parse(decodeURIComponent(img.getAttribute('data-logo-candidates')||'[]'));}catch(_e){list=[];}
+    let idx=Number(img.getAttribute('data-logo-index')||0)+1;
+    if(idx<list.length){img.setAttribute('data-logo-index',String(idx));img.src=list[idx];return;}
+    hideBrokenLogo(img);
+  }catch(_e){hideBrokenLogo(img);}
+}
+function logoImgAttrsForUrl(url){
+  let list=logoCandidateUrls(url);
+  if(!list.length)return ' alt="" class="logo-hidden"';
+  return ' alt="" loading="lazy" decoding="async" data-logo-index="0" data-logo-candidates="'+encodeURIComponent(JSON.stringify(list)).replace(/\"/g,'&quot;')+'" onload="this.classList.remove(\'logo-hidden\');this.classList.add(\'show\')" onerror="tomaunoLogoFallback(this)" src="'+esc(list[0])+'"';
+}
 function logoImgSafeAttrs(){
-  return ' alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onload="this.classList.remove(\'logo-hidden\');this.classList.add(\'show\')" onerror="this.classList.remove(\'show\');this.classList.add(\'logo-hidden\');this.removeAttribute(\'src\')"';
+  return ' alt="" loading="lazy" decoding="async" onload="this.classList.remove(\'logo-hidden\');this.classList.add(\'show\')" onerror="tomaunoLogoFallback(this)"';
 }
 function logoSlotDefaultSettings(slot){
   slot=String(slot||'1');
@@ -1365,7 +1393,7 @@ function logoOverlayHtml(ev,p,opts){
     let st=getLogoSlotSettings(eventPreset,item.slot);
     let fade=opts.fade?' preview-delayed-logo':'';
     let cls='director-logo-overlay logo-slot-'+item.slot+' pos-'+esc(st.logoPos||'br')+' logo-hidden'+fade;
-    return '<img src="'+esc(item.url)+'" class="'+cls+'" '+logoImgSafeAttrs()+' style="width:'+esc(st.logoSize||16)+'%;opacity:'+(Number(st.logoOpacity||78)/100).toFixed(2)+';--director-logo-margin:'+esc(st.logoMargin||18)+'px;--director-logo-opacity:'+(Number(st.logoOpacity||78)/100).toFixed(2)+'">';
+    return '<img class="'+cls+'" '+logoImgAttrsForUrl(item.url)+' style="width:'+esc(st.logoSize||16)+'%;opacity:'+(Number(st.logoOpacity||78)/100).toFixed(2)+';--director-logo-margin:'+esc(st.logoMargin||18)+'px;--director-logo-opacity:'+(Number(st.logoOpacity||78)/100).toFixed(2)+'">';
   }).join('');
 }
 function stripLogoFieldsFromVideoPreset(p){
@@ -1913,14 +1941,16 @@ function hideBrokenLogo(img){try{if(img){img.classList.remove('show');img.classL
 function prepareLogoImg(img,url){
   if(!img)return;
   hideBrokenLogo(img);
-  if(!url)return;
+  let list=logoCandidateUrls(url);
+  if(!list.length)return;
   img.alt='';
   img.loading='lazy';
   img.decoding='async';
-  img.referrerPolicy='no-referrer';
+  img.setAttribute('data-logo-index','0');
+  img.setAttribute('data-logo-candidates',encodeURIComponent(JSON.stringify(list)));
   img.onload=function(){this.classList.remove('logo-hidden');this.classList.add('show');};
-  img.onerror=function(){hideBrokenLogo(this);};
-  img.src=url;
+  img.onerror=function(){tomaunoLogoFallback(this);};
+  img.src=list[0];
 }
 function syncDirectorGridLogos(p,ev){
   // La grilla por ahora no muestra logos para no cargar visualmente las tarjetas.
@@ -2009,7 +2039,7 @@ updateBackTopBtn();
 function confirmDeleteVideoFromGrid(id){
   try{ delVid(String(id)); }catch(e){ console.warn('confirmDeleteVideoFromGrid',e); toast('Error','No se pudo abrir la confirmación para eliminar.'); }
 }
-(async()=>{await fbReady; await fbGetConfig(); await console.log("TOMAUNO VIDEOS v106");
+(async()=>{await fbReady; await fbGetConfig(); await console.log("TOMAUNO VIDEOS v108");
 ghLoad(); await Promise.all([fbGetOrders(),fbGetStats(),fbGetReactions()]); fbListenReactions(); updateTopStats();})();
 </script>
 </body></html>
