@@ -1868,7 +1868,63 @@
           "previewInicio": 190,
           "previewSegundos": 20,
           "precio": 15000,
-          "driveId": "https://drive.google.com/file/d/1Kedq3lpA-cnQSCYhBHXlAkghcRu2VOPE/view?usp=sharing"
+          "driveId": "https://drive.google.com/file/d/1Kedq3lpA-cnQSCYhBHXlAkghcRu2VOPE/view?usp=sharing",
+          "directorPreset": {
+            "brillo": -2,
+            "exposicion": 35,
+            "sombras": 26,
+            "contraste": 16,
+            "saturacion": 0,
+            "calidez": 0,
+            "nitidez": 0,
+            "ruidoImagen": 0,
+            "volumen": 100,
+            "graves": 0,
+            "agudos": 0,
+            "ruidoAudio": 0,
+            "zoom": 0,
+            "posX": 0,
+            "posY": 0,
+            "logoSize": 15,
+            "logoOpacity": 78,
+            "logoMargin": 18,
+            "histZoom": 0,
+            "histPosX": 0,
+            "histPosY": 0,
+            "rotacion": "0",
+            "normalizarLuz": false,
+            "normalizarAudio": false,
+            "logoDurante": true,
+            "logoFinal": false,
+            "logoPos": "br",
+            "logoPath": "logo_tomauno.png",
+            "historia": false,
+            "histInicio": "00:00",
+            "histFin": "00:15",
+            "outDir": "C:\\TOMAUNO\\ENTREGAS",
+            "fuenteTipo": "youtube",
+            "logoIndex": 3,
+            "logos": {
+              "1": {
+                "logoPos": "tr",
+                "logoSize": 8,
+                "logoOpacity": 78,
+                "logoMargin": 12
+              },
+              "2": {
+                "logoPos": "bl",
+                "logoSize": 25,
+                "logoOpacity": 78,
+                "logoMargin": 18
+              },
+              "3": {
+                "logoPos": "br",
+                "logoSize": 15,
+                "logoOpacity": 78,
+                "logoMargin": 18
+              }
+            }
+          }
         },
         {
           "id": "2",
