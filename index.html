@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v125 CORTES DIRECTOR COMPLETO - base v122 -->
+<!-- TOMAUNO VIDEOS - VERSION v126 CORTES DIRECTOR FUNCIONAL - base v125 -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1024,7 +1024,7 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 
 
 /* ===== v97 fixes: versión, botones compactos, Director global/individual ===== */
-:root{--tomauno-version:'v125';}
+:root{--tomauno-version:'v126';}
 .admin-video-inline{display:grid!important;grid-template-columns:minmax(0,1fr) 40px!important;gap:7px!important;align-items:center!important;width:100%!important}
 .admin-video-inline input{width:100%!important;min-width:0!important;max-width:100%!important}
 .admin-video-inline .apply-all-mini{width:38px!important;height:38px!important;min-width:38px!important;padding:0!important;border-radius:50%!important;display:grid!important;place-items:center!important;font-size:14px!important;line-height:1!important;margin:0!important}
@@ -1122,10 +1122,25 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .cut-v125-title-modal .modal-actions{display:flex;justify-content:flex-end;gap:8px}
 @media(max-width:720px){.cut-v125-grid,.cut-v125-time-row{grid-template-columns:1fr}.cut-v125-current{grid-template-columns:1fr 70px auto}.cut-v125-actions .btn{flex:1}}
 
+
+
+/* ===== v126 Cortes Director funcional ===== */
+.cut-v125-card{border-color:rgba(255,255,255,.16)!important;background:rgba(255,255,255,.045)!important}
+.cut-v125-current{grid-template-columns:minmax(0,1fr) 86px auto!important}
+.cut-v125-current input[type=text]{background:#fff!important;color:#111!important;border:0!important;border-radius:4px!important;padding:6px 8px!important;font-weight:800;text-align:center}
+.cut-v125-current input[type=range]{accent-color:#0d8cff!important}
+.cut-v125-status{font-size:12px!important}
+.director-story-frame.cut-show{display:block!important}
+.director-story-frame.cut-normal{left:3%!important;top:3%!important;width:94%!important;height:94%!important;transform:none!important;border-radius:12px!important}
+.director-story-frame.cut-vertical{left:50%!important;top:50%!important;width:29.7%!important;height:94%!important;transform:translate(-50%,-50%)!important}
+.director-story-frame.cut-square{left:50%!important;top:50%!important;width:52.9%!important;height:94%!important;transform:translate(-50%,-50%)!important}
+.director-story-frame:before{content:attr(data-label)!important}
+.cut-v125-actions .open-original{border-color:rgba(255,208,77,.36)!important;color:#ffd04d!important}
+
 </style>
 </head>
 <body>
-<div class="bggrid"></div><div class="version-mini">v125</div>
+<div class="bggrid"></div><div class="version-mini">v126</div>
 <header>
   <div class="brand" id="adminTrigger"><img id="logoImg" alt="Tomauno"><div class="wordmark"><strong>TOMA<span>UNO</span></strong><small>VIDEOS</small></div></div>
   <div class="nav"><button class="pill" id="btnEvents">Eventos</button><button class="pill" id="btnVideos">Videos</button><span class="status"><i class="dot" id="statusDot"></i><span id="statusText">Conectando</span></span></div>
@@ -2092,34 +2107,35 @@ openDirectorFullscreen=function(){
 
 
 
-/* ===== v125 Cortes Director completo ===== */
+/* ===== v126 Cortes Director funcional ===== */
 (function(){
-  function el(id){return document.getElementById(id);} 
-  function safeEsc(x){return (typeof esc==='function')?esc(x):String(x==null?'':x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-  function parseTimeV125(v){
+  function el(id){return document.getElementById(id);}
+  function safeEsc(x){return (typeof esc==='function')?esc(x):String(x==null?'':x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function parseTimeV126(v){
     if(v==null)return 0; v=String(v).trim(); if(!v)return 0;
     if(/^\d+(\.\d+)?$/.test(v))return Math.max(0,Math.round(Number(v)||0));
-    var parts=v.split(':').map(function(n){return Number(n)||0;});
-    if(parts.length===3)return Math.max(0,Math.round(parts[0]*3600+parts[1]*60+parts[2]));
-    if(parts.length===2)return Math.max(0,Math.round(parts[0]*60+parts[1]));
+    var p=v.split(':').map(function(n){return Number(n)||0;});
+    if(p.length===3)return Math.max(0,Math.round(p[0]*3600+p[1]*60+p[2]));
+    if(p.length===2)return Math.max(0,Math.round(p[0]*60+p[1]));
     return 0;
   }
-  function fmtTimeV125(sec){
-    sec=Math.max(0,Math.round(Number(sec)||0)); var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
-    var mm=String(m).padStart(2,'0'),ss=String(s).padStart(2,'0');
-    return h?String(h).padStart(2,'0')+':'+mm+':'+ss:mm+':'+ss;
+  function fmtTimeV126(sec){
+    sec=Math.max(0,Math.round(Number(sec)||0)); var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),ss=sec%60;
+    var mm=String(m).padStart(2,'0'),s=String(ss).padStart(2,'0');
+    return h?String(h).padStart(2,'0')+':'+mm+':'+s:mm+':'+s;
   }
-  function cutEventV125(){return (state.data.eventos||[]).find(function(e){return String(e.id)===String(state.directorEventId);})||state.currentEvent||null;}
-  function cutVideoV125(ev){
+  function cutEventV126(){return (state.data.eventos||[]).find(function(e){return String(e.id)===String(state.directorEventId);})||state.currentEvent||null;}
+  function cutVideoV126(ev){
     if(!ev)return null;
     return (ev.videos||[]).find(function(v){return String(v.id)===String(state.directorVideoId);})||(ev.videos||[]).find(function(v){return v.youtubeId;})||(ev.videos||[])[0]||null;
   }
-  function cutReadV125(){
-    var start=parseTimeV125(el('dir_cut_start_v125')&&el('dir_cut_start_v125').value);
-    var end=parseTimeV125(el('dir_cut_end_v125')&&el('dir_cut_end_v125').value);
+  function cutReadV126(){
+    var start=parseTimeV126(el('dir_cut_start_v125')&&el('dir_cut_start_v125').value);
+    var end=parseTimeV126(el('dir_cut_end_v125')&&el('dir_cut_end_v125').value);
     return {start:start,end:end,duration:Math.max(0,end-start),tipo:(el('dir_cut_tipo_v125')&&el('dir_cut_tipo_v125').value)||'normal',rotacion:(el('dir_cut_rot_v125')&&el('dir_cut_rot_v125').value)||'0'};
   }
-  function cutFiltersV125(c){
+  function cutLabelV126(c){return c.tipo==='vertical'?'9:16 HISTORIA':(c.tipo==='cuadrado'?'1:1 CUADRADO':'CORTE NORMAL');}
+  function cutFiltersV126(c){
     var vf=[];
     if(c.rotacion==='90')vf.push('transpose=1');
     if(c.rotacion==='-90')vf.push('transpose=2');
@@ -2128,83 +2144,130 @@ openDirectorFullscreen=function(){
     if(c.tipo==='cuadrado')vf.push('scale=-2:1080,crop=1080:1080');
     return vf.join(',');
   }
-  function cutCommandV125(){
-    var ev=cutEventV125(),v=cutVideoV125(ev),c=cutReadV125();
-    var name=(v&&v.titulo?v.titulo:'corte').replace(/[\\/:*?"<>|]+/g,'_').trim()||'corte';
-    var cmd='ffmpeg -y -ss '+fmtTimeV125(c.start)+' -to '+fmtTimeV125(c.end)+' -i "%INPUT%"';
-    var vf=cutFiltersV125(c); if(vf)cmd+=' -vf "'+vf+'"';
-    cmd+=' -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -c:a aac -b:a 192k "C:\\TOMAUNO\\ENTREGAS\\'+name+'_CORTE_TOMAUNO.mp4"';
+  function cutOutputNameV126(v,c){
+    var name=(v&&v.titulo?v.titulo:'corte')+'_'+fmtTimeV126(c.start).replace(/:/g,'-')+'_'+fmtTimeV126(c.end).replace(/:/g,'-');
+    return name.replace(/[\\/:*?"<>|]+/g,'_').trim()||'corte_tomauno';
+  }
+  function cutCommandV126(){
+    var ev=cutEventV126(),v=cutVideoV126(ev),c=cutReadV126();
+    var name=cutOutputNameV126(v,c);
+    var cmd='ffmpeg -y -ss '+fmtTimeV126(c.start)+' -to '+fmtTimeV126(c.end)+' -i "%INPUT%"';
+    var vf=cutFiltersV126(c); if(vf)cmd+=' -vf "'+vf+'"';
+    cmd+=' -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -c:a aac -b:a 192k "C:\\TOMAUNO\\ENTREGAS\\'+name+'_TOMAUNO.mp4"';
     return cmd;
   }
-  function cutUpdateV125(){
-    var c=cutReadV125();
+  function cutBatV126(){
+    var ev=cutEventV126(),v=cutVideoV126(ev),c=cutReadV126();
+    var name=cutOutputNameV126(v,c)+'_TOMAUNO.mp4';
+    var vf=cutFiltersV126(c);
+    var lines=[];
+    lines.push('@echo off');
+    lines.push('REM TOMAUNO - Corte Director');
+    lines.push('REM Arrastra el video original encima de este BAT.');
+    lines.push('set "INPUT=%~1"');
+    lines.push('if "%INPUT%"=="" (');
+    lines.push('  echo Arrastra el archivo MP4 original encima de este BAT.');
+    lines.push('  pause');
+    lines.push('  exit /b');
+    lines.push(')');
+    lines.push('set "OUTDIR=%USERPROFILE%\\Downloads\\TOMAUNO_ENTREGAS"');
+    lines.push('if not exist "%OUTDIR%" mkdir "%OUTDIR%"');
+    var cmd='ffmpeg -y -ss '+fmtTimeV126(c.start)+' -to '+fmtTimeV126(c.end)+' -i "%INPUT%"';
+    if(vf)cmd+=' -vf "'+vf+'"';
+    cmd+=' -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -c:a aac -b:a 192k "%OUTDIR%\\'+name+'"';
+    lines.push(cmd);
+    lines.push('echo.');
+    lines.push('echo Archivo listo en: %OUTDIR%');
+    lines.push('pause');
+    return lines.join('\r\n');
+  }
+  function cutSeekFrameV126(sec){
+    sec=Math.max(0,Math.round(Number(sec)||0)); state.directorBigStart=sec; state.cutCurrentV126=sec;
+    var r=el('dir_cut_current_v125'),t=el('dir_cut_current_time_v126'); if(r)r.value=sec; if(t)t.value=fmtTimeV126(sec);
+    var fr=el('dir_frame'); if(!fr)return;
+    try{
+      if(fr.src && fr.src.indexOf('enablejsapi=1')<0){
+        var join=fr.src.indexOf('?')>-1?'&':'?';
+        fr.src=fr.src+join+'enablejsapi=1&origin='+encodeURIComponent(location.origin);
+      }
+      setTimeout(function(){try{fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'seekTo',args:[sec,true]}),'*');}catch(_e){}},80);
+      setTimeout(function(){try{fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'playVideo',args:[]}),'*');}catch(_e){}},140);
+    }catch(e){console.warn('seek director',e);}
+  }
+  function cutUpdateFrameV126(c){
+    var f=el('dir_story_frame'); if(!f)return;
+    f.classList.remove('show','cut-show','cut-normal','cut-vertical','cut-square');
+    f.removeAttribute('style');
+    f.setAttribute('data-label',cutLabelV126(c));
+    f.classList.add('show','cut-show',c.tipo==='vertical'?'cut-vertical':(c.tipo==='cuadrado'?'cut-square':'cut-normal'));
+  }
+  function cutUpdateV126(){
+    var c=cutReadV126();
     var info=el('dir_cut_info_v125');
-    if(info)info.innerHTML='Inicio: <b>'+fmtTimeV125(c.start)+'</b> &nbsp; Fin: <b>'+fmtTimeV125(c.end)+'</b> &nbsp; Duración: <b>'+fmtTimeV125(c.duration)+'</b><br>Tipo: <b>'+(c.tipo==='normal'?'Normal / tarjeta vendible':c.tipo==='vertical'?'Vertical 9:16':'Cuadrado 1:1')+'</b> · Rotación: <b>'+(c.rotacion==='0'?'sin rotar':c.rotacion+'°')+'</b>';
-    var ta=el('dir_cut_cmd_v125'); if(ta)ta.value=cutCommandV125();
+    if(info)info.innerHTML='Inicio: <b>'+fmtTimeV126(c.start)+'</b> &nbsp; Fin: <b>'+fmtTimeV126(c.end)+'</b> &nbsp; Duración: <b>'+fmtTimeV126(c.duration)+'</b><br>Tipo: <b>'+(c.tipo==='normal'?'Normal / tarjeta vendible':c.tipo==='vertical'?'Vertical 9:16':'Cuadrado 1:1')+'</b> · Rotación: <b>'+(c.rotacion==='0'?'sin rotar':c.rotacion+'°')+'</b>'+(c.end<=c.start?'<br><span style="color:#ffd04d;font-weight:900">El fin debe ser mayor que el inicio.</span>':'');
+    var ta=el('dir_cut_cmd_v125'); if(ta)ta.value=cutCommandV126();
+    cutUpdateFrameV126(c);
   }
-  function cutSetCurrentV125(sec,seekVideo){
-    sec=Math.max(0,Math.round(Number(sec)||0)); state.directorBigStart=sec;
-    var r=el('dir_cut_current_v125'),n=el('dir_cut_current_num_v125'); if(r)r.value=sec; if(n)n.value=sec;
-    if(seekVideo){
-      var yt=(typeof cleanYouTube==='function')?cleanYouTube(state.directorSample||((el('dir_sample')||{}).value)||''):(state.directorSample||'');
-      var fr=el('dir_frame'); if(fr&&yt)fr.src='https://www.youtube.com/embed/'+encodeURIComponent(yt)+'?rel=0&modestbranding=1&vq=hd1080&start='+encodeURIComponent(sec);
-    }
-  }
-  function cutCreateCardV125(){
-    var ev=cutEventV125(),base=cutVideoV125(ev),c=cutReadV125();
+  function cutCreateCardV126(){
+    var ev=cutEventV126(),base=cutVideoV126(ev),c=cutReadV126();
     if(!ev||!base){toast('Corte','No hay video base seleccionado.');return;}
     if(c.duration<=0){toast('Corte','Marcá inicio y fin válido.');return;}
-    var suggested=(base.titulo||'Corte')+' · '+fmtTimeV125(c.start)+'-'+fmtTimeV125(c.end);
-    openModal('Crear tarjeta desde corte','<div class="cut-v125-title-modal"><p class="muted">Se creará una tarjeta nueva usando el mismo YouTube/Drive del video base, pero con este fragmento.</p><div class="field"><label>Título</label><input id="cutTitleV125" value="'+safeEsc(suggested)+'"></div><div class="field"><label>Subtítulo</label><input id="cutSubV125" value="'+safeEsc(base.subtitulo||'')+'"></div><div class="modal-actions right-red" style="padding-top:14px"><button class="btn gray" id="cutCancelV125">Cancelar</button><button class="btn red" id="cutOkV125">Crear tarjeta</button></div></div>');
+    var suggested=(base.titulo||'Corte')+' · '+fmtTimeV126(c.start)+'-'+fmtTimeV126(c.end);
+    openModal('Crear tarjeta desde corte','<div class="cut-v125-title-modal"><p class="muted">Se creará una tarjeta nueva al final del evento. Después podés editarla desde Videos.</p><div class="field"><label>Título</label><input id="cutTitleV125" value="'+safeEsc(suggested)+'"></div><div class="field"><label>Subtítulo</label><input id="cutSubV125" value="'+safeEsc(base.subtitulo||('Corte '+fmtTimeV126(c.start)+' a '+fmtTimeV126(c.end)))+'"></div><div class="modal-actions right-red" style="padding-top:14px"><button class="btn gray" id="cutCancelV125">Cancelar</button><button class="btn red" id="cutOkV125">Crear tarjeta</button></div></div>');
     var cancel=el('cutCancelV125'),ok=el('cutOkV125'); if(cancel)cancel.onclick=closeModal;
     if(ok)ok.onclick=async function(){
       var title=(el('cutTitleV125')&&el('cutTitleV125').value.trim())||suggested;
-      var sub=(el('cutSubV125')&&el('cutSubV125').value.trim())||'';
+      var sub=(el('cutSubV125')&&el('cutSubV125').value.trim())||('Corte '+fmtTimeV126(c.start)+' a '+fmtTimeV126(c.end)+' · '+(c.tipo==='vertical'?'Vertical 9:16':c.tipo==='cuadrado'?'Cuadrado 1:1':'Normal'));
       var newId=(typeof nextVid==='function')?String(nextVid(ev)):String(Date.now());
-      var nv=Object.assign({},base,{id:newId,titulo:title,subtitulo:sub,bailarina:sub||base.bailarina||'',previewInicio:c.start,previewSegundos:c.duration,descargas:0,plays:0,corteDe:String(base.id||''),corteTipo:c.tipo,corteInicio:c.start,corteFin:c.end,corteRotacion:c.rotacion,codigo:(typeof randCode==='function'?randCode():(String(Math.floor(1000+Math.random()*9000))))});
+      var nv=Object.assign({},base,{id:newId,titulo:title,subtitulo:sub,bailarina:sub,previewInicio:c.start,previewSegundos:c.duration,descargas:0,plays:0,corteDe:String(base.id||''),corteTipo:c.tipo,corteInicio:c.start,corteFin:c.end,corteRotacion:c.rotacion,codigo:(typeof randCode==='function'?randCode():String(Math.floor(1000+Math.random()*9000)))});
       ev.videos=ev.videos||[]; ev.videos.push(nv); closeModal();
       var saved=false; try{saved=await ghSave('Crear corte '+title,true);}catch(_e){}
-      state.currentEvent=ev; if(typeof renderVideos==='function')renderVideos(); toast(saved?'Tarjeta creada':'Tarjeta local','Corte agregado a la grilla.');
+      state.currentEvent=ev; if(typeof renderVideos==='function')renderVideos(); toast(saved?'Tarjeta creada':'Tarjeta local','Corte agregado al final de la grilla.');
     };
-    setTimeout(function(){var input=el('cutTitleV125'); if(input)input.focus();},60);
+    setTimeout(function(){var input=el('cutTitleV125'); if(input){input.focus();input.select();}},60);
   }
-  function cutDownloadBatV125(){
-    var txt='@echo off\r\nREM TOMAUNO - Corte Director\r\nREM Reemplazá %INPUT% por el archivo original.\r\n'+cutCommandV125()+'\r\npause\r\n';
-    var blob=new Blob([txt],{type:'application/x-msdos-program'}),a=document.createElement('a');
+  function cutDownloadBatV126(){
+    var blob=new Blob([cutBatV126()],{type:'application/x-msdos-program'}),a=document.createElement('a');
     a.href=URL.createObjectURL(blob); a.download='tomauno_corte_director.bat'; document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},700);
   }
-  function installCutsV125(){
-    if(el('dir_cut_v125'))return;
+  function cutOpenOriginalV126(){
+    var ev=cutEventV126(),v=cutVideoV126(ev); if(!v||!v.driveId){toast('Sin Drive','Este video no tiene Drive cargado.');return;}
+    var url=(typeof driveViewUrl==='function')?driveViewUrl(v.driveId):('https://drive.google.com/file/d/'+encodeURIComponent(v.driveId)+'/view?usp=sharing');
+    window.open(url,'_blank');
+  }
+  function installCutsV126(){
+    if(el('dir_cut_v125')){cutUpdateV126();return;}
     var oldHist=el('dir_historia'), oldDetails=oldHist&&oldHist.closest('details');
     var oldTools=el('dir_story_tools_v122'); if(oldTools)oldTools.style.display='none';
     var anchor=oldDetails || el('dir_cmd') || el('dir_save'); if(!anchor||!anchor.parentNode)return;
     if(oldDetails)oldDetails.style.display='none';
     var p=(typeof readDirectorPreset==='function')?readDirectorPreset():{};
-    var start=parseTimeV125(p.histInicio||'00:00'), end=parseTimeV125(p.histFin||'00:15'); if(end<=start)end=start+15;
-    var cur=Number(state.directorBigStart||start||0)||0;
+    var start=parseTimeV126(p.histInicio||'00:00'), end=parseTimeV126(p.histFin||'00:15'); if(end<=start)end=start+15;
+    var cur=Number(state.cutCurrentV126||state.directorBigStart||start||0)||0;
     var box=document.createElement('details'); box.className='cut-v125-card'; box.id='dir_cut_v125'; box.open=true;
-    box.innerHTML='<summary>✂️ Cortes Director</summary><div class="cut-v125-body"><div class="cut-v125-grid"><div class="field"><label>Tipo salida</label><select id="dir_cut_tipo_v125"><option value="normal">Normal / tarjeta vendible</option><option value="vertical">Vertical 9:16 historia/reel</option><option value="cuadrado">Cuadrado 1:1</option></select></div><div class="field"><label>Rotación</label><select id="dir_cut_rot_v125"><option value="0">Sin rotar</option><option value="90">90° derecha</option><option value="-90">90° izquierda</option><option value="180">180°</option></select></div><div class="span2 cut-v125-time-row"><div class="field"><label>Inicio</label><input id="dir_cut_start_v125" value="'+safeEsc(fmtTimeV125(start))+'" placeholder="01:20"></div><div class="field"><label>Fin</label><input id="dir_cut_end_v125" value="'+safeEsc(fmtTimeV125(end))+'" placeholder="02:00"></div></div><div class="span2"><label>Barra para ubicar momento</label><div class="cut-v125-current"><input type="range" id="dir_cut_current_v125" min="0" max="7200" step="1" value="'+safeEsc(cur)+'"><input type="number" id="dir_cut_current_num_v125" min="0" value="'+safeEsc(cur)+'"><button class="btn gray small" id="dir_cut_go_v125" type="button">Ir</button></div></div></div><div class="cut-v125-actions"><button class="btn gray small" id="dir_cut_mark_start_v125" type="button">✂ Marcar inicio</button><button class="btn gray small" id="dir_cut_mark_end_v125" type="button">✂ Marcar fin</button><button class="btn gray small" id="dir_cut_view_start_v125" type="button">▶ Ir inicio</button><button class="btn gray small" id="dir_cut_view_end_v125" type="button">▶ Ir fin</button><button class="btn red small main-cut" id="dir_cut_create_v125" type="button">✂ Crear tarjeta</button><button class="btn gray small" id="dir_cut_copy_v125" type="button">📋 FFmpeg</button><button class="btn gray small" id="dir_cut_bat_v125" type="button">⬇ BAT</button></div><div class="cut-v125-status" id="dir_cut_info_v125"></div><textarea class="cut-v125-cmd" id="dir_cut_cmd_v125" readonly></textarea></div>';
+    box.innerHTML='<summary>✂️ Cortes Director</summary><div class="cut-v125-body"><div class="cut-v125-grid"><div class="field"><label>Tipo salida</label><select id="dir_cut_tipo_v125"><option value="normal">Normal / tarjeta vendible</option><option value="vertical">Vertical 9:16 historia/reel</option><option value="cuadrado">Cuadrado 1:1</option></select></div><div class="field"><label>Rotación</label><select id="dir_cut_rot_v125"><option value="0">Sin rotar</option><option value="90">90° derecha</option><option value="-90">90° izquierda</option><option value="180">180°</option></select></div><div class="span2 cut-v125-time-row"><div class="field"><label>Inicio</label><input id="dir_cut_start_v125" value="'+safeEsc(fmtTimeV126(start))+'" placeholder="01:20"></div><div class="field"><label>Fin</label><input id="dir_cut_end_v125" value="'+safeEsc(fmtTimeV126(end))+'" placeholder="02:00"></div></div><div class="span2"><label>Barra para ubicar momento</label><div class="cut-v125-current"><input type="range" id="dir_cut_current_v125" min="0" max="7200" step="1" value="'+safeEsc(cur)+'"><input type="text" id="dir_cut_current_time_v126" value="'+safeEsc(fmtTimeV126(cur))+'"><button class="btn gray small" id="dir_cut_go_v125" type="button">Ir</button></div></div></div><div class="cut-v125-actions"><button class="btn gray small" id="dir_cut_mark_start_v125" type="button">✂ Marcar inicio</button><button class="btn gray small" id="dir_cut_mark_end_v125" type="button">✂ Marcar fin</button><button class="btn gray small" id="dir_cut_view_start_v125" type="button">▶ Ir inicio</button><button class="btn gray small" id="dir_cut_view_end_v125" type="button">▶ Ir fin</button><button class="btn red small main-cut" id="dir_cut_create_v125" type="button">✂ Crear tarjeta</button><button class="btn gray small open-original" id="dir_cut_open_drive_v126" type="button">📁 Abrir original</button><button class="btn gray small" id="dir_cut_copy_v125" type="button">📋 FFmpeg</button><button class="btn gray small" id="dir_cut_bat_v125" type="button">⬇ BAT</button></div><div class="cut-v125-status" id="dir_cut_info_v125"></div><textarea class="cut-v125-cmd" id="dir_cut_cmd_v125" readonly></textarea></div>';
     anchor.parentNode.insertBefore(box, anchor);
-    ['dir_cut_tipo_v125','dir_cut_rot_v125','dir_cut_start_v125','dir_cut_end_v125'].forEach(function(id){var x=el(id); if(x){x.oninput=cutUpdateV125;x.onchange=cutUpdateV125;}});
-    var r=el('dir_cut_current_v125'),n=el('dir_cut_current_num_v125');
-    if(r)r.oninput=function(){if(n)n.value=r.value;}; if(n)n.oninput=function(){if(r)r.value=n.value;};
-    var go=el('dir_cut_go_v125'); if(go)go.onclick=function(){cutSetCurrentV125(Number((n&&n.value)||(r&&r.value)||0)||0,true);};
-    el('dir_cut_mark_start_v125').onclick=function(){var sec=Number((n&&n.value)||(r&&r.value)||0)||0; el('dir_cut_start_v125').value=fmtTimeV125(sec); cutUpdateV125();};
-    el('dir_cut_mark_end_v125').onclick=function(){var sec=Number((n&&n.value)||(r&&r.value)||0)||0; el('dir_cut_end_v125').value=fmtTimeV125(sec); cutUpdateV125();};
-    el('dir_cut_view_start_v125').onclick=function(){cutSetCurrentV125(parseTimeV125(el('dir_cut_start_v125').value),true);};
-    el('dir_cut_view_end_v125').onclick=function(){cutSetCurrentV125(parseTimeV125(el('dir_cut_end_v125').value),true);};
-    el('dir_cut_create_v125').onclick=cutCreateCardV125;
-    el('dir_cut_copy_v125').onclick=async function(){var cmd=cutCommandV125(),ta=el('dir_cut_cmd_v125'); if(ta){ta.value=cmd;ta.classList.add('show');} try{await navigator.clipboard.writeText(cmd); toast('Corte','Comando FFmpeg copiado.');}catch(_e){toast('Corte','Comando listo en pantalla.');}};
-    el('dir_cut_bat_v125').onclick=cutDownloadBatV125;
-    cutUpdateV125();
+    ['dir_cut_tipo_v125','dir_cut_rot_v125','dir_cut_start_v125','dir_cut_end_v125'].forEach(function(id){var x=el(id); if(x){x.oninput=cutUpdateV126;x.onchange=cutUpdateV126;}});
+    var r=el('dir_cut_current_v125'),t=el('dir_cut_current_time_v126');
+    if(r){r.oninput=function(){state.cutCurrentV126=Number(r.value)||0;if(t)t.value=fmtTimeV126(state.cutCurrentV126);cutSeekFrameV126(state.cutCurrentV126);};}
+    if(t){t.onchange=function(){var sec=parseTimeV126(t.value);state.cutCurrentV126=sec;if(r)r.value=sec;t.value=fmtTimeV126(sec);cutSeekFrameV126(sec);};}
+    var go=el('dir_cut_go_v125'); if(go)go.onclick=function(){cutSeekFrameV126(parseTimeV126((t&&t.value)||(r&&r.value)||0));};
+    el('dir_cut_mark_start_v125').onclick=function(){var sec=Number(state.cutCurrentV126||((r&&r.value)||0))||0; el('dir_cut_start_v125').value=fmtTimeV126(sec); cutUpdateV126();};
+    el('dir_cut_mark_end_v125').onclick=function(){var sec=Number(state.cutCurrentV126||((r&&r.value)||0))||0; el('dir_cut_end_v125').value=fmtTimeV126(sec); cutUpdateV126();};
+    el('dir_cut_view_start_v125').onclick=function(){cutSeekFrameV126(parseTimeV126(el('dir_cut_start_v125').value));};
+    el('dir_cut_view_end_v125').onclick=function(){cutSeekFrameV126(parseTimeV126(el('dir_cut_end_v125').value));};
+    el('dir_cut_create_v125').onclick=cutCreateCardV126;
+    el('dir_cut_open_drive_v126').onclick=cutOpenOriginalV126;
+    el('dir_cut_copy_v125').onclick=async function(){var cmd=cutCommandV126(),ta=el('dir_cut_cmd_v125'); if(ta){ta.value=cmd;ta.classList.add('show');} try{await navigator.clipboard.writeText(cmd); toast('Corte','Comando FFmpeg copiado.');}catch(_e){toast('Corte','Comando listo en pantalla.');}};
+    el('dir_cut_bat_v125').onclick=cutDownloadBatV126;
+    cutUpdateV126(); cutSeekFrameV126(cur);
   }
-  var oldBind=window.bindDirector;
-  if(typeof oldBind==='function') window.bindDirector=function(ev){oldBind(ev); setTimeout(installCutsV125,0);};
-  var oldAdminDirector=window.adminDirector;
-  if(typeof oldAdminDirector==='function') window.adminDirector=function(){oldAdminDirector(); setTimeout(installCutsV125,0);};
-  window.installCutsV125=installCutsV125;
-  document.addEventListener('click',function(){setTimeout(function(){if(el('dir_frame'))installCutsV125();},50);},true);
-  console.log('TOMAUNO VIDEOS v125 Cortes Director completo');
+  window.installCutsV126=installCutsV126;
+  var obs=new MutationObserver(function(){if(el('dir_frame'))setTimeout(installCutsV126,0);});
+  try{obs.observe(document.body,{childList:true,subtree:true});}catch(_e){}
+  document.addEventListener('click',function(){setTimeout(function(){if(el('dir_frame'))installCutsV126();},50);},true);
+  setTimeout(function(){if(el('dir_frame'))installCutsV126();},500);
+  console.log('TOMAUNO VIDEOS v126 Cortes Director funcional');
 })();
 </script>
 </body></html>
