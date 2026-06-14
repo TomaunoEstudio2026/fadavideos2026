@@ -2042,6 +2042,25 @@
           "corteInicio": 22,
           "corteFin": 55,
           "corteRotacion": "0"
+        },
+        {
+          "id": "25",
+          "descargas": 0,
+          "plays": 0,
+          "codigo": "9732",
+          "titulo": "Bailarina Luana Aldavel ·vertical",
+          "subtitulo": "Selvática - Ciudad de Corrientes Capital",
+          "bailarina": "Selvática - Ciudad de Corrientes Capital",
+          "youtubeId": "r-BEsyp3LGM",
+          "previewInicio": 204,
+          "previewSegundos": 36,
+          "precio": 15000,
+          "driveId": "https://drive.google.com/file/d/1Kedq3lpA-cnQSCYhBHXlAkghcRu2VOPE/view?usp=sharing",
+          "corteDe": "24",
+          "corteTipo": "vertical",
+          "corteInicio": 204,
+          "corteFin": 240,
+          "corteRotacion": "0"
         }
       ],
       "titulo": "🌿 Selvática Fashion Show 🌿",
