@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v126 CORTES DIRECTOR FUNCIONAL - base v125 -->
+<!-- TOMAUNO VIDEOS - VERSION v127 CORTES DIRECTOR DURACION Y FORMATO - base v126 -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1137,6 +1137,37 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .director-story-frame:before{content:attr(data-label)!important}
 .cut-v125-actions .open-original{border-color:rgba(255,208,77,.36)!important;color:#ffd04d!important}
 
+
+
+/* v127: Cortes Director - duración real + formato visible en grilla/reproducción */
+.cut-v127-duration-row{display:grid;grid-template-columns:1fr 120px;gap:8px;align-items:end;margin-top:8px}
+.cut-v127-duration-row input{background:#181818;border:1px solid var(--line);border-radius:10px;color:#fff;padding:9px 10px;font-weight:800;text-align:center}
+.cut-v127-help{font-size:11px;color:#aaa;line-height:1.35;margin-top:6px}
+.cut-v127-help b{color:#fff}.cut-v127-warn{color:#ffd04d!important;font-weight:900}.cut-v127-ok{color:#00d46a!important;font-weight:900}
+.video-card.cut-card-v127 .thumb{background-size:cover!important;background-position:center!important;border-bottom:1px solid rgba(255,255,255,.08)}
+.video-card.cut-card-v127.cut-vertical-v127 .thumb{aspect-ratio:9/16;max-height:360px;background-size:cover!important}
+.video-card.cut-card-v127.cut-square-v127 .thumb{aspect-ratio:1/1;background-size:cover!important}
+.video-card.cut-card-v127.cut-normal-v127 .thumb{aspect-ratio:16/9;background-size:cover!important}
+.video-card.cut-card-v127 .badge:before{content:'✂ ';}
+.video-card.cut-card-v127.cut-vertical-v127 .badge{background:rgba(224,0,0,.94)!important}
+.video-card.cut-card-v127.cut-square-v127 .badge{background:rgba(255,208,77,.18)!important;color:#ffd04d!important;border-color:rgba(255,208,77,.34)!important}
+.modal.video-preview.cut-play-v127 .video-wrap{background:#000!important;display:block!important;position:relative!important;overflow:hidden!important;margin-left:auto!important;margin-right:auto!important}
+.modal.video-preview.cut-play-v127 .video-frame{background:#000!important;border:0!important}
+@media(min-width:721px){
+  .modal.video-preview.cut-play-vertical-v127 .modal-box{width:min(500px,96vw)!important}
+  .modal.video-preview.cut-play-vertical-v127 .video-wrap{width:min(420px,92vw)!important;aspect-ratio:9/16!important;height:auto!important;border-radius:18px!important}
+  .modal.video-preview.cut-play-square-v127 .modal-box{width:min(690px,96vw)!important}
+  .modal.video-preview.cut-play-square-v127 .video-wrap{width:min(620px,92vw)!important;aspect-ratio:1/1!important;height:auto!important;border-radius:18px!important}
+  .modal.video-preview.cut-play-normal-v127 .video-wrap{aspect-ratio:16/9!important}
+  .modal.video-preview.cut-play-vertical-v127 .video-frame,.modal.video-preview.cut-play-square-v127 .video-frame{position:absolute!important;left:50%!important;top:50%!important;width:177.78%!important;height:100%!important;max-width:none!important;max-height:none!important;transform:translate(-50%,-50%)!important;aspect-ratio:auto!important}
+}
+@media(max-width:720px){
+  .modal.video-preview.preview-mobile.cut-play-vertical-v127 .video-wrap{position:absolute!important;left:50%!important;top:50%!important;width:min(100vw,56.25vh)!important;height:min(177.78vw,100vh)!important;transform:translate(-50%,-50%)!important;aspect-ratio:9/16!important;display:block!important;overflow:hidden!important}
+  .modal.video-preview.preview-mobile.cut-play-square-v127 .video-wrap{position:absolute!important;left:50%!important;top:50%!important;width:min(100vw,100vh)!important;height:min(100vw,100vh)!important;transform:translate(-50%,-50%)!important;aspect-ratio:1/1!important;display:block!important;overflow:hidden!important}
+  .modal.video-preview.preview-mobile.cut-play-normal-v127 .video-wrap{aspect-ratio:16/9!important}
+  .modal.video-preview.preview-mobile.cut-play-vertical-v127 .video-frame,.modal.video-preview.preview-mobile.cut-play-square-v127 .video-frame{position:absolute!important;left:50%!important;top:50%!important;width:177.78%!important;height:100%!important;min-width:0!important;min-height:0!important;max-width:none!important;max-height:none!important;transform:translate(-50%,-50%)!important;aspect-ratio:auto!important}
+}
+
 </style>
 </head>
 <body>
@@ -2268,6 +2299,132 @@ openDirectorFullscreen=function(){
   document.addEventListener('click',function(){setTimeout(function(){if(el('dir_frame'))installCutsV126();},50);},true);
   setTimeout(function(){if(el('dir_frame'))installCutsV126();},500);
   console.log('TOMAUNO VIDEOS v126 Cortes Director funcional');
+})();
+
+
+/* ===== v127 Cortes Director: barra por duración real + formato persistente ===== */
+(function(){
+  function el(id){return document.getElementById(id);}
+  function parseTimeV127(v){
+    if(v==null)return 0; v=String(v).trim(); if(!v)return 0;
+    if(/^\d+(\.\d+)?$/.test(v))return Math.max(0,Math.round(Number(v)||0));
+    var p=v.split(':').map(function(n){return Number(n)||0;});
+    if(p.length===3)return Math.max(0,Math.round(p[0]*3600+p[1]*60+p[2]));
+    if(p.length===2)return Math.max(0,Math.round(p[0]*60+p[1]));
+    return 0;
+  }
+  function fmtTimeV127(sec){
+    sec=Math.max(0,Math.round(Number(sec)||0)); var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),ss=sec%60;
+    var mm=String(m).padStart(2,'0'),s=String(ss).padStart(2,'0');
+    return h?String(h).padStart(2,'0')+':'+mm+':'+s:mm+':'+s;
+  }
+  function evV127(){return (state.data.eventos||[]).find(function(e){return String(e.id)===String(state.directorEventId);})||state.currentEvent||null;}
+  function vidV127(){var ev=evV127(); if(!ev)return null; return (ev.videos||[]).find(function(v){return String(v.id)===String(state.directorVideoId);})||(ev.videos||[]).find(function(v){return v.youtubeId;})||(ev.videos||[])[0]||null;}
+  function durKeyV127(){var ev=evV127(),v=vidV127(); return ev&&v?'tomauno_cut_duration_'+ev.id+'_'+String(v.id):'';}
+  function savedDurV127(){try{var k=durKeyV127();return k?Number(localStorage.getItem(k)||0)||0:0;}catch(_e){return 0;}}
+  function clampV127(sec){var d=Number(state.cutDurationV127||savedDurV127()||0)||0; sec=Math.max(0,Math.round(Number(sec)||0)); return d>0?Math.min(sec,Math.round(d)):sec;}
+  function setDurationV127(sec,source){
+    sec=Math.round(Number(sec)||0); if(sec<=0)return;
+    state.cutDurationV127=sec;
+    try{var k=durKeyV127(); if(k)localStorage.setItem(k,String(sec));}catch(_e){}
+    var r=el('dir_cut_current_v125'); if(r){r.max=String(sec); if(Number(r.value)>sec)r.value=String(sec);}
+    var di=el('dir_cut_duration_v127'); if(di)di.value=fmtTimeV127(sec);
+    var msg=el('dir_cut_duration_msg_v127'); if(msg)msg.innerHTML='<span class="cut-v127-ok">Duración usada:</span> '+fmtTimeV127(sec)+(source?' · '+source:'');
+  }
+  function seekFrameV127(sec){
+    sec=clampV127(sec); state.directorBigStart=sec; state.cutCurrentV126=sec;
+    var r=el('dir_cut_current_v125'),t=el('dir_cut_current_time_v126'); if(r)r.value=String(sec); if(t)t.value=fmtTimeV127(sec);
+    try{ if(state.cutPlayerV127&&state.cutPlayerV127.seekTo){state.cutPlayerV127.seekTo(sec,true); state.cutPlayerV127.playVideo&&state.cutPlayerV127.playVideo(); return;} }catch(_e){}
+    var fr=el('dir_frame'); if(!fr)return;
+    try{fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'seekTo',args:[sec,true]}),'*');setTimeout(function(){try{fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'playVideo',args:[]}), '*');}catch(_e){}},80);}catch(_e){}
+  }
+  function enhanceCutDomV127(){
+    var r=el('dir_cut_current_v125'),t=el('dir_cut_current_time_v126'),box=el('dir_cut_v125'); if(!r||!t||!box)return;
+    if(!el('dir_cut_duration_v127')){
+      var wrap=document.createElement('div'); wrap.className='cut-v127-duration-row';
+      wrap.innerHTML='<div><div class="cut-v127-help" id="dir_cut_duration_msg_v127"><b>Duración:</b> detectando desde YouTube. Si no se detecta, escribila manualmente.</div><div class="cut-v127-help">La barra azul queda limitada a esta duración para que no pase dos o tres veces el largo real.</div></div><input id="dir_cut_duration_v127" placeholder="Duración" value="">';
+      var cur=r.closest('.cut-v125-current'); if(cur&&cur.parentNode)cur.parentNode.appendChild(wrap);
+      var di=el('dir_cut_duration_v127');
+      if(di){di.onchange=function(){var d=parseTimeV127(di.value); if(d>0)setDurationV127(d,'manual'); else di.value='';};di.onkeydown=function(e){if(e.key==='Enter')di.blur();};}
+    }
+    var saved=savedDurV127(); if(saved>0)setDurationV127(saved,'guardada');
+    if(r.getAttribute('data-v127-bound')!=='1'){
+      r.setAttribute('data-v127-bound','1');
+      r.oninput=function(){seekFrameV127(Number(r.value)||0);};
+      t.onchange=function(){var sec=clampV127(parseTimeV127(t.value)); t.value=fmtTimeV127(sec); seekFrameV127(sec);};
+      t.onkeydown=function(e){if(e.key==='Enter')t.blur();};
+      var go=el('dir_cut_go_v125'); if(go)go.onclick=function(){seekFrameV127(parseTimeV127((t&&t.value)||(r&&r.value)||0));};
+      var vs=el('dir_cut_view_start_v125'); if(vs)vs.onclick=function(){seekFrameV127(parseTimeV127((el('dir_cut_start_v125')||{}).value));};
+      var ve=el('dir_cut_view_end_v125'); if(ve)ve.onclick=function(){seekFrameV127(parseTimeV127((el('dir_cut_end_v125')||{}).value));};
+    }
+    var sel=el('dir_cut_tipo_v125'); if(sel&&sel.options&&sel.options.length){
+      for(var i=0;i<sel.options.length;i++){
+        if(sel.options[i].value==='normal')sel.options[i].text='Normal 16:9 / tarjeta vendible';
+        if(sel.options[i].value==='vertical')sel.options[i].text='Vertical 9:16 / historia-reel';
+        if(sel.options[i].value==='cuadrado')sel.options[i].text='Cuadrado 1:1';
+      }
+    }
+  }
+  function ensureApiV127(){
+    if(window.YT&&window.YT.Player){setupPlayerV127();return;}
+    if(!document.getElementById('yt_api_v127')){var tag=document.createElement('script');tag.id='yt_api_v127';tag.src='https://www.youtube.com/iframe_api';document.head.appendChild(tag);}
+    var old=window.onYouTubeIframeAPIReady; window.onYouTubeIframeAPIReady=function(){try{if(typeof old==='function')old();}catch(_e){} setupPlayerV127();};
+  }
+  function setupPlayerV127(){
+    var fr=el('dir_frame'); if(!fr||!(window.YT&&window.YT.Player))return;
+    try{
+      if(fr.src&&fr.src.indexOf('enablejsapi=1')<0){fr.src=fr.src+(fr.src.indexOf('?')>-1?'&':'?')+'enablejsapi=1&origin='+encodeURIComponent(location.origin); setTimeout(setupPlayerV127,450); return;}
+      if(state.cutPlayerIframeV127===fr&&state.cutPlayerV127)return;
+      state.cutPlayerIframeV127=fr;
+      state.cutPlayerV127=new YT.Player(fr,{events:{onReady:function(e){pollDurationV127(e.target,'YouTube');},onStateChange:function(e){pollDurationV127(e.target,'YouTube');}}});
+    }catch(_e){}
+  }
+  function pollDurationV127(player,source){
+    var tries=0; var timer=setInterval(function(){tries++;
+      try{var d=Number(player.getDuration&&player.getDuration())||0; if(d>0){setDurationV127(d,source); clearInterval(timer);}}
+      catch(_e){}
+      if(tries>20)clearInterval(timer);
+    },500);
+  }
+  function trackCurrentV127(){
+    try{var p=state.cutPlayerV127; if(!p||!p.getCurrentTime||document.activeElement===el('dir_cut_current_v125'))return; var sec=Math.round(Number(p.getCurrentTime())||0); if(sec>=0){state.cutCurrentV126=sec; var r=el('dir_cut_current_v125'),t=el('dir_cut_current_time_v126'); if(r&&Number(r.max||0)>=sec)r.value=String(sec); if(t)t.value=fmtTimeV127(sec);}}
+    catch(_e){}
+  }
+  setInterval(function(){if(el('dir_cut_v125')){enhanceCutDomV127();ensureApiV127();trackCurrentV127();}},900);
+  var obs=new MutationObserver(function(){setTimeout(function(){if(el('dir_cut_v125')){enhanceCutDomV127();ensureApiV127();}},80);});
+  try{obs.observe(document.body,{childList:true,subtree:true});}catch(_e){}
+
+  if(typeof videoCard==='function'){
+    var _videoCardV127=videoCard;
+    videoCard=function(e,v){
+      var h=_videoCardV127(e,v);
+      if(v&&v.corteTipo){
+        var tipo=String(v.corteTipo||'normal');
+        var cls=' cut-card-v127 cut-'+(tipo==='vertical'?'vertical':tipo==='cuadrado'?'square':'normal')+'-v127 ';
+        h=h.replace('card video-card ', 'card video-card '+cls);
+        var label=tipo==='vertical'?'Corte 9:16':(tipo==='cuadrado'?'Corte 1:1':'Corte 16:9');
+        h=h.replace('<span class="chip">Ref:', '<span class="chip">'+label+'</span><span class="chip">Ref:');
+      }
+      return h;
+    };
+  }
+  if(typeof startPreviewWithMode==='function'){
+    var _startPreviewWithModeV127=startPreviewWithMode;
+    startPreviewWithMode=function(id,mode){
+      _startPreviewWithModeV127(id,mode);
+      setTimeout(function(){
+        try{
+          var v=(typeof findVideo==='function')?findVideo(id):null; if(!v||!v.corteTipo)return;
+          var tipo=String(v.corteTipo||'normal');
+          var modal=el('modal'); if(!modal)return;
+          modal.classList.add('cut-play-v127','cut-play-'+(tipo==='vertical'?'vertical':tipo==='cuadrado'?'square':'normal')+'-v127');
+          var wrap=modal.querySelector('.video-wrap'); if(wrap){wrap.classList.remove('zoom-wrap','wide-wrap');wrap.classList.add('cut-format-wrap-v127');}
+          var fr=modal.querySelector('.video-frame'); if(fr){fr.classList.remove('mode-zoom','mode-wide');fr.classList.add('mode-normal');}
+        }catch(_e){}
+      },0);
+    };
+  }
+  console.log('TOMAUNO VIDEOS v127 Cortes Director duración/formato');
 })();
 </script>
 </body></html>
