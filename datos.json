@@ -2027,7 +2027,8 @@
           "corteTipo": "normal",
           "corteInicio": 22,
           "corteFin": 55,
-          "corteRotacion": "0"
+          "corteRotacion": "0",
+          "imagen": "https://i.imgur.com/5DbZcIT.jpeg"
         },
         {
           "id": "25",
