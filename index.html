@@ -1324,10 +1324,32 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .video-card .admin-cut-marker{pointer-events:none!important;}
 .video-card .cut-frame-ref{position:absolute;left:9px;top:9px;z-index:7;border:1px solid rgba(255,208,77,.45);background:rgba(0,0,0,.72);color:#ffe08a;border-radius:999px;padding:5px 8px;font-size:9px;font-weight:950;letter-spacing:.3px;pointer-events:none;}
 
+
+/* v142: play grilla robusto + etiqueta de recorte chica fuera del cuadro */
+.director-story-frame.cut-show:after{
+  content:attr(data-label)!important;
+  position:absolute!important;
+  left:auto!important;
+  right:-44px!important;
+  top:-4px!important;
+  background:rgba(224,0,0,.86)!important;
+  border:1px solid rgba(255,255,255,.22)!important;
+  border-radius:999px!important;
+  padding:3px 6px!important;
+  font-size:9px!important;
+  line-height:1!important;
+  font-weight:950!important;
+  color:#fff!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+}
+.video-card .thumb{cursor:pointer!important;}
+.video-card .thumb:before{pointer-events:none!important;}
+
 </style>
 </head>
 <body>
-<div class="bggrid"></div><div class="version-mini">v140</div>
+<div class="bggrid"></div><div class="version-mini">v142</div>
 <header>
   <div class="brand" id="adminTrigger"><img id="logoImg" alt="Tomauno"><div class="wordmark"><strong>TOMA<span>UNO</span></strong><small>VIDEOS</small></div></div>
   <div class="nav"><button class="pill" id="btnEvents">Eventos</button><button class="pill" id="btnVideos">Videos</button><span class="status"><i class="dot" id="statusDot"></i><span id="statusText">Conectando</span></span></div>
@@ -1472,6 +1494,28 @@ function renderVideos(){let e=state.currentEvent;if(!e){renderEvents();return;}s
 function ytThumb(id){id=cleanYouTube(id);return id?'https://img.youtube.com/vi/'+encodeURIComponent(id)+'/maxresdefault.jpg':'';}
 function videoCard(e,v){let thumb=v.imagen||ytThumb(v.youtubeId);let corteTipo=String(v.corteTipo||v.corte&&v.corte.tipo||'').toLowerCase();let cutClass=corteTipo==='vertical'?'cut-card-vertical':(corteTipo==='cuadrado'||corteTipo==='square'?'cut-card-square':'');let bg=thumb?' style="background-image:url('+esc(thumb)+')"':'';let sub=v.subtitulo||v.bailarina||'';let preview=v.previewInicio?('Vista previa '+formatTime(v.previewInicio)+' / '+(v.previewSegundos||20)+'s'):'Completo libre';let cartKey=e.id+'|'+v.id;let inCart=!!state.cart[cartKey];let isAdm=sessionStorage.getItem(SS_ADMIN)==='1';let sold=isAdm&&videoHasOrder(e.id,v.id);let cardFilter=directorCardFilter(e,v);let cardBgSize=directorCardBgSize(e,v);let cardBgPos=directorCardBgPosition(e,v);let coverCrop=v.portadaCrop||null;let cutPanX=Number((coverCrop&&coverCrop.panX)!=null?coverCrop.panX:(v.cortePanX||v.corteX||0))||0, cutPanY=Number((coverCrop&&coverCrop.panY)!=null?coverCrop.panY:(v.cortePanY||v.corteY||0))||0;let cutThumbPos=(50+cutPanX)+'% '+(50+cutPanY)+'%';let cssVars='--cut-pan-x:'+cutPanX+'%;--cut-pan-y:'+cutPanY+'%;--cut-thumb-position:'+cutThumbPos+';';if(cardFilter){cssVars+='--director-card-filter:'+cardFilter+';--director-card-bg-size:'+cardBgSize+';--director-card-bg-position:'+cardBgPos+';'}let cardStyle=' style="'+esc(cssVars)+'"';let hasInd=hasDirectorVideoPreset(e,v);let corteChip=corteTipo?'<span class="chip cut-format-chip">Corte '+(corteTipo==='vertical'?'9:16':(corteTipo==='cuadrado'||corteTipo==='square'?'1:1':'16:9'))+'</span>':'';let h='<article class="card video-card '+esc(cutClass)+' '+(inCart?'selected ':'')+(v.oculto?'hidden-video ':'')+(sold?'sold-video ':'unsold-admin ')+'" data-card-video="'+esc(v.id)+'" data-has-individual="'+(isAdm&&hasInd?'1':'0')+'"'+cardStyle+'>';if(isAdm){h+='<button class="admin-edit-mini" title="Editar video" data-adminedit="'+esc(v.id)+'">✎</button>';h+='<button class="director-video-adjust-mini" title="Ajustar en Director" data-directorvideo="'+esc(v.id)+'">🎛</button>';h+='<button class="admin-delete-mini" title="Eliminar video" data-admincarddel="'+esc(v.id)+'">🗑</button>';if(corteTipo)h+='<span class="admin-cut-marker" title="Video creado desde Director">✂ EDITADO</span>';}h+='<div class="thumb" data-play="'+esc(v.id)+'"'+bg+'>'+(v.portadaFrame!=null?'<span class="cut-frame-ref" title="Frame de portada guardado como referencia para FFmpeg">📸 '+esc(formatTime(Number(v.portadaFrame)||0))+'</span>':'')+'<span class="badge">'+esc(preview)+'</span></div><div class="body"><h3>'+esc(v.titulo)+'</h3><p>'+esc(sub||'Video Tomauno')+'</p><div class="meta"><span class="chip">'+(v.driveId?'🔐 Descarga':'🎬 Preview')+'</span>'+corteChip+'<span class="chip">Ref: '+esc((e.numero||1)+','+v.id)+'</span>'+(sold?'<span class="chip">✅ Comprado</span>':'')+(v.oculto?'<span class="chip">Oculto</span>':'')+'</div>'+reactionHtml(e,v)+'<div class="price">'+money(v.precio)+'</div><div class="actions">';if(v.driveId)h+='<button class="btn code-btn" data-download="'+esc(v.id)+'">Descargar</button>';else h+='<button class="btn code-btn" disabled>Sin descarga</button>';h+='<button class="btn red buy-main" data-buy="'+esc(v.id)+'">Comprar</button><button class="btn select-dot '+(inCart?'selected-cart':'')+'" title="Agregar al pedido" data-cart="'+esc(v.id)+'">'+(inCart?'🛒✓':'🛒')+'</button><button class="btn share-action" title="Compartir video" data-share="'+esc(v.id)+'">🔗</button></div></div></article>';return h;}
 function reactionHtml(e,v){let k=reactionKey(e.id,v.id);let c=reactionCounts(e.id,v.id);let opts=[['❤️','me encanta'],['👏','aplausos'],['🔥','tremendo']];let h='<div class="reaction-row">';opts.forEach(o=>{let em=o[0],lbl=o[1],n=Number(c[em]||0);let done=localStorage.getItem(reactionStorageKey(k,em))==='1';h+='<button class="react-btn '+(done?'done':'')+'" title="'+esc(lbl)+'" data-react="'+esc(v.id)+'" data-emoji="'+esc(em)+'">'+em+' <small>'+n+'</small></button>';});h+='</div>';return h;}
+
+function hardPlayFromCardV142(id,ev){
+  try{
+    if(ev){ev.preventDefault&&ev.preventDefault();ev.stopPropagation&&ev.stopPropagation();}
+    if(!id)return;
+    playVideo(id);
+  }catch(err){
+    console.error('play grilla v142',err);
+    try{toast('No se pudo reproducir','Revisá que el video tenga YouTube cargado.');}catch(_e){}
+  }
+}
+function bindThumbPlayHardV142(){
+  document.querySelectorAll('.video-card .thumb[data-play]').forEach(function(th){
+    if(th._v142PlayBound)return; th._v142PlayBound=true;
+    th.addEventListener('click',function(ev){hardPlayFromCardV142(th.getAttribute('data-play'),ev);},true);
+    th.addEventListener('pointerup',function(ev){
+      if(ev.pointerType==='mouse' && ev.button!==0)return;
+      hardPlayFromCardV142(th.getAttribute('data-play'),ev);
+    },true);
+  });
+}
+
 function bindVideoButtons(){
   document.querySelectorAll('[data-play]').forEach(b=>b.onclick=(ev)=>{ev&&ev.stopPropagation&&ev.stopPropagation();playVideo(b.getAttribute('data-play'));});
   document.querySelectorAll('[data-buy]').forEach(b=>b.onclick=(ev)=>{ev&&ev.stopPropagation&&ev.stopPropagation();buySingle(b.getAttribute('data-buy'));});
@@ -1488,9 +1532,12 @@ function bindVideoButtons(){
     card.addEventListener('click',function(ev){
       if(ev.defaultPrevented)return;
       if(ev.target&&ev.target.closest&&ev.target.closest('button,a,input,select,textarea,.admin-edit-mini,.director-video-adjust-mini,.admin-delete-mini,.react-btn'))return;
-      let id=this.getAttribute('data-card-video'); if(id)playVideo(id);
-    });
+      let th=ev.target&&ev.target.closest&&ev.target.closest('.thumb[data-play]');
+      let id=(th&&th.getAttribute('data-play'))||this.getAttribute('data-card-video');
+      if(id)hardPlayFromCardV142(id,ev);
+    },true);
   });
+  bindThumbPlayHardV142();
 }
 function toggleCart(id){let e=state.currentEvent;if(!e)return;let k=e.id+'|'+id;if(state.cart[k])delete state.cart[k];else state.cart[k]={eventoId:e.id,eventoNumero:e.numero,eventoTitulo:e.titulo,videoId:id};renderVideos();}
 function cartItems(){let items=[];Object.keys(state.cart).forEach(k=>{let c=state.cart[k];let e=state.data.eventos.find(x=>x.id===c.eventoId);let v=e&&(e.videos||[]).find(x=>String(x.id)===String(c.videoId));if(e&&v)items.push({eventoId:e.id,eventoNumero:e.numero,eventoTitulo:e.titulo,videoId:v.id,titulo:v.titulo,subtitulo:v.subtitulo||v.bailarina||'',precio:Number(v.precio||0),driveId:v.driveId||''});});return items;}
@@ -1625,6 +1672,7 @@ function startPreviewWithMode(id,mode){
   if($('previewLiveBack'))$('previewLiveBack').onclick=closeModal;
   if($('modalClose2'))$('modalClose2').onclick=closeModal;let cine=$('modalCinema');if(cine&&!state.previewIsTouch){cine.style.display='inline-flex';cine.onclick=()=>{let mb=document.querySelector('#modal .modal-box');if(mb)mb.classList.toggle('cinema-pc');cine.textContent=(mb&&mb.classList.contains('cinema-pc'))?'Vista normal':'Pantalla amplia';};}if($('modalBuy'))$('modalBuy').onclick=()=>{closeModal();buySingle(id);};
 }
+try{window.playVideo=playVideo;}catch(_e){}
 async function validateCodeForVideo(code,e,v){let c=String(code||'').trim().toUpperCase();if(!c)return false;let base=String(v.codigo||'').trim().toUpperCase();if(base&&c===base)return true;let orders=state.orders.length?state.orders:await fbGetOrders();return orders.some(p=>String(p.estado||'').toLowerCase()==='desbloqueado'&&String(p.clave||'').trim().toUpperCase()===c&&(p.items||[]).some(it=>String(it.eventoId||'')===String(e.id)&&String(it.videoId||'')===String(v.id)));}
 function cleanDriveId(value){
   var v=String(value||'').trim();
@@ -2385,7 +2433,7 @@ openDirectorFullscreen=function(){
     if(r && !state.cutDraggingV126) r.value=String(Math.min(sec,Number(r.max||sec)||sec));
     if(t && !state.cutTimeEditingV126) t.value=fmtTimeV126(sec);
   }
-  function cutLabelV126(c){return c.tipo==='vertical'?'9:16 HISTORIA':(c.tipo==='cuadrado'?'1:1 CUADRADO':'CORTE NORMAL');}
+  function cutLabelV126(c){return c.tipo==='vertical'?'9:16':(c.tipo==='cuadrado'?'1:1':'16:9');}
   function cutZoomScaleV139(z){return Math.max(1,Math.min(3,1+(Number(z||0)||0)));}
   function cutClampPanForPreviewV139(tipo,panX,panY,zoom){
     tipo=String(tipo||'normal');
@@ -2615,11 +2663,63 @@ openDirectorFullscreen=function(){
     var blob=new Blob([lines.join('\r\n')],{type:'application/x-msdos-program'}),a=document.createElement('a');
     a.href=URL.createObjectURL(blob);a.download='tomauno_lote_cortes.bat';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},700);
   }
+  function cutTrackPointAtV142(rel){
+    var arr=Array.isArray(state.cutTrackingPointsV137)?state.cutTrackingPointsV137.slice().filter(function(p){return p&&Number(p.t)>=0;}):[];
+    if(!arr.length)return null;
+    arr.sort(function(a,b){return Number(a.t)-Number(b.t);});
+    var a=arr[0],b=arr[arr.length-1];
+    for(var i=0;i<arr.length-1;i++){var p=arr[i],n=arr[i+1];if(rel>=Number(p.t)&&rel<=Number(n.t)){a=p;b=n;break;}}
+    var at=Number(a.t)||0,bt=Number(b.t)||at,ratio=bt>at?Math.max(0,Math.min(1,(rel-at)/(bt-at))):0;
+    return {
+      t:rel,
+      panX:(Number(a.panX||0)+(Number(b.panX||0)-Number(a.panX||0))*ratio),
+      panY:(Number(a.panY||0)+(Number(b.panY||0)-Number(a.panY||0))*ratio),
+      zoom:(Number(a.zoom||0)+(Number(b.zoom||0)-Number(a.zoom||0))*ratio)
+    };
+  }
+  function cutApplyTrackPointV142(pt){
+    if(!pt)return;
+    var sx=el('dir_cut_pan_x_v135'),sy=el('dir_cut_pan_y_v135'),zz=el('dir_cut_zoom_v136');
+    if(sx)sx.value=String(Math.round(Number(pt.panX||0)));
+    if(sy)sy.value=String(Math.round(Number(pt.panY||0)));
+    if(zz)zz.value=String(Math.max(0,Math.min(2,Number(pt.zoom||0))).toFixed(2));
+    state.cutPanXV136=Number(pt.panX||0)||0; state.cutPanYV136=Number(pt.panY||0)||0; state.cutZoomV136=Number(pt.zoom||0)||0;
+    cutUpdateV126();
+  }
+  function cutPlaybackStopV142(){
+    clearInterval(state.cutPlaybackTimerV142); state.cutPlaybackTimerV142=null; state.cutPlaybackActiveV142=false;
+  }
+  function cutPlaybackStartV142(){
+    var arr=Array.isArray(state.cutTrackingPointsV137)?state.cutTrackingPointsV137:[];
+    if(!arr.length)return false;
+    var c=cutReadV126();
+    var start=Number(c.start||0)||0;
+    state.cutPlaybackActiveV142=true;
+    state.cutPlaybackClockV142=performance.now();
+    cutSeekFrameV126(start);
+    clearInterval(state.cutPlaybackTimerV142);
+    state.cutPlaybackTimerV142=setInterval(function(){
+      var rel=(performance.now()-Number(state.cutPlaybackClockV142||performance.now()))/1000;
+      var dur=Number(c.duration||0)||0;
+      if(dur>0 && rel>=dur){rel=dur;cutPlaybackStopV142();cutPlayPauseV137('pause');}
+      var abs=start+rel;
+      var r=el('dir_cut_current_v125'),t=el('dir_cut_current_time_v126');
+      if(r)r.value=String(Math.round(abs)); if(t)t.value=fmtTimeV126(abs); state.cutCurrentV126=abs;
+      cutApplyTrackPointV142(cutTrackPointAtV142(rel));
+    },80);
+    return true;
+  }
   function cutPlayPauseV137(force){
     var fr=el('dir_frame'); if(!fr||!fr.contentWindow)return;
     try{
+      var willPlay=force==='play' || (force!=='pause' && !state.cutIsPlayingV137);
+      if(force==='pause' || (!willPlay)){cutPlaybackStopV142();}
       var func=force==='pause'?'pauseVideo':(force==='play'?'playVideo':(state.cutIsPlayingV137?'pauseVideo':'playVideo'));
-      fr.contentWindow.postMessage(JSON.stringify({event:'command',func:func,args:[]}),'*');
+      if(func==='playVideo' && !state.cutTrackingActiveV137 && Array.isArray(state.cutTrackingPointsV137) && state.cutTrackingPointsV137.length>1){
+        cutPlaybackStartV142();
+      }else{
+        fr.contentWindow.postMessage(JSON.stringify({event:'command',func:func,args:[]}),'*');
+      }
       state.cutIsPlayingV137=(func==='playVideo');
     }catch(_e){}
   }
@@ -2654,6 +2754,7 @@ openDirectorFullscreen=function(){
     return Math.max(0,sec||0);
   }
   function cutTrackStartV137(){
+    cutPlaybackStopV142();
     var cur=cutCurrentFromUIV138();
     state.cutCurrentV126=cur;
     state.cutTrackingActiveV137=true;
@@ -2753,7 +2854,7 @@ openDirectorFullscreen=function(){
     state.cutTrackingPointsV137=Array.isArray(baseInit.corteTracking)?baseInit.corteTracking.slice():[];
     state.cutCoverV139=baseInit.portadaFrame!=null?{tiempo:Number(baseInit.portadaFrame)||start,tipo:initialTipo,panX:initialPanX,panY:initialPanY,zoom:initialZoom}:null;
     var box=document.createElement('details'); box.className='cut-v125-card'; box.id='dir_cut_v125'; box.open=true;
-    box.innerHTML='<summary>✂️ Cortes Director</summary><div class="cut-v125-body"><div class="cut-v125-grid"><div class="field"><label>Tipo salida</label><select id="dir_cut_tipo_v125"><option value="normal">Normal 16:9</option><option value="vertical">Vertical 9:16 historia/reel</option><option value="cuadrado">Cuadrado 1:1</option></select></div><div class="field"><label>Rotación</label><select id="dir_cut_rot_v125"><option value="0">Sin rotar</option><option value="90">90° derecha</option><option value="-90">90° izquierda</option><option value="180">180°</option></select></div><div class="span2 cut-v125-time-row"><div class="field"><label>Inicio</label><input id="dir_cut_start_v125" value="'+safeEsc(fmtTimeV126(start))+'" placeholder="01:20"></div><div class="field"><label>Fin</label><input id="dir_cut_end_v125" value="'+safeEsc(fmtTimeV126(end))+'" placeholder="02:00"></div></div><div class="span2"><label>Barra para ubicar momento</label><div class="cut-v125-current"><input type="range" id="dir_cut_current_v125" min="0" max="'+safeEsc(Math.max(end+60,Number(state.cutVideoDurationV126||0)||end+60))+'" step="1" value="'+safeEsc(cur)+'"><input type="text" id="dir_cut_current_time_v126" value="'+safeEsc(fmtTimeV126(cur))+'"><button class="btn gray small" id="dir_cut_go_v125" type="button">Ir</button></div><div class="cut-v125-duration-line"><div class="cut-v125-help">La barra se limita por duración real de YouTube cuando está disponible.</div><div class="field"><label>Duración video</label><input id="dir_cut_total_v126" value="'+safeEsc(fmtTimeV126(Number(state.cutVideoDurationV126||0)||Math.max(end+60,cur+60)))+'" placeholder="45:00"></div></div></div><div class="cut-v125-pan-grid"><div class="field"><label>Mover recorte horizontal</label><input type="range" id="dir_cut_pan_x_v135" min="-75" max="75" step="1" value="0"></div><div class="field"><label>Mover recorte vertical</label><input type="range" id="dir_cut_pan_y_v135" min="-55" max="55" step="1" value="0"></div><div class="field"><label>Zoom extra recorte</label><input type="range" id="dir_cut_zoom_v136" min="0" max="2" step="0.05" value="0"></div><div class="field"><label>Archivo original local</label><input id="dir_cut_file_v136" placeholder="Ej: FADA_2026_BLOQUE_01.mp4"></div><div class="span2 cut-v125-pan-note">Arrastrá el cuadro rojo. Archivo original local: nombre exacto del MP4 cuando uses BAT lote en una carpeta.</div></div></div><div class="cut-v125-actions"><button class="btn gray small" id="dir_cut_mark_start_v125" type="button">✂ Marcar inicio</button><button class="btn gray small" id="dir_cut_mark_end_v125" type="button">✂ Marcar fin</button><button class="btn gray small" id="dir_cut_view_start_v125" type="button">▶ Ir inicio</button><button class="btn gray small" id="dir_cut_view_end_v125" type="button">▶ Ir fin</button><button class="btn gray small" id="dir_cut_play_v137" type="button">▶/⏸ Play</button><button class="btn gray small" id="dir_cut_track_v137" type="button">● Iniciar seguimiento</button><button class="btn gray small" id="dir_cut_cover_v139" type="button">📸 Usar frame portada</button><button class="btn red small main-cut" id="dir_cut_create_v125" type="button">✂ Crear tarjeta</button><button class="btn gray small open-original" id="dir_cut_open_drive_v126" type="button">📁 Abrir original</button><button class="btn gray small" id="dir_cut_copy_v125" type="button">📋 Copiar FFmpeg</button><button class="btn gray small" id="dir_cut_bat_v125" type="button">⬇ BAT actual</button><button class="btn gray small ffmpeg-btn" id="dir_cut_ffmpeg_v136" type="button">⬇ Descargar programa FFmpeg</button><button class="btn gray small batch-main" id="dir_cut_batch_add_v136" type="button">➕ Agregar a lote BAT</button><button class="btn gray small batch-main" id="dir_cut_batch_down_v136" type="button">📦 Descargar BAT lote</button><button class="btn gray small" id="dir_cut_batch_reset_v136" type="button">🧹 Reset lote</button><span class="cut-batch-counter" id="dir_cut_batch_count_v136">0 cortes en lote</span></div><div class="cut-v125-status" id="dir_cut_info_v125"></div><div class="cut-v137-hotkeys"><b>Seguimiento:</b> Iniciar seguimiento marca Inicio y reproduce. Parar seguimiento pausa y marca Fin. Flechas ← → mueven el cuadro; ↑ ↓ hacen zoom.</div><div class="cut-v125-status" id="dir_cut_track_status_v137">Movimiento guardado · 0 puntos</div><textarea class="cut-v125-cmd" id="dir_cut_cmd_v125" readonly></textarea></div>';
+    box.innerHTML='<summary>✂️ Cortes Director</summary><div class="cut-v125-body"><div class="cut-v125-grid"><div class="field"><label>Tipo salida</label><select id="dir_cut_tipo_v125"><option value="normal">Normal 16:9</option><option value="vertical">Vertical 9:16 historia/reel</option><option value="cuadrado">Cuadrado 1:1</option></select></div><div class="field"><label>Rotación</label><select id="dir_cut_rot_v125"><option value="0">Sin rotar</option><option value="90">90° derecha</option><option value="-90">90° izquierda</option><option value="180">180°</option></select></div><div class="span2 cut-v125-time-row"><div class="field"><label>Inicio</label><input id="dir_cut_start_v125" value="'+safeEsc(fmtTimeV126(start))+'" placeholder="01:20"></div><div class="field"><label>Fin</label><input id="dir_cut_end_v125" value="'+safeEsc(fmtTimeV126(end))+'" placeholder="02:00"></div></div><div class="span2"><label>Barra para ubicar momento</label><div class="cut-v125-current"><input type="range" id="dir_cut_current_v125" min="0" max="'+safeEsc(Math.max(end+60,Number(state.cutVideoDurationV126||0)||end+60))+'" step="1" value="'+safeEsc(cur)+'"><input type="text" id="dir_cut_current_time_v126" value="'+safeEsc(fmtTimeV126(cur))+'"><button class="btn gray small" id="dir_cut_go_v125" type="button">Ir</button></div><div class="cut-v125-duration-line"><div class="cut-v125-help">La barra se limita por duración real de YouTube cuando está disponible.</div><div class="field"><label>Duración video</label><input id="dir_cut_total_v126" value="'+safeEsc(fmtTimeV126(Number(state.cutVideoDurationV126||0)||Math.max(end+60,cur+60)))+'" placeholder="45:00"></div></div></div><div class="cut-v125-pan-grid"><div class="field"><label>Mover recorte horizontal</label><input type="range" id="dir_cut_pan_x_v135" min="-75" max="75" step="1" value="0"></div><div class="field"><label>Mover recorte vertical</label><input type="range" id="dir_cut_pan_y_v135" min="-55" max="55" step="1" value="0"></div><div class="field"><label>Zoom extra recorte</label><input type="range" id="dir_cut_zoom_v136" min="0" max="2" step="0.05" value="0"></div><div class="field"><label>Archivo local opcional BAT</label><input id="dir_cut_file_v136" placeholder="Opcional. Ej: FADA_2026_BLOQUE_01.mp4"></div><div class="span2 cut-v125-pan-note">Arrastrá el cuadro rojo. El archivo local es opcional: sólo sirve si vas a generar un BAT lote buscando videos por nombre en una carpeta.</div></div></div><div class="cut-v125-actions"><button class="btn gray small" id="dir_cut_mark_start_v125" type="button">✂ Marcar inicio</button><button class="btn gray small" id="dir_cut_mark_end_v125" type="button">✂ Marcar fin</button><button class="btn gray small" id="dir_cut_view_start_v125" type="button">▶ Ir inicio</button><button class="btn gray small" id="dir_cut_view_end_v125" type="button">▶ Ir fin</button><button class="btn gray small" id="dir_cut_play_v137" type="button">▶/⏸ Play</button><button class="btn gray small" id="dir_cut_track_v137" type="button">● Iniciar seguimiento</button><button class="btn gray small" id="dir_cut_cover_v139" type="button">📸 Usar frame portada</button><button class="btn red small main-cut" id="dir_cut_create_v125" type="button">✂ Crear tarjeta</button><button class="btn gray small open-original" id="dir_cut_open_drive_v126" type="button">📁 Abrir original</button><button class="btn gray small" id="dir_cut_copy_v125" type="button">📋 Copiar FFmpeg</button><button class="btn gray small" id="dir_cut_bat_v125" type="button">⬇ BAT actual</button><button class="btn gray small ffmpeg-btn" id="dir_cut_ffmpeg_v136" type="button">⬇ Descargar programa FFmpeg</button><button class="btn gray small batch-main" id="dir_cut_batch_add_v136" type="button">➕ Agregar a lote BAT</button><button class="btn gray small batch-main" id="dir_cut_batch_down_v136" type="button">📦 Descargar BAT lote</button><button class="btn gray small" id="dir_cut_batch_reset_v136" type="button">🧹 Reset lote</button><span class="cut-batch-counter" id="dir_cut_batch_count_v136">0 cortes en lote</span></div><div class="cut-v125-status" id="dir_cut_info_v125"></div><div class="cut-v137-hotkeys"><b>Seguimiento:</b> Iniciar seguimiento marca Inicio y reproduce. Parar seguimiento pausa y marca Fin. Flechas ← → mueven el cuadro; ↑ ↓ hacen zoom.</div><div class="cut-v125-status" id="dir_cut_track_status_v137">Movimiento guardado · 0 puntos</div><textarea class="cut-v125-cmd" id="dir_cut_cmd_v125" readonly></textarea></div>';
     anchor.parentNode.insertBefore(box, anchor);
     if(el('dir_cut_tipo_v125'))el('dir_cut_tipo_v125').value=initialTipo;
     if(el('dir_cut_rot_v125'))el('dir_cut_rot_v125').value=initialRot;
