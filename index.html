@@ -1172,17 +1172,17 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .video-card.cut-card-square .thumb{aspect-ratio:1/1!important;background-size:cover!important;background-position:center center!important;}
 .modal.video-preview .video-wrap.cut-preview-vertical{width:min(430px,92vw)!important;height:auto!important;aspect-ratio:9/16!important;max-height:82vh!important;overflow:hidden!important;position:relative!important;display:block!important;background:#000!important;}
 .modal.video-preview .video-wrap.cut-preview-square{width:min(720px,92vw,78vh)!important;height:auto!important;aspect-ratio:1/1!important;max-height:82vh!important;overflow:hidden!important;position:relative!important;display:block!important;background:#000!important;}
-.modal.video-preview .video-wrap.cut-preview-vertical .video-frame{position:absolute!important;left:50%!important;top:50%!important;height:100%!important;width:316.05%!important;min-width:316.05%!important;max-width:none!important;min-height:100%!important;max-height:none!important;transform:translate(-50%,-50%)!important;aspect-ratio:16/9!important;border:0!important;background:#000!important;}
-.modal.video-preview .video-wrap.cut-preview-square .video-frame{position:absolute!important;left:50%!important;top:50%!important;height:100%!important;width:177.78%!important;min-width:177.78%!important;max-width:none!important;min-height:100%!important;max-height:none!important;transform:translate(-50%,-50%)!important;aspect-ratio:16/9!important;border:0!important;background:#000!important;}
+.modal.video-preview .video-wrap.cut-preview-vertical .video-frame{position:absolute!important;left:50%!important;top:50%!important;height:calc(100% * var(--cut-zoom,1))!important;width:calc(316.05% * var(--cut-zoom,1))!important;min-width:calc(316.05% * var(--cut-zoom,1))!important;max-width:none!important;min-height:100%!important;max-height:none!important;transform:translate(-50%,-50%)!important;aspect-ratio:16/9!important;border:0!important;background:#000!important;}
+.modal.video-preview .video-wrap.cut-preview-square .video-frame{position:absolute!important;left:50%!important;top:50%!important;height:calc(100% * var(--cut-zoom,1))!important;width:calc(177.78% * var(--cut-zoom,1))!important;min-width:calc(177.78% * var(--cut-zoom,1))!important;max-width:none!important;min-height:100%!important;max-height:none!important;transform:translate(-50%,-50%)!important;aspect-ratio:16/9!important;border:0!important;background:#000!important;}
 .modal.video-preview .video-wrap.cut-preview-vertical .preview-protect-shield,
 .modal.video-preview .video-wrap.cut-preview-square .preview-protect-shield,
 .modal.video-preview .video-wrap.cut-preview-vertical .iframe-hotspot,
 .modal.video-preview .video-wrap.cut-preview-square .iframe-hotspot{position:absolute!important;inset:0!important;z-index:12!important;}
 @media(max-width:720px){
   .modal.video-preview.preview-mobile .video-wrap.cut-preview-vertical{left:50%!important;top:50%!important;width:min(100vw,56.25vh)!important;height:min(177.78vw,100vh)!important;aspect-ratio:9/16!important;transform:translate(-50%,-50%)!important;max-height:100vh!important;border-radius:0!important;overflow:hidden!important;display:block!important;}
-  .modal.video-preview.preview-mobile .video-wrap.cut-preview-vertical .video-frame{position:absolute!important;left:50%!important;top:50%!important;height:100%!important;width:316.05%!important;min-width:316.05%!important;min-height:100%!important;max-width:none!important;max-height:none!important;transform:translate(-50%,-50%)!important;aspect-ratio:16/9!important;}
+  .modal.video-preview.preview-mobile .video-wrap.cut-preview-vertical .video-frame{position:absolute!important;left:50%!important;top:50%!important;height:calc(100% * var(--cut-zoom,1))!important;width:calc(316.05% * var(--cut-zoom,1))!important;min-width:calc(316.05% * var(--cut-zoom,1))!important;min-height:100%!important;max-width:none!important;max-height:none!important;transform:translate(-50%,-50%)!important;aspect-ratio:16/9!important;}
   .modal.video-preview.preview-mobile .video-wrap.cut-preview-square{left:50%!important;top:50%!important;width:min(100vw,100vh)!important;height:min(100vw,100vh)!important;aspect-ratio:1/1!important;transform:translate(-50%,-50%)!important;max-height:100vh!important;border-radius:0!important;overflow:hidden!important;display:block!important;}
-  .modal.video-preview.preview-mobile .video-wrap.cut-preview-square .video-frame{position:absolute!important;left:50%!important;top:50%!important;height:100%!important;width:177.78%!important;min-width:177.78%!important;min-height:100%!important;max-width:none!important;max-height:none!important;transform:translate(-50%,-50%)!important;aspect-ratio:16/9!important;}
+  .modal.video-preview.preview-mobile .video-wrap.cut-preview-square .video-frame{position:absolute!important;left:50%!important;top:50%!important;height:calc(100% * var(--cut-zoom,1))!important;width:calc(177.78% * var(--cut-zoom,1))!important;min-width:calc(177.78% * var(--cut-zoom,1))!important;min-height:100%!important;max-width:none!important;max-height:none!important;transform:translate(-50%,-50%)!important;aspect-ratio:16/9!important;}
 }
 
 
@@ -1210,11 +1210,11 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 
 /* v135: portadas, marcas admin de cortes y encuadre manual de corte */
 .video-card.cut-card-vertical .thumb{
-  background-size:auto 178%!important;
+  background-size:auto calc(178% * var(--cut-zoom,1))!important;
   background-position:var(--cut-thumb-position,var(--director-card-bg-position,50% 50%))!important;
 }
 .video-card.cut-card-square .thumb{
-  background-size:auto 178%!important;
+  background-size:auto calc(178% * var(--cut-zoom,1))!important;
   background-position:var(--cut-thumb-position,var(--director-card-bg-position,50% 50%))!important;
 }
 .admin-cut-marker{position:absolute;left:48px;bottom:10px;z-index:6;border:1px solid rgba(255,208,77,.55);background:rgba(0,0,0,.76);color:#ffd04d;border-radius:999px;padding:6px 9px;font-size:10px;font-weight:900;letter-spacing:.4px;pointer-events:none}
@@ -1229,10 +1229,27 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
   .modal.video-preview.preview-mobile .video-wrap.cut-preview-square .video-frame{transform:translate(calc(-50% + var(--cut-pan-x,0%)),calc(-50% + var(--cut-pan-y,0%)))!important;}
 }
 
+
+/* v136: recorte arrastrable, zoom real y lote BAT */
+.director-story-frame.cut-show{pointer-events:auto!important;cursor:move!important;touch-action:none!important;}
+.director-story-frame.cut-show:before{pointer-events:none!important;}
+.director-story-frame.cut-dragging{box-shadow:0 0 0 999px rgba(0,0,0,.36),0 0 34px rgba(255,25,25,.72)!important;border-color:#ff3939!important;}
+.director-story-frame .cut-corner{position:absolute;width:13px;height:13px;border:2px solid #fff;background:#e00000;border-radius:50%;right:-8px;bottom:-8px;box-shadow:0 0 12px rgba(0,0,0,.5);pointer-events:none;}
+.cut-v136-batch{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 0;}
+.cut-v136-batch .span2{grid-column:span 2;}
+.cut-batch-counter{font-size:11px;color:#ffd04d;font-weight:900;align-self:center;}
+.cut-v125-actions .batch-main{border-color:rgba(0,212,106,.5)!important;color:#00d46a!important;}
+.cut-v125-actions .ffmpeg-btn{border-color:rgba(255,255,255,.28)!important;}
+@media(max-width:700px){.cut-v136-batch{grid-template-columns:1fr}.cut-v136-batch .span2{grid-column:span 1}}
+
+/* v136 zoom visual: el cuadro rojo se achica al aumentar zoom para reflejar el recorte real */
+.director-story-frame.cut-vertical{width:calc(29.7% / var(--cut-zoom,1))!important;height:calc(94% / var(--cut-zoom,1))!important;transform:translate(calc(-50% + var(--cut-pan-x,0%)),calc(-50% + var(--cut-pan-y,0%)))!important;}
+.director-story-frame.cut-square{width:calc(52.9% / var(--cut-zoom,1))!important;height:calc(94% / var(--cut-zoom,1))!important;transform:translate(calc(-50% + var(--cut-pan-x,0%)),calc(-50% + var(--cut-pan-y,0%)))!important;}
+
 </style>
 </head>
 <body>
-<div class="bggrid"></div><div class="version-mini">v135</div>
+<div class="bggrid"></div><div class="version-mini">v136</div>
 <header>
   <div class="brand" id="adminTrigger"><img id="logoImg" alt="Tomauno"><div class="wordmark"><strong>TOMA<span>UNO</span></strong><small>VIDEOS</small></div></div>
   <div class="nav"><button class="pill" id="btnEvents">Eventos</button><button class="pill" id="btnVideos">Videos</button><span class="status"><i class="dot" id="statusDot"></i><span id="statusText">Conectando</span></span></div>
@@ -1375,7 +1392,7 @@ function checkVideoDuplicateWarning(){
 
 function renderVideos(){let e=state.currentEvent;if(!e){renderEvents();return;}state.directorEventId=e.id;try{applyDirectorPresetToView();}catch(_e){}let q=state.query.toLowerCase();let visibleEvents=state.data.eventos.filter(x=>x.visibilidad!=='oculto');let isAdm=sessionStorage.getItem(SS_ADMIN)==='1';let vids=(e.videos||[]).filter(v=>isAdm||!v.oculto).filter(v=>!q||[v.titulo,v.subtitulo,v.bailarina,v.categoria,v.escuela,v.localidad].join(' ').toLowerCase().indexOf(q)>-1);if(isAdm){let vf=state.videoSaleFilter||'todos';if(vf!=='todos')vids=vids.filter(v=>{let sold=videoHasOrder(e.id,v.id);return vf==='vendidos'?sold:!sold;});}let h='<div class="section-head"><div><h2>'+esc(e.titulo)+'</h2><div class="muted">'+esc(e.subtitulo||'')+'</div></div><button class="btn gray" id="backEvents">Ver eventos</button></div>'+eventIntroHtml(e)+'<div class="toolbar"><input class="search" id="searchBox" placeholder="Buscar por título, participante, categoría o escuela..." value="'+esc(state.query)+'"><span class="view-count">'+vids.length+' visibles</span></div>';if(isAdm){let vf=state.videoSaleFilter||'todos';h+='<div class="video-sale-filters"><button class="btn '+(vf==='todos'?'active':'')+'" data-vfilter="todos">Todos</button><button class="btn '+(vf==='vendidos'?'active':'')+'" data-vfilter="vendidos">Comprados</button><button class="btn '+(vf==='sincomprar'?'active':'')+'" data-vfilter="sincomprar">Sin comprar</button></div>';}h+='<div class="event-pills">';visibleEvents.forEach(x=>{let count=(x.videos||[]).filter(v=>isAdm||!v.oculto).length;h+='<button class="pill '+(x.id===e.id?'active':'')+'" data-open-event="'+esc(x.id)+'">#'+esc(x.numero)+' '+esc(x.titulo)+' <small>· '+count+' videos</small></button>';});h+='<button class="pill family-pill" id="familyPrivacyBtnInline" type="button">👨‍👩‍👧 Familias</button>';h+='</div><div style="height:20px"></div>';if(!vids.length)h+='<div class="empty">No hay videos para este filtro.</div>';else{h+='<div class="video-grid">';vids.forEach(v=>h+=videoCard(e,v));h+='</div>';}$('app').innerHTML=h;$('backEvents').onclick=renderEvents;let sb=$('searchBox');let searchTimer=null;sb.oninput=function(){let val=this.value;clearTimeout(searchTimer);searchTimer=setTimeout(()=>{state.query=val;renderVideos();setTimeout(()=>{let n=$('searchBox');if(n){n.focus();n.setSelectionRange(n.value.length,n.value.length);}},0);},450);};document.querySelectorAll('[data-vfilter]').forEach(b=>b.onclick=()=>{state.videoSaleFilter=b.getAttribute('data-vfilter')||'todos';renderVideos();});bindEventButtons();bindVideoButtons();let fpi=$('familyPrivacyBtnInline');if(fpi)fpi.onclick=openFamilyPrivacy;renderCart();}
 function ytThumb(id){id=cleanYouTube(id);return id?'https://img.youtube.com/vi/'+encodeURIComponent(id)+'/maxresdefault.jpg':'';}
-function videoCard(e,v){let thumb=v.imagen||ytThumb(v.youtubeId);let corteTipo=String(v.corteTipo||v.corte&&v.corte.tipo||'').toLowerCase();let cutClass=corteTipo==='vertical'?'cut-card-vertical':(corteTipo==='cuadrado'||corteTipo==='square'?'cut-card-square':'');let bg=thumb?' style="background-image:url('+esc(thumb)+')"':'';let sub=v.subtitulo||v.bailarina||'';let preview=v.previewInicio?('Vista previa '+formatTime(v.previewInicio)+' / '+(v.previewSegundos||20)+'s'):'Completo libre';let cartKey=e.id+'|'+v.id;let inCart=!!state.cart[cartKey];let isAdm=sessionStorage.getItem(SS_ADMIN)==='1';let sold=isAdm&&videoHasOrder(e.id,v.id);let cardFilter=directorCardFilter(e,v);let cardBgSize=directorCardBgSize(e,v);let cardBgPos=directorCardBgPosition(e,v);let cutPanX=Number(v.cortePanX||v.corteX||0)||0, cutPanY=Number(v.cortePanY||v.corteY||0)||0;let cutThumbPos=(50+cutPanX)+'% '+(50+cutPanY)+'%';let cssVars='--cut-pan-x:'+cutPanX+'%;--cut-pan-y:'+cutPanY+'%;--cut-thumb-position:'+cutThumbPos+';';if(cardFilter){cssVars+='--director-card-filter:'+cardFilter+';--director-card-bg-size:'+cardBgSize+';--director-card-bg-position:'+cardBgPos+';'}let cardStyle=' style="'+esc(cssVars)+'"';let hasInd=hasDirectorVideoPreset(e,v);let corteChip=corteTipo?'<span class="chip cut-format-chip">Corte '+(corteTipo==='vertical'?'9:16':(corteTipo==='cuadrado'||corteTipo==='square'?'1:1':'16:9'))+'</span>':'';let h='<article class="card video-card '+esc(cutClass)+' '+(inCart?'selected ':'')+(v.oculto?'hidden-video ':'')+(sold?'sold-video ':'unsold-admin ')+'" data-card-video="'+esc(v.id)+'" data-has-individual="'+(isAdm&&hasInd?'1':'0')+'"'+cardStyle+'>';if(isAdm){h+='<button class="admin-edit-mini" title="Editar video" data-adminedit="'+esc(v.id)+'">✎</button>';h+='<button class="director-video-adjust-mini" title="Ajustar en Director" data-directorvideo="'+esc(v.id)+'">🎛</button>';h+='<button class="admin-delete-mini" title="Eliminar video" data-admincarddel="'+esc(v.id)+'">🗑</button>';if(corteTipo)h+='<span class="admin-cut-marker" title="Video creado desde Director">✂ EDITADO</span>';}h+='<div class="thumb" data-play="'+esc(v.id)+'"'+bg+'><span class="badge">'+esc(preview)+'</span></div><div class="body"><h3>'+esc(v.titulo)+'</h3><p>'+esc(sub||'Video Tomauno')+'</p><div class="meta"><span class="chip">'+(v.driveId?'🔐 Descarga':'🎬 Preview')+'</span>'+corteChip+'<span class="chip">Ref: '+esc((e.numero||1)+','+v.id)+'</span>'+(sold?'<span class="chip">✅ Comprado</span>':'')+(v.oculto?'<span class="chip">Oculto</span>':'')+'</div>'+reactionHtml(e,v)+'<div class="price">'+money(v.precio)+'</div><div class="actions">';if(v.driveId)h+='<button class="btn code-btn" data-download="'+esc(v.id)+'">Descargar</button>';else h+='<button class="btn code-btn" disabled>Sin descarga</button>';h+='<button class="btn red buy-main" data-buy="'+esc(v.id)+'">Comprar</button><button class="btn select-dot '+(inCart?'selected-cart':'')+'" title="Agregar al pedido" data-cart="'+esc(v.id)+'">'+(inCart?'🛒✓':'🛒')+'</button><button class="btn share-action" title="Compartir video" data-share="'+esc(v.id)+'">🔗</button></div></div></article>';return h;}
+function videoCard(e,v){let thumb=v.imagen||ytThumb(v.youtubeId);let corteTipo=String(v.corteTipo||v.corte&&v.corte.tipo||'').toLowerCase();let cutClass=corteTipo==='vertical'?'cut-card-vertical':(corteTipo==='cuadrado'||corteTipo==='square'?'cut-card-square':'');let bg=thumb?' style="background-image:url('+esc(thumb)+')"':'';let sub=v.subtitulo||v.bailarina||'';let preview=v.previewInicio?('Vista previa '+formatTime(v.previewInicio)+' / '+(v.previewSegundos||20)+'s'):'Completo libre';let cartKey=e.id+'|'+v.id;let inCart=!!state.cart[cartKey];let isAdm=sessionStorage.getItem(SS_ADMIN)==='1';let sold=isAdm&&videoHasOrder(e.id,v.id);let cardFilter=directorCardFilter(e,v);let cardBgSize=directorCardBgSize(e,v);let cardBgPos=directorCardBgPosition(e,v);let cutPanX=Number(v.cortePanX||v.corteX||0)||0, cutPanY=Number(v.cortePanY||v.corteY||0)||0, cutZoom=Number(v.corteZoom||1)||1;let cutThumbPos=(50+cutPanX)+'% '+(50+cutPanY)+'%';let cssVars='--cut-pan-x:'+cutPanX+'%;--cut-pan-y:'+cutPanY+'%;--cut-zoom:'+cutZoom+';--cut-thumb-position:'+cutThumbPos+';';if(cardFilter){cssVars+='--director-card-filter:'+cardFilter+';--director-card-bg-size:'+cardBgSize+';--director-card-bg-position:'+cardBgPos+';'}let cardStyle=' style="'+esc(cssVars)+'"';let hasInd=hasDirectorVideoPreset(e,v);let corteChip=corteTipo?'<span class="chip cut-format-chip">Corte '+(corteTipo==='vertical'?'9:16':(corteTipo==='cuadrado'||corteTipo==='square'?'1:1':'16:9'))+'</span>':'';let h='<article class="card video-card '+esc(cutClass)+' '+(inCart?'selected ':'')+(v.oculto?'hidden-video ':'')+(sold?'sold-video ':'unsold-admin ')+'" data-card-video="'+esc(v.id)+'" data-has-individual="'+(isAdm&&hasInd?'1':'0')+'"'+cardStyle+'>';if(isAdm){h+='<button class="admin-edit-mini" title="Editar video" data-adminedit="'+esc(v.id)+'">✎</button>';h+='<button class="director-video-adjust-mini" title="Ajustar en Director" data-directorvideo="'+esc(v.id)+'">🎛</button>';h+='<button class="admin-delete-mini" title="Eliminar video" data-admincarddel="'+esc(v.id)+'">🗑</button>';if(corteTipo)h+='<span class="admin-cut-marker" title="Video creado desde Director">✂ EDITADO</span>';}h+='<div class="thumb" data-play="'+esc(v.id)+'"'+bg+'><span class="badge">'+esc(preview)+'</span></div><div class="body"><h3>'+esc(v.titulo)+'</h3><p>'+esc(sub||'Video Tomauno')+'</p><div class="meta"><span class="chip">'+(v.driveId?'🔐 Descarga':'🎬 Preview')+'</span>'+corteChip+'<span class="chip">Ref: '+esc((e.numero||1)+','+v.id)+'</span>'+(sold?'<span class="chip">✅ Comprado</span>':'')+(v.oculto?'<span class="chip">Oculto</span>':'')+'</div>'+reactionHtml(e,v)+'<div class="price">'+money(v.precio)+'</div><div class="actions">';if(v.driveId)h+='<button class="btn code-btn" data-download="'+esc(v.id)+'">Descargar</button>';else h+='<button class="btn code-btn" disabled>Sin descarga</button>';h+='<button class="btn red buy-main" data-buy="'+esc(v.id)+'">Comprar</button><button class="btn select-dot '+(inCart?'selected-cart':'')+'" title="Agregar al pedido" data-cart="'+esc(v.id)+'">'+(inCart?'🛒✓':'🛒')+'</button><button class="btn share-action" title="Compartir video" data-share="'+esc(v.id)+'">🔗</button></div></div></article>';return h;}
 function reactionHtml(e,v){let k=reactionKey(e.id,v.id);let c=reactionCounts(e.id,v.id);let opts=[['❤️','me encanta'],['👏','aplausos'],['🔥','tremendo']];let h='<div class="reaction-row">';opts.forEach(o=>{let em=o[0],lbl=o[1],n=Number(c[em]||0);let done=localStorage.getItem(reactionStorageKey(k,em))==='1';h+='<button class="react-btn '+(done?'done':'')+'" title="'+esc(lbl)+'" data-react="'+esc(v.id)+'" data-emoji="'+esc(em)+'">'+em+' <small>'+n+'</small></button>';});h+='</div>';return h;}
 function bindVideoButtons(){document.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>playVideo(b.getAttribute('data-play')));document.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buySingle(b.getAttribute('data-buy')));document.querySelectorAll('[data-download]').forEach(b=>b.onclick=()=>downloadVideo(b.getAttribute('data-download')));document.querySelectorAll('[data-share]').forEach(b=>b.onclick=e=>{e.stopPropagation();shareVideo(b.getAttribute('data-share'));});document.querySelectorAll('[data-cart]').forEach(b=>b.onclick=()=>toggleCart(b.getAttribute('data-cart')));document.querySelectorAll('[data-react]').forEach(b=>b.onclick=e=>{e.stopPropagation();reactVideo(state.currentEvent.id,b.getAttribute('data-react'),b.getAttribute('data-emoji'));});document.querySelectorAll('[data-adminedit]').forEach(b=>b.onclick=e=>{e.stopPropagation();openAdminEditVideo(state.currentEvent.id,b.getAttribute('data-adminedit'));});document.querySelectorAll('[data-directorvideo]').forEach(b=>b.onclick=e=>{e.stopPropagation();openDirectorForVideo(state.currentEvent.id,b.getAttribute('data-directorvideo'));});document.querySelectorAll('[data-admincarddel]').forEach(b=>b.onclick=e=>{e.stopPropagation();confirmDeleteVideoFromGrid(b.getAttribute('data-admincarddel'));});}
 function toggleCart(id){let e=state.currentEvent;if(!e)return;let k=e.id+'|'+id;if(state.cart[k])delete state.cart[k];else state.cart[k]={eventoId:e.id,eventoNumero:e.numero,eventoTitulo:e.titulo,videoId:id};renderVideos();}
@@ -1443,7 +1460,7 @@ function startPreviewWithMode(id,mode){
   let playFilter=directorCssFilter(playPreset);
   let playTransform=directorFrameTransform(playPreset,false);
   let playLogo='<div class="director-logo-layer-v120">'+logoHtmlV120(e,playPreset)+'</div>';
-  let cutPanX=Number(v.cortePanX||v.corteX||0)||0, cutPanY=Number(v.cortePanY||v.corteY||0)||0;let playStyle=' style="--tomauno-event-filter:'+esc(playFilter)+';--director-video-transform:'+esc(playTransform)+';--director-bg-size:'+(100+Number(playPreset.zoom||0))+'% auto;--director-bg-position:'+(50+Number(playPreset.posX||0))+'% '+(50+Number(playPreset.posY||0))+'%;--cut-pan-x:'+cutPanX+'%;--cut-pan-y:'+cutPanY+'%"';
+  let playStyle=' style="--tomauno-event-filter:'+esc(playFilter)+';--director-video-transform:'+esc(playTransform)+';--director-bg-size:'+(100+Number(playPreset.zoom||0))+'% auto;--director-bg-position:'+(50+Number(playPreset.posX||0))+'% '+(50+Number(playPreset.posY||0))+'%"';
   let frameId='ytFrame_'+String(Date.now());
   let base='https://www.youtube.com/embed/'+encodeURIComponent(cleanYouTube(v.youtubeId));
   function buildSrc(){let src=base+'?autoplay=1&mute=0&playsinline=1&rel=0&modestbranding=1&controls=0&disablekb=1&fs=0&iv_load_policy=3&enablejsapi=1&origin='+encodeURIComponent(location.origin)+'&vq=hd1080&hd=1';if(start>0)src+='&start='+start;return src;}
@@ -2227,7 +2244,11 @@ openDirectorFullscreen=function(){
   function cutReadV126(){
     var start=parseTimeV126(el('dir_cut_start_v125')&&el('dir_cut_start_v125').value);
     var end=parseTimeV126(el('dir_cut_end_v125')&&el('dir_cut_end_v125').value);
-    return {start:start,end:end,duration:Math.max(0,end-start),tipo:(el('dir_cut_tipo_v125')&&el('dir_cut_tipo_v125').value)||'normal',rotacion:(el('dir_cut_rot_v125')&&el('dir_cut_rot_v125').value)||'0',panX:Number((el('dir_cut_pan_x_v135')&&el('dir_cut_pan_x_v135').value)||0),panY:Number((el('dir_cut_pan_y_v135')&&el('dir_cut_pan_y_v135').value)||0)};
+    var panX=Number((el('dir_cut_pan_x_v135')&&el('dir_cut_pan_x_v135').value)||state.cutPanXV136||0)||0;
+    var panY=Number((el('dir_cut_pan_y_v135')&&el('dir_cut_pan_y_v135').value)||state.cutPanYV136||0)||0;
+    var zoom=Number((el('dir_cut_zoom_v136')&&el('dir_cut_zoom_v136').value)||state.cutZoomV136||1)||1;
+    zoom=Math.max(1,Math.min(3,zoom));
+    return {start:start,end:end,duration:Math.max(0,end-start),tipo:(el('dir_cut_tipo_v125')&&el('dir_cut_tipo_v125').value)||'normal',rotacion:(el('dir_cut_rot_v125')&&el('dir_cut_rot_v125').value)||'0',panX:panX,panY:panY,zoom:zoom,archivoOriginal:(el('dir_cut_file_v136')&&el('dir_cut_file_v136').value.trim())||''};
   }
   function cutSetDurationV126(sec){
     sec=Math.max(1,Math.round(Number(sec)||0));
@@ -2249,8 +2270,9 @@ openDirectorFullscreen=function(){
     if(c.rotacion==='90')vf.push('transpose=1');
     if(c.rotacion==='-90')vf.push('transpose=2');
     if(c.rotacion==='180')vf.push('transpose=1,transpose=1');
-    if(c.tipo==='vertical'){var px=Math.round((Number(c.panX||0))*1080/100);var py=Math.round((Number(c.panY||0))*1920/100);vf.push('scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920:(iw-ow)/2'+(px>=0?'+':'')+px+':(ih-oh)/2'+(py>=0?'+':'')+py);}
-    if(c.tipo==='cuadrado'){var sx=Math.round((Number(c.panX||0))*1080/100);var sy=Math.round((Number(c.panY||0))*1080/100);vf.push('scale=1080:1080:force_original_aspect_ratio=increase,crop=1080:1080:(iw-ow)/2'+(sx>=0?'+':'')+sx+':(ih-oh)/2'+(sy>=0?'+':'')+sy);}
+    var zoom=Math.max(1,Math.min(3,Number(c.zoom||1)||1));
+    if(c.tipo==='vertical'){var sw=Math.round(1080*zoom),sh=Math.round(1920*zoom);var px=Math.round((Number(c.panX||0))*1080/100);var py=Math.round((Number(c.panY||0))*1920/100);vf.push('scale='+sw+':'+sh+':force_original_aspect_ratio=increase,crop=1080:1920:(iw-ow)/2+'+px+':(ih-oh)/2+'+py);}
+    if(c.tipo==='cuadrado'){var ss=Math.round(1080*zoom);var sx=Math.round((Number(c.panX||0))*1080/100);var sy=Math.round((Number(c.panY||0))*1080/100);vf.push('scale='+ss+':'+ss+':force_original_aspect_ratio=increase,crop=1080:1080:(iw-ow)/2+'+sx+':(ih-oh)/2+'+sy);}
     return vf.join(',');
   }
   function cutOutputNameV126(v,c){
@@ -2310,12 +2332,15 @@ openDirectorFullscreen=function(){
     f.setAttribute('data-label',cutLabelV126(c));
     f.style.setProperty('--cut-pan-x',String(Number(c.panX||0))+'%');
     f.style.setProperty('--cut-pan-y',String(Number(c.panY||0))+'%');
+    f.style.setProperty('--cut-zoom',String(Math.max(1,Math.min(3,Number(c.zoom||1)||1))));
     f.classList.add('show','cut-show',c.tipo==='vertical'?'cut-vertical':(c.tipo==='cuadrado'?'cut-square':'cut-normal'));
+    if(!f.querySelector('.cut-corner'))f.insertAdjacentHTML('beforeend','<i class="cut-corner"></i>');
+    bindCutFrameDragV136();
   }
   function cutUpdateV126(){
     var c=cutReadV126();
     var info=el('dir_cut_info_v125');
-    if(info)info.innerHTML='Inicio: <b>'+fmtTimeV126(c.start)+'</b> &nbsp; Fin: <b>'+fmtTimeV126(c.end)+'</b> &nbsp; Duración: <b>'+fmtTimeV126(c.duration)+'</b><br>Tipo: <b>'+(c.tipo==='normal'?'Normal 16:9':c.tipo==='vertical'?'Vertical 9:16':'Cuadrado 1:1')+'</b> · Rotación: <b>'+(c.rotacion==='0'?'sin rotar':c.rotacion+'°')+'</b> · Encuadre X: <b>'+c.panX+'%</b> Y: <b>'+c.panY+'%</b>'+(c.end<=c.start?'<br><span style="color:#ffd04d;font-weight:900">El fin debe ser mayor que el inicio.</span>':'');
+    if(info)info.innerHTML='Inicio: <b>'+fmtTimeV126(c.start)+'</b> &nbsp; Fin: <b>'+fmtTimeV126(c.end)+'</b> &nbsp; Duración: <b>'+fmtTimeV126(c.duration)+'</b><br>Tipo: <b>'+(c.tipo==='normal'?'Normal 16:9':c.tipo==='vertical'?'Vertical 9:16':'Cuadrado 1:1')+'</b> · Rotación: <b>'+(c.rotacion==='0'?'sin rotar':c.rotacion+'°')+'</b> · Encuadre X: <b>'+c.panX+'%</b> Y: <b>'+c.panY+'%</b> · Zoom: <b>'+c.zoom.toFixed(2)+'x</b>'+(c.end<=c.start?'<br><span style="color:#ffd04d;font-weight:900">El fin debe ser mayor que el inicio.</span>':'');
     var ta=el('dir_cut_cmd_v125'); if(ta)ta.value=cutCommandV126();
     cutUpdateFrameV126(c);
   }
@@ -2324,14 +2349,13 @@ openDirectorFullscreen=function(){
     if(!ev||!base){toast('Corte','No hay video base seleccionado.');return;}
     if(c.duration<=0){toast('Corte','Marcá inicio y fin válido.');return;}
     var suggested=(base.titulo||'Corte')+' · '+fmtTimeV126(c.start)+'-'+fmtTimeV126(c.end);
-    openModal('Crear tarjeta desde corte','<div class="cut-v125-title-modal"><p class="muted">Se creará una tarjeta nueva al final del evento. Después podés editarla desde Videos.</p><div class="field"><label>Título</label><input id="cutTitleV125" value="'+safeEsc(suggested)+'"></div><div class="field"><label>Subtítulo</label><input id="cutSubV125" value="'+safeEsc(base.subtitulo||('Corte '+fmtTimeV126(c.start)+' a '+fmtTimeV126(c.end)))+'"></div><div class="field"><label>Portada URL opcional</label><input id="cutImgV135" value="'+safeEsc(base.imagen||'')+'" placeholder="Pegá una imagen si querés portada propia"></div><div class="modal-actions right-red" style="padding-top:14px"><button class="btn gray" id="cutCancelV125">Cancelar</button><button class="btn red" id="cutOkV125">Crear tarjeta</button></div></div>');
+    openModal('Crear tarjeta desde corte','<div class="cut-v125-title-modal"><p class="muted">Se creará una tarjeta nueva al final del evento. Después podés editarla desde Videos.</p><div class="field"><label>Título</label><input id="cutTitleV125" value="'+safeEsc(suggested)+'"></div><div class="field"><label>Subtítulo</label><input id="cutSubV125" value="'+safeEsc(base.subtitulo||('Corte '+fmtTimeV126(c.start)+' a '+fmtTimeV126(c.end)))+'"></div><div class="modal-actions right-red" style="padding-top:14px"><button class="btn gray" id="cutCancelV125">Cancelar</button><button class="btn red" id="cutOkV125">Crear tarjeta</button></div></div>');
     var cancel=el('cutCancelV125'),ok=el('cutOkV125'); if(cancel)cancel.onclick=closeModal;
     if(ok)ok.onclick=async function(){
       var title=(el('cutTitleV125')&&el('cutTitleV125').value.trim())||suggested;
       var sub=(el('cutSubV125')&&el('cutSubV125').value.trim())||('Corte '+fmtTimeV126(c.start)+' a '+fmtTimeV126(c.end)+' · '+(c.tipo==='vertical'?'Vertical 9:16':c.tipo==='cuadrado'?'Cuadrado 1:1':'Normal'));
-      var img=(el('cutImgV135')&&el('cutImgV135').value.trim())||base.imagen||'';
       var newId=(typeof nextVid==='function')?String(nextVid(ev)):String(Date.now());
-      var nv=Object.assign({},base,{id:newId,titulo:title,subtitulo:sub,bailarina:sub,previewInicio:c.start,previewSegundos:c.duration,descargas:0,plays:0,corteDe:String(base.id||''),corteTipo:c.tipo,corteInicio:c.start,corteFin:c.end,corteRotacion:c.rotacion,imagen:img,cortePanX:c.panX,cortePanY:c.panY,codigo:(typeof randCode==='function'?randCode():String(Math.floor(1000+Math.random()*9000)))});
+      var nv=Object.assign({},base,{id:newId,titulo:title,subtitulo:sub,bailarina:sub,previewInicio:c.start,previewSegundos:c.duration,descargas:0,plays:0,corteDe:String(base.id||''),corteTipo:c.tipo,corteInicio:c.start,corteFin:c.end,corteRotacion:c.rotacion,cortePanX:c.panX,cortePanY:c.panY,corteZoom:c.zoom,codigo:(typeof randCode==='function'?randCode():String(Math.floor(1000+Math.random()*9000)))});
       ev.videos=ev.videos||[]; ev.videos.push(nv); closeModal();
       var saved=false; try{saved=await ghSave('Crear corte '+title,true);}catch(_e){}
       state.currentEvent=ev; if(typeof renderVideos==='function')renderVideos(); toast(saved?'Tarjeta creada':'Tarjeta local','Corte agregado al final de la grilla.');
@@ -2341,6 +2365,77 @@ openDirectorFullscreen=function(){
   function cutDownloadBatV126(){
     var blob=new Blob([cutBatV126()],{type:'application/x-msdos-program'}),a=document.createElement('a');
     a.href=URL.createObjectURL(blob); a.download='tomauno_corte_director.bat'; document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},700);
+  }
+  function cutDownloadFfmpegV136(){
+    window.open('https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip','_blank');
+  }
+  function cutSafeFileV136(name){
+    name=String(name||'video_original.mp4').trim();
+    name=name.replace(/[\\/:*?"<>|]+/g,'_');
+    if(!/\.(mp4|mov|mkv|avi|m4v)$/i.test(name))name+='.mp4';
+    return name;
+  }
+  function cutBatchKeyV136(){return 'TOMAUNO_BAT_LOTE_V136';}
+  function cutBatchReadV136(){try{return JSON.parse(localStorage.getItem(cutBatchKeyV136())||'[]')||[];}catch(_e){return [];}}
+  function cutBatchWriteV136(arr){localStorage.setItem(cutBatchKeyV136(),JSON.stringify(arr||[]));cutBatchCounterV136();}
+  function cutBatchCounterV136(){var n=cutBatchReadV136().length,b=el('dir_cut_batch_count_v136');if(b)b.textContent=n+' corte'+(n===1?'':'s')+' en lote';}
+  function cutBatchAddV136(){
+    var ev=cutEventV126(),v=cutVideoV126(ev),c=cutReadV126();
+    if(!ev||!v){toast('Lote BAT','No hay video seleccionado.');return;}
+    if(c.duration<=0){toast('Lote BAT','Marcá inicio y fin válido.');return;}
+    var file=cutSafeFileV136(c.archivoOriginal||v.archivoOriginal||v.nombreArchivo||((v.titulo||'video_original')+'.mp4'));
+    var item={eventoId:ev.id,eventoTitulo:ev.titulo||'',videoId:String(v.id||''),titulo:v.titulo||'',archivoOriginal:file,inicio:c.start,fin:c.end,duration:c.duration,tipo:c.tipo,rotacion:c.rotacion,panX:c.panX,panY:c.panY,zoom:c.zoom,salida:cutOutputNameV126(v,c)+'_TOMAUNO.mp4'};
+    var arr=cutBatchReadV136();arr.push(item);cutBatchWriteV136(arr);
+    toast('Lote BAT','Corte agregado. '+arr.length+' en memoria.');
+  }
+  function cutBatchResetV136(){cutBatchWriteV136([]);toast('Lote BAT','Memoria de cortes vacía.');}
+  function cutBatchDownloadV136(){
+    var arr=cutBatchReadV136();
+    if(!arr.length){toast('Lote BAT','No hay cortes agregados.');return;}
+    var lines=[];
+    lines.push('@echo off');
+    lines.push('setlocal enabledelayedexpansion');
+    lines.push('REM TOMAUNO - Lote de cortes. Ejecutar este BAT en la misma carpeta de los videos originales.');
+    lines.push('set "OUTDIR=SALIDA_HISTORIAS_TOMAUNO"');
+    lines.push('if not exist "%OUTDIR%" mkdir "%OUTDIR%"');
+    lines.push('set "LOG=%OUTDIR%\\resultado_lote.txt"');
+    lines.push('echo Inicio lote TOMAUNO %date% %time% > "%LOG%"');
+    arr.forEach(function(it,idx){
+      var c={start:it.inicio,end:it.fin,tipo:it.tipo,rotacion:it.rotacion,panX:it.panX,panY:it.panY,zoom:it.zoom};
+      var vf=cutFiltersV126(c);
+      var input=cutSafeFileV136(it.archivoOriginal);
+      var out=String(it.salida||('corte_'+(idx+1)+'.mp4')).replace(/[\\/:*?"<>|]+/g,'_');
+      lines.push('echo Procesando '+(idx+1)+'/'+arr.length+': '+out+' >> "%LOG%"');
+      lines.push('if not exist "'+input+'" (');
+      lines.push('  echo FALTA: '+input+' >> "%LOG%"');
+      lines.push(') else (');
+      var cmd='  ffmpeg -hide_banner -y -ss '+fmtTimeV126(it.inicio)+' -to '+fmtTimeV126(it.fin)+' -i "'+input+'"';
+      if(vf)cmd+=' -vf "'+vf+'"';
+      cmd+=' -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -c:a aac -b:a 192k "%OUTDIR%\\'+out+'"';
+      lines.push(cmd);
+      lines.push('  if errorlevel 1 (echo ERROR: '+out+' >> "%LOG%") else (echo OK: '+out+' >> "%LOG%")');
+      lines.push(')');
+    });
+    lines.push('echo Fin lote TOMAUNO %date% %time% >> "%LOG%"');
+    var blob=new Blob([lines.join('\r\n')],{type:'application/x-msdos-program'}),a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);a.download='tomauno_lote_cortes.bat';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},700);
+  }
+  function bindCutFrameDragV136(){
+    var f=el('dir_story_frame'),wrap=document.querySelector('.director-preview-wrap'); if(!f||!wrap||f._dragV136)return; f._dragV136=true;
+    function setFromEvent(ev){
+      var r=wrap.getBoundingClientRect(); if(!r.width||!r.height)return;
+      var x=((ev.clientX-r.left)-r.width/2)/r.width*100;
+      var y=((ev.clientY-r.top)-r.height/2)/r.height*100;
+      x=Math.max(-45,Math.min(45,x)); y=Math.max(-30,Math.min(30,y));
+      var sx=el('dir_cut_pan_x_v135'),sy=el('dir_cut_pan_y_v135');
+      if(sx)sx.value=String(Math.round(x)); if(sy)sy.value=String(Math.round(y));
+      state.cutPanXV136=Math.round(x); state.cutPanYV136=Math.round(y);
+      cutUpdateV126();
+    }
+    f.addEventListener('pointerdown',function(ev){if(!f.classList.contains('cut-show'))return;ev.preventDefault();f.setPointerCapture&&f.setPointerCapture(ev.pointerId);f.classList.add('cut-dragging');setFromEvent(ev);});
+    f.addEventListener('pointermove',function(ev){if(!f.classList.contains('cut-dragging'))return;ev.preventDefault();setFromEvent(ev);});
+    function up(ev){f.classList.remove('cut-dragging');try{f.releasePointerCapture&&f.releasePointerCapture(ev.pointerId);}catch(_e){}}
+    f.addEventListener('pointerup',up);f.addEventListener('pointercancel',up);
   }
   function cutOpenOriginalV126(){
     var ev=cutEventV126(),v=cutVideoV126(ev); if(!v||!v.driveId){toast('Sin Drive','Este video no tiene Drive cargado.');return;}
@@ -2357,9 +2452,9 @@ openDirectorFullscreen=function(){
     var start=parseTimeV126(p.histInicio||'00:00'), end=parseTimeV126(p.histFin||'00:15'); if(end<=start)end=start+15;
     var cur=Number(state.cutCurrentV126||state.directorBigStart||start||0)||0;
     var box=document.createElement('details'); box.className='cut-v125-card'; box.id='dir_cut_v125'; box.open=true;
-    box.innerHTML='<summary>✂️ Cortes Director</summary><div class="cut-v125-body"><div class="cut-v125-grid"><div class="field"><label>Tipo salida</label><select id="dir_cut_tipo_v125"><option value="normal">Normal 16:9</option><option value="vertical">Vertical 9:16 historia/reel</option><option value="cuadrado">Cuadrado 1:1</option></select></div><div class="field"><label>Rotación</label><select id="dir_cut_rot_v125"><option value="0">Sin rotar</option><option value="90">90° derecha</option><option value="-90">90° izquierda</option><option value="180">180°</option></select></div><div class="span2 cut-v125-time-row"><div class="field"><label>Inicio</label><input id="dir_cut_start_v125" value="'+safeEsc(fmtTimeV126(start))+'" placeholder="01:20"></div><div class="field"><label>Fin</label><input id="dir_cut_end_v125" value="'+safeEsc(fmtTimeV126(end))+'" placeholder="02:00"></div></div><div class="span2"><label>Barra para ubicar momento</label><div class="cut-v125-current"><input type="range" id="dir_cut_current_v125" min="0" max="'+safeEsc(Math.max(end+60,Number(state.cutVideoDurationV126||0)||end+60))+'" step="1" value="'+safeEsc(cur)+'"><input type="text" id="dir_cut_current_time_v126" value="'+safeEsc(fmtTimeV126(cur))+'"><button class="btn gray small" id="dir_cut_go_v125" type="button">Ir</button></div><div class="cut-v125-duration-line"><div class="cut-v125-help">La barra se limita por duración real de YouTube cuando está disponible.</div><div class="field"><label>Duración video</label><input id="dir_cut_total_v126" value="'+safeEsc(fmtTimeV126(Number(state.cutVideoDurationV126||0)||Math.max(end+60,cur+60)))+'" placeholder="45:00"></div></div></div><div class="cut-v125-pan-grid"><div class="field"><label>Mover recorte horizontal</label><input type="range" id="dir_cut_pan_x_v135" min="-45" max="45" step="1" value="'+safeEsc(String(p.histPosX||0))+'"></div><div class="field"><label>Mover recorte vertical</label><input type="range" id="dir_cut_pan_y_v135" min="-30" max="30" step="1" value="'+safeEsc(String(p.histPosY||0))+'"></div><div class="span2 cut-v125-pan-note">Usá horizontal para centrar a la bailarina cuando el corte vertical la deja muy a un costado. Esto también queda en el BAT/FFmpeg.</div></div></div><div class="cut-v125-actions"><button class="btn gray small" id="dir_cut_mark_start_v125" type="button">✂ Marcar inicio</button><button class="btn gray small" id="dir_cut_mark_end_v125" type="button">✂ Marcar fin</button><button class="btn gray small" id="dir_cut_view_start_v125" type="button">▶ Ir inicio</button><button class="btn gray small" id="dir_cut_view_end_v125" type="button">▶ Ir fin</button><button class="btn red small main-cut" id="dir_cut_create_v125" type="button">✂ Crear tarjeta</button><button class="btn gray small open-original" id="dir_cut_open_drive_v126" type="button">📁 Abrir original</button><button class="btn gray small" id="dir_cut_copy_v125" type="button">📋 FFmpeg</button><button class="btn gray small" id="dir_cut_bat_v125" type="button">⬇ BAT</button></div><div class="cut-v125-status" id="dir_cut_info_v125"></div><textarea class="cut-v125-cmd" id="dir_cut_cmd_v125" readonly></textarea></div>';
+    box.innerHTML='<summary>✂️ Cortes Director</summary><div class="cut-v125-body"><div class="cut-v125-grid"><div class="field"><label>Tipo salida</label><select id="dir_cut_tipo_v125"><option value="normal">Normal 16:9</option><option value="vertical">Vertical 9:16 historia/reel</option><option value="cuadrado">Cuadrado 1:1</option></select></div><div class="field"><label>Rotación</label><select id="dir_cut_rot_v125"><option value="0">Sin rotar</option><option value="90">90° derecha</option><option value="-90">90° izquierda</option><option value="180">180°</option></select></div><div class="span2 cut-v125-time-row"><div class="field"><label>Inicio</label><input id="dir_cut_start_v125" value="'+safeEsc(fmtTimeV126(start))+'" placeholder="01:20"></div><div class="field"><label>Fin</label><input id="dir_cut_end_v125" value="'+safeEsc(fmtTimeV126(end))+'" placeholder="02:00"></div></div><div class="span2"><label>Barra para ubicar momento</label><div class="cut-v125-current"><input type="range" id="dir_cut_current_v125" min="0" max="'+safeEsc(Math.max(end+60,Number(state.cutVideoDurationV126||0)||end+60))+'" step="1" value="'+safeEsc(cur)+'"><input type="text" id="dir_cut_current_time_v126" value="'+safeEsc(fmtTimeV126(cur))+'"><button class="btn gray small" id="dir_cut_go_v125" type="button">Ir</button></div><div class="cut-v125-duration-line"><div class="cut-v125-help">La barra se limita por duración real de YouTube cuando está disponible.</div><div class="field"><label>Duración video</label><input id="dir_cut_total_v126" value="'+safeEsc(fmtTimeV126(Number(state.cutVideoDurationV126||0)||Math.max(end+60,cur+60)))+'" placeholder="45:00"></div></div></div><div class="cut-v125-pan-grid"><div class="field"><label>Mover recorte horizontal</label><input type="range" id="dir_cut_pan_x_v135" min="-45" max="45" step="1" value="0"></div><div class="field"><label>Mover recorte vertical</label><input type="range" id="dir_cut_pan_y_v135" min="-30" max="30" step="1" value="0"></div><div class="field"><label>Zoom recorte</label><input type="range" id="dir_cut_zoom_v136" min="1" max="3" step="0.05" value="1"></div><div class="field"><label>Archivo original local</label><input id="dir_cut_file_v136" placeholder="Ej: FADA_2026_BLOQUE_01.mp4"></div><div class="span2 cut-v125-pan-note">Podés arrastrar el cuadro rojo libremente. El archivo local se usa para el BAT por lote si descargás varios originales en una misma carpeta.</div></div></div><div class="cut-v125-actions"><button class="btn gray small" id="dir_cut_mark_start_v125" type="button">✂ Marcar inicio</button><button class="btn gray small" id="dir_cut_mark_end_v125" type="button">✂ Marcar fin</button><button class="btn gray small" id="dir_cut_view_start_v125" type="button">▶ Ir inicio</button><button class="btn gray small" id="dir_cut_view_end_v125" type="button">▶ Ir fin</button><button class="btn red small main-cut" id="dir_cut_create_v125" type="button">✂ Crear tarjeta</button><button class="btn gray small open-original" id="dir_cut_open_drive_v126" type="button">📁 Abrir original</button><button class="btn gray small" id="dir_cut_copy_v125" type="button">📋 FFmpeg</button><button class="btn gray small" id="dir_cut_bat_v125" type="button">⬇ BAT actual</button><button class="btn gray small ffmpeg-btn" id="dir_cut_ffmpeg_v136" type="button">⬇ Descargar FFmpeg</button><button class="btn gray small batch-main" id="dir_cut_batch_add_v136" type="button">➕ Agregar a lote BAT</button><button class="btn gray small batch-main" id="dir_cut_batch_down_v136" type="button">📦 Descargar BAT lote</button><button class="btn gray small" id="dir_cut_batch_reset_v136" type="button">🧹 Reset lote</button><span class="cut-batch-counter" id="dir_cut_batch_count_v136">0 cortes en lote</span></div><div class="cut-v125-status" id="dir_cut_info_v125"></div><textarea class="cut-v125-cmd" id="dir_cut_cmd_v125" readonly></textarea></div>';
     anchor.parentNode.insertBefore(box, anchor);
-    ['dir_cut_tipo_v125','dir_cut_rot_v125','dir_cut_start_v125','dir_cut_end_v125','dir_cut_pan_x_v135','dir_cut_pan_y_v135'].forEach(function(id){var x=el(id); if(x){x.oninput=cutUpdateV126;x.onchange=cutUpdateV126;}});
+    ['dir_cut_tipo_v125','dir_cut_rot_v125','dir_cut_start_v125','dir_cut_end_v125','dir_cut_pan_x_v135','dir_cut_pan_y_v135','dir_cut_zoom_v136','dir_cut_file_v136'].forEach(function(id){var x=el(id); if(x){x.oninput=cutUpdateV126;x.onchange=cutUpdateV126;}});
     var r=el('dir_cut_current_v125'),t=el('dir_cut_current_time_v126'),total=el('dir_cut_total_v126');
     if(r){r.onpointerdown=function(){state.cutDraggingV126=true;};r.onpointerup=function(){state.cutDraggingV126=false;};r.oninput=function(){state.cutCurrentV126=Number(r.value)||0;if(t)t.value=fmtTimeV126(state.cutCurrentV126);cutSeekFrameV126(state.cutCurrentV126);};}
     if(t){t.onfocus=function(){state.cutTimeEditingV126=true;};t.onblur=function(){state.cutTimeEditingV126=false;};t.onchange=function(){var sec=parseTimeV126(t.value);state.cutCurrentV126=sec;if(r)r.value=sec;t.value=fmtTimeV126(sec);cutSeekFrameV126(sec);};}
@@ -2373,6 +2468,12 @@ openDirectorFullscreen=function(){
     el('dir_cut_open_drive_v126').onclick=cutOpenOriginalV126;
     el('dir_cut_copy_v125').onclick=async function(){var cmd=cutCommandV126(),ta=el('dir_cut_cmd_v125'); if(ta){ta.value=cmd;ta.classList.add('show');} try{await navigator.clipboard.writeText(cmd); toast('Corte','Comando FFmpeg copiado.');}catch(_e){toast('Corte','Comando listo en pantalla.');}};
     el('dir_cut_bat_v125').onclick=cutDownloadBatV126;
+    var ff=el('dir_cut_ffmpeg_v136'); if(ff)ff.onclick=cutDownloadFfmpegV136;
+    var ba=el('dir_cut_batch_add_v136'); if(ba)ba.onclick=cutBatchAddV136;
+    var bd=el('dir_cut_batch_down_v136'); if(bd)bd.onclick=cutBatchDownloadV136;
+    var br=el('dir_cut_batch_reset_v136'); if(br)br.onclick=cutBatchResetV136;
+    cutBatchCounterV136();
+    bindCutFrameDragV136();
     cutUpdateV126(); cutSeekFrameV126(cur);
   }
   window.installCutsV126=installCutsV126;
@@ -2386,7 +2487,7 @@ openDirectorFullscreen=function(){
     if(Number(data.info.currentTime)>=0)cutSyncCurrentV126(Number(data.info.currentTime));
   });
   setInterval(function(){var fr=el('dir_frame'); if(fr&&fr.contentWindow){try{fr.contentWindow.postMessage(JSON.stringify({event:'listening',id:'dir_frame'}),'*');fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'getCurrentTime',args:[]}),'*');fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'getDuration',args:[]}),'*');}catch(_e){}}},800);
-  console.log('TOMAUNO VIDEOS v131 Cortes Director formato unificado');
+  console.log('TOMAUNO VIDEOS v136 Cortes Director arrastrable y lote BAT');
 })();
 </script>
 </body></html>
