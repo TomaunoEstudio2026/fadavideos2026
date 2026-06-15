@@ -1272,10 +1272,33 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .cut-v137-hotkeys{font-size:11px;color:#bbb;line-height:1.35;margin-top:4px}
 .cut-v137-hotkeys b{color:#fff}
 
+
+/* v138: tracking publicado, teclas y marcador admin compacto */
+.admin-cut-marker{
+  left:84px!important;bottom:10px!important;width:30px!important;height:30px!important;padding:0!important;
+  display:grid!important;place-items:center!important;font-size:0!important;border-radius:50%!important;
+  pointer-events:none!important;background:rgba(0,0,0,.82)!important;color:#ffd04d!important;z-index:6!important;
+}
+.admin-cut-marker:before{content:'✂';font-size:15px;line-height:1;}
+.director-story-frame .cut-corner{pointer-events:auto!important;cursor:nwse-resize!important;}
+.cut-v138-help{font-size:11px;color:#aaa;line-height:1.35;margin-top:5px}
+.cut-v138-help b{color:#fff}
+/* El iframe se mueve en sentido opuesto al centro elegido del recorte. */
+.modal.video-preview .video-wrap.cut-preview-vertical .video-frame,
+.modal.video-preview .video-wrap.cut-preview-square .video-frame{
+  transform:translate(calc(-50% - var(--cut-pan-x,0%)),calc(-50% - var(--cut-pan-y,0%)))!important;
+}
+@media(max-width:720px){
+  .modal.video-preview.preview-mobile .video-wrap.cut-preview-vertical .video-frame,
+  .modal.video-preview.preview-mobile .video-wrap.cut-preview-square .video-frame{
+    transform:translate(calc(-50% - var(--cut-pan-x,0%)),calc(-50% - var(--cut-pan-y,0%)))!important;
+  }
+}
+
 </style>
 </head>
 <body>
-<div class="bggrid"></div><div class="version-mini">v137</div>
+<div class="bggrid"></div><div class="version-mini">v138</div>
 <header>
   <div class="brand" id="adminTrigger"><img id="logoImg" alt="Tomauno"><div class="wordmark"><strong>TOMA<span>UNO</span></strong><small>VIDEOS</small></div></div>
   <div class="nav"><button class="pill" id="btnEvents">Eventos</button><button class="pill" id="btnVideos">Videos</button><span class="status"><i class="dot" id="statusDot"></i><span id="statusText">Conectando</span></span></div>
@@ -1481,16 +1504,17 @@ function startPreviewWithMode(id,mode){
   let v=findVideo(id);let e=state.currentEvent;if(!v)return;
   if(state.previewTimer)clearTimeout(state.previewTimer);
   fbTrack('play_video',{eventoId:e.id,eventoTitulo:e.titulo,videoId:v.id,titulo:v.titulo});
-  let start=Number(v.previewInicio||0),dur=Number(v.previewSegundos||20),isPreview=start>0&&dur>0;
+  let start=Number(v.previewInicio||0),dur=Number(v.previewSegundos||20),corteTipoForPreview=String(v.corteTipo||v.corte&&v.corte.tipo||'').toLowerCase(),isPreview=dur>0&&(start>0||!!v.corteDe||!!corteTipoForPreview);
   let playPreset=hasDirectorVideoPreset(e,v)?directorPresetForVideo(e,v.id):directorPresetForEvent(e);
   let playFilter=directorCssFilter(playPreset);
   let playTransform=directorFrameTransform(playPreset,false);
   let playLogo='<div class="director-logo-layer-v120">'+logoHtmlV120(e,playPreset)+'</div>';
-  let playStyle=' style="--tomauno-event-filter:'+esc(playFilter)+';--director-video-transform:'+esc(playTransform)+';--director-bg-size:'+(100+Number(playPreset.zoom||0))+'% auto;--director-bg-position:'+(50+Number(playPreset.posX||0))+'% '+(50+Number(playPreset.posY||0))+'%"';
+  let cutBasePanX=Number(v.cortePanX||v.corteX||0)||0, cutBasePanY=Number(v.cortePanY||v.corteY||0)||0;
+  let playStyle=' style="--tomauno-event-filter:'+esc(playFilter)+';--director-video-transform:'+esc(playTransform)+';--director-bg-size:'+(100+Number(playPreset.zoom||0))+'% auto;--director-bg-position:'+(50+Number(playPreset.posX||0))+'% '+(50+Number(playPreset.posY||0))+'%;--cut-pan-x:'+cutBasePanX+'%;--cut-pan-y:'+cutBasePanY+'%"';
   let frameId='ytFrame_'+String(Date.now());
   let base='https://www.youtube.com/embed/'+encodeURIComponent(cleanYouTube(v.youtubeId));
   function buildSrc(){let src=base+'?autoplay=1&mute=0&playsinline=1&rel=0&modestbranding=1&controls=0&disablekb=1&fs=0&iv_load_policy=3&enablejsapi=1&origin='+encodeURIComponent(location.origin)+'&vq=hd1080&hd=1';if(start>0)src+='&start='+start;return src;}
-  let corteTipo=String(v.corteTipo||v.corte&&v.corte.tipo||'').toLowerCase();
+  let corteTipo=corteTipoForPreview;
   let cutPreviewClass=corteTipo==='vertical'?' cut-preview-vertical':((corteTipo==='cuadrado'||corteTipo==='square')?' cut-preview-square':'');
   let wrapClass=(mode==='zoom'?' zoom-wrap':(mode==='wide'?' wide-wrap':''))+cutPreviewClass;
   let frameClass=mode==='zoom'?'mode-zoom':(mode==='wide'?'mode-wide':'mode-normal');
@@ -1520,6 +1544,24 @@ function startPreviewWithMode(id,mode){
   }
   openModal('Vista previa',html,(state.previewIsTouch?'video-preview preview-mobile'+(isWideOnly?' preview-wide-only':''):'video-preview')); 
   let frame=$(frameId),shield=$('previewShield'),fade=$('previewFade');
+  let previewWrap=document.querySelector('#modal .video-wrap');
+  if(previewWrap && corteTipo){previewWrap.style.setProperty('--cut-pan-x',cutBasePanX+'%');previewWrap.style.setProperty('--cut-pan-y',cutBasePanY+'%');}
+  let cutTrackingV138=Array.isArray(v.corteTracking)?v.corteTracking.slice().filter(p=>p&&Number(p.t)>=0):[];
+  if(previewWrap && cutTrackingV138.length){
+    cutTrackingV138.sort((a,b)=>Number(a.t)-Number(b.t));
+    let trackStartClock=Date.now();
+    clearInterval(state.previewTrackingTimerV138);
+    state.previewTrackingTimerV138=setInterval(function(){
+      let elapsed=(Date.now()-trackStartClock)/1000;
+      let a=cutTrackingV138[0],b=cutTrackingV138[cutTrackingV138.length-1];
+      for(let i=0;i<cutTrackingV138.length-1;i++){let p=cutTrackingV138[i],n=cutTrackingV138[i+1];if(elapsed>=Number(p.t)&&elapsed<=Number(n.t)){a=p;b=n;break;}}
+      let at=Number(a.t)||0,bt=Number(b.t)||at,ratio=bt>at?Math.max(0,Math.min(1,(elapsed-at)/(bt-at))):0;
+      let panX=(Number(a.panX||0)+(Number(b.panX||0)-Number(a.panX||0))*ratio);
+      let panY=(Number(a.panY||0)+(Number(b.panY||0)-Number(a.panY||0))*ratio);
+      previewWrap.style.setProperty('--cut-pan-x',panX.toFixed(2)+'%');
+      previewWrap.style.setProperty('--cut-pan-y',panY.toFixed(2)+'%');
+    },120);
+  }
   function ytCommand(func){try{frame.contentWindow.postMessage('{"event":"command","func":"'+func+'","args":""}','*');}catch(err){}}
   function protect(){if(shield)shield.classList.remove('off');}
   setTimeout(()=>ytCommand('playVideo'),250);setTimeout(()=>ytCommand('playVideo'),850);setTimeout(protect,450);
@@ -1564,7 +1606,7 @@ function focusVideoByHash(hash){let p=hash.split(',');focusVideoById(p[1]||p[0])
 function focusVideoById(vid){let el=document.querySelector('[data-card-video="'+String(vid).replace(/[^a-zA-Z0-9_-]/g,'')+'"]');if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.boxShadow='0 0 0 2px rgba(255,0,0,.8),0 30px 90px rgba(0,0,0,.55)';setTimeout(()=>el.style.boxShadow='',2300);}}
 function openModal(t,h,extraClass){$('modalTitle').textContent=t;$('modalContent').innerHTML=h;let m=$('modal');m.className='modal'+(extraClass?' '+extraClass:'');m.style.display='flex';setTimeout(()=>{let pin=$('adminPin')||$('buyerName')||$('privPass');if(pin){pin.focus();pin.select&&pin.select();}},40);}
 function stopDirectorPlayback(){try{let fr=$('dir_frame');if(fr&&fr.contentWindow){fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}),'*');}if(fr&&fr.src){state.directorLastSrc=fr.src;fr.src='about:blank';}}catch(_e){}}
-function closeModal(){if(state.previewTimer){clearTimeout(state.previewTimer);state.previewTimer=null;}try{document.querySelectorAll('#modal iframe').forEach(f=>f.src='about:blank');}catch(_e){}if(state.directorPausedSrc){try{let fr=$('dir_frame');if(fr)fr.src=state.directorPausedSrc;}catch(_e){}state.directorPausedSrc='';}$('modal').style.display='none';$('modal').className='modal';$('modalContent').innerHTML='';}
+function closeModal(){if(state.previewTimer){clearTimeout(state.previewTimer);state.previewTimer=null;}if(state.previewTrackingTimerV138){clearInterval(state.previewTrackingTimerV138);state.previewTrackingTimerV138=null;}try{document.querySelectorAll('#modal iframe').forEach(f=>f.src='about:blank');}catch(_e){}if(state.directorPausedSrc){try{let fr=$('dir_frame');if(fr)fr.src=state.directorPausedSrc;}catch(_e){}state.directorPausedSrc='';}$('modal').style.display='none';$('modal').className='modal';$('modalContent').innerHTML='';}
 function familyReviewMessage(){return 'Hola Tomauno.%0A%0AQuiero solicitar la revisión de un contenido publicado.%0A%0AEvento:%0ANúmero de video o coreografía:%0AMotivo:%0A%0ANombre:%0ARelación con la persona que aparece:%0A%0AGracias.';}
 function openFamilyPrivacy(){
   let html='';
@@ -2393,7 +2435,7 @@ openDirectorFullscreen=function(){
   function cutUpdateV126(){
     var c=cutReadV126();
     var info=el('dir_cut_info_v125');
-    if(info)info.innerHTML='Inicio: <b>'+fmtTimeV126(c.start)+'</b> &nbsp; Fin: <b>'+fmtTimeV126(c.end)+'</b> &nbsp; Duración: <b>'+fmtTimeV126(c.duration)+'</b><br>Tipo: <b>'+(c.tipo==='normal'?'Normal 16:9':c.tipo==='vertical'?'Vertical 9:16':'Cuadrado 1:1')+'</b> · Rotación: <b>'+(c.rotacion==='0'?'sin rotar':c.rotacion+'°')+'</b> · Encuadre X: <b>'+c.panX+'%</b> Y: <b>'+c.panY+'%</b> · Zoom: <b>'+((Number(c.zoom||0)||0).toFixed(2))+'</b>'+(c.end<=c.start?'<br><span style="color:#ffd04d;font-weight:900">El fin debe ser mayor que el inicio.</span>':'');
+    if(info)info.innerHTML='Inicio: <b>'+fmtTimeV126(c.start)+'</b> &nbsp; Fin: <b>'+fmtTimeV126(c.end)+'</b> &nbsp; Duración: <b>'+fmtTimeV126(c.duration)+'</b><br>Tipo: <b>'+(c.tipo==='normal'?'Normal 16:9':c.tipo==='vertical'?'Vertical 9:16':'Cuadrado 1:1')+'</b> · Rotación: <b>'+(c.rotacion==='0'?'sin rotar':c.rotacion+'°')+'</b> · Encuadre X: <b>'+c.panX+'%</b> Y: <b>'+c.panY+'%</b> · Zoom: <b>+'+(Number(c.zoom||0)).toFixed(2)+'</b>'+(c.end<=c.start?'<br><span style="color:#ffd04d;font-weight:900">El fin debe ser mayor que el inicio.</span>':'');
     var ta=el('dir_cut_cmd_v125'); if(ta)ta.value=cutCommandV126();
     cutUpdateFrameV126(c);
   }
@@ -2485,7 +2527,7 @@ openDirectorFullscreen=function(){
     var st=el('dir_cut_track_status_v137'),btn=el('dir_cut_track_v137');
     var n=(state.cutTrackingPointsV137||[]).length;
     if(st)st.textContent=(state.cutTrackingActiveV137?'Grabando movimiento · ':'Movimiento guardado · ')+n+' punto'+(n===1?'':'s');
-    if(btn){btn.classList.toggle('cut-v137-tracking-on',!!state.cutTrackingActiveV137);btn.textContent=state.cutTrackingActiveV137?'■ Detener seguimiento':'● Grabar seguimiento';}
+    if(btn){btn.classList.toggle('cut-v137-tracking-on',!!state.cutTrackingActiveV137);btn.textContent=state.cutTrackingActiveV137?'■ Parar seguimiento':'● Iniciar seguimiento';}
   }
   function cutTrackPushV137(){
     if(!state.cutTrackingActiveV137)return;
@@ -2500,11 +2542,20 @@ openDirectorFullscreen=function(){
       cutTrackingStatusV137();
     }
   }
+  function cutCurrentFromUIV138(){
+    var t=el('dir_cut_current_time_v126'),r=el('dir_cut_current_v125');
+    var sec=parseTimeV126(t&&t.value); if(!sec && r)sec=Number(r.value)||0;
+    if(!sec && state.cutCurrentV126)sec=Number(state.cutCurrentV126)||0;
+    return Math.max(0,sec||0);
+  }
   function cutTrackStartV137(){
+    var cur=cutCurrentFromUIV138();
+    state.cutCurrentV126=cur;
     state.cutTrackingActiveV137=true;
-    state.cutTrackingStartV137=Number(state.cutCurrentV126||0)||0;
+    state.cutTrackingStartV137=cur;
     state.cutTrackingPointsV137=[];
-    var s=el('dir_cut_start_v125'); if(s)s.value=fmtTimeV126(state.cutTrackingStartV137);
+    var s=el('dir_cut_start_v125'); if(s)s.value=fmtTimeV126(cur);
+    var r=el('dir_cut_current_v125'),t=el('dir_cut_current_time_v126'); if(r)r.value=String(cur); if(t)t.value=fmtTimeV126(cur);
     cutPlayPauseV137('play');
     clearInterval(state.cutTrackingTimerV137);
     state.cutTrackingTimerV137=setInterval(cutTrackPushV137,250);
@@ -2521,22 +2572,45 @@ openDirectorFullscreen=function(){
   }
   function cutTrackToggleV137(){state.cutTrackingActiveV137?cutTrackStopV137(true):cutTrackStartV137();}
   function bindCutFrameDragV136(){
-    var f=el('dir_story_frame'),wrap=document.querySelector('.director-preview-wrap'); if(!f||!wrap||f._dragV136)return; f._dragV136=true;
-    function setFromEvent(ev){
-      var r=wrap.getBoundingClientRect(); if(!r.width||!r.height)return;
-      var x=((ev.clientX-r.left)/r.width*100)-50;
-      var y=((ev.clientY-r.top)/r.height*100)-50;
-      var c=cutReadV126(); c.panX=x; c.panY=y;
+    var f=el('dir_story_frame'),wrap=document.querySelector('.director-preview-wrap'); if(!f||!wrap||f._dragV138)return; f._dragV138=true;
+    var mode='',offsetX=0,offsetY=0,startZoom=0,startClientX=0,startClientY=0;
+    function clampAndApply(c){
       var g=cutFrameGeometryV137(c);
-      var sx=el('dir_cut_pan_x_v135'),sy=el('dir_cut_pan_y_v135');
-      if(sx)sx.value=String(Math.round(g.panX)); if(sy)sy.value=String(Math.round(g.panY));
-      state.cutPanXV136=Math.round(g.panX); state.cutPanYV136=Math.round(g.panY);
+      var sx=el('dir_cut_pan_x_v135'),sy=el('dir_cut_pan_y_v135'),zz=el('dir_cut_zoom_v136');
+      if(sx)sx.value=String(Math.round(g.panX));
+      if(sy)sy.value=String(Math.round(g.panY));
+      if(zz)zz.value=String(Math.max(0,Math.min(2,Number(c.zoom||0)||0)).toFixed(2));
+      state.cutPanXV136=Math.round(g.panX); state.cutPanYV136=Math.round(g.panY); state.cutZoomV136=Number((zz&&zz.value)||c.zoom||0)||0;
       cutTrackPushV137();
       cutUpdateV126();
     }
-    f.addEventListener('pointerdown',function(ev){if(!f.classList.contains('cut-show'))return;ev.preventDefault();f.setPointerCapture&&f.setPointerCapture(ev.pointerId);f.classList.add('cut-dragging');setFromEvent(ev);});
-    f.addEventListener('pointermove',function(ev){if(!f.classList.contains('cut-dragging'))return;ev.preventDefault();setFromEvent(ev);});
-    function up(ev){f.classList.remove('cut-dragging');try{f.releasePointerCapture&&f.releasePointerCapture(ev.pointerId);}catch(_e){}}
+    function centerFromEvent(ev){
+      var r=wrap.getBoundingClientRect();
+      return {x:((ev.clientX-r.left)/r.width*100)-50,y:((ev.clientY-r.top)/r.height*100)-50};
+    }
+    f.addEventListener('pointerdown',function(ev){
+      if(!f.classList.contains('cut-show'))return;
+      ev.preventDefault();ev.stopPropagation();
+      f.setPointerCapture&&f.setPointerCapture(ev.pointerId);f.classList.add('cut-dragging');
+      startClientX=ev.clientX;startClientY=ev.clientY;
+      var c=cutReadV126();startZoom=Number(c.zoom||0)||0;
+      if(ev.target&&ev.target.classList&&ev.target.classList.contains('cut-corner')){mode='resize';return;}
+      mode='move';
+      var p=centerFromEvent(ev);offsetX=p.x-(Number(c.panX||0)||0);offsetY=p.y-(Number(c.panY||0)||0);
+    });
+    f.addEventListener('pointermove',function(ev){
+      if(!f.classList.contains('cut-dragging'))return;
+      ev.preventDefault();ev.stopPropagation();
+      var c=cutReadV126();
+      if(mode==='resize'){
+        var delta=((startClientX-ev.clientX)+(startClientY-ev.clientY))/220;
+        c.zoom=Math.max(0,Math.min(2,startZoom+delta));
+      }else{
+        var p=centerFromEvent(ev);c.panX=p.x-offsetX;c.panY=p.y-offsetY;
+      }
+      clampAndApply(c);
+    });
+    function up(ev){f.classList.remove('cut-dragging');mode='';try{f.releasePointerCapture&&f.releasePointerCapture(ev.pointerId);}catch(_e){}}
     f.addEventListener('pointerup',up);f.addEventListener('pointercancel',up);
   }
   function cutOpenOriginalV126(){
@@ -2554,7 +2628,7 @@ openDirectorFullscreen=function(){
     var start=parseTimeV126(p.histInicio||'00:00'), end=parseTimeV126(p.histFin||'00:15'); if(end<=start)end=start+15;
     var cur=Number(state.cutCurrentV126||state.directorBigStart||start||0)||0;
     var box=document.createElement('details'); box.className='cut-v125-card'; box.id='dir_cut_v125'; box.open=true;
-    box.innerHTML='<summary>✂️ Cortes Director</summary><div class="cut-v125-body"><div class="cut-v125-grid"><div class="field"><label>Tipo salida</label><select id="dir_cut_tipo_v125"><option value="normal">Normal 16:9</option><option value="vertical">Vertical 9:16 historia/reel</option><option value="cuadrado">Cuadrado 1:1</option></select></div><div class="field"><label>Rotación</label><select id="dir_cut_rot_v125"><option value="0">Sin rotar</option><option value="90">90° derecha</option><option value="-90">90° izquierda</option><option value="180">180°</option></select></div><div class="span2 cut-v125-time-row"><div class="field"><label>Inicio</label><input id="dir_cut_start_v125" value="'+safeEsc(fmtTimeV126(start))+'" placeholder="01:20"></div><div class="field"><label>Fin</label><input id="dir_cut_end_v125" value="'+safeEsc(fmtTimeV126(end))+'" placeholder="02:00"></div></div><div class="span2"><label>Barra para ubicar momento</label><div class="cut-v125-current"><input type="range" id="dir_cut_current_v125" min="0" max="'+safeEsc(Math.max(end+60,Number(state.cutVideoDurationV126||0)||end+60))+'" step="1" value="'+safeEsc(cur)+'"><input type="text" id="dir_cut_current_time_v126" value="'+safeEsc(fmtTimeV126(cur))+'"><button class="btn gray small" id="dir_cut_go_v125" type="button">Ir</button></div><div class="cut-v125-duration-line"><div class="cut-v125-help">La barra se limita por duración real de YouTube cuando está disponible.</div><div class="field"><label>Duración video</label><input id="dir_cut_total_v126" value="'+safeEsc(fmtTimeV126(Number(state.cutVideoDurationV126||0)||Math.max(end+60,cur+60)))+'" placeholder="45:00"></div></div></div><div class="cut-v125-pan-grid"><div class="field"><label>Mover recorte horizontal</label><input type="range" id="dir_cut_pan_x_v135" min="-45" max="45" step="1" value="0"></div><div class="field"><label>Mover recorte vertical</label><input type="range" id="dir_cut_pan_y_v135" min="-30" max="30" step="1" value="0"></div><div class="field"><label>Zoom recorte</label><input type="range" id="dir_cut_zoom_v136" min="0" max="2" step="0.05" value="0"></div><div class="field"><label>Archivo original local</label><input id="dir_cut_file_v136" placeholder="Ej: FADA_2026_BLOQUE_01.mp4"></div><div class="span2 cut-v125-pan-note">Arrastrá el cuadro rojo. Archivo original local: nombre exacto del MP4 cuando uses BAT lote en una carpeta.</div></div></div><div class="cut-v125-actions"><button class="btn gray small" id="dir_cut_mark_start_v125" type="button">✂ Marcar inicio</button><button class="btn gray small" id="dir_cut_mark_end_v125" type="button">✂ Marcar fin</button><button class="btn gray small" id="dir_cut_view_start_v125" type="button">▶ Ir inicio</button><button class="btn gray small" id="dir_cut_view_end_v125" type="button">▶ Ir fin</button><button class="btn gray small" id="dir_cut_play_v137" type="button">▶/⏸ Play</button><button class="btn gray small" id="dir_cut_track_v137" type="button">● Grabar seguimiento</button><button class="btn red small main-cut" id="dir_cut_create_v125" type="button">✂ Crear tarjeta</button><button class="btn gray small open-original" id="dir_cut_open_drive_v126" type="button">📁 Abrir original</button><button class="btn gray small" id="dir_cut_copy_v125" type="button">📋 FFmpeg</button><button class="btn gray small" id="dir_cut_bat_v125" type="button">⬇ BAT actual</button><button class="btn gray small ffmpeg-btn" id="dir_cut_ffmpeg_v136" type="button">⬇ Descargar FFmpeg</button><button class="btn gray small batch-main" id="dir_cut_batch_add_v136" type="button">➕ Agregar a lote BAT</button><button class="btn gray small batch-main" id="dir_cut_batch_down_v136" type="button">📦 Descargar BAT lote</button><button class="btn gray small" id="dir_cut_batch_reset_v136" type="button">🧹 Reset lote</button><span class="cut-batch-counter" id="dir_cut_batch_count_v136">0 cortes en lote</span></div><div class="cut-v125-status" id="dir_cut_info_v125"></div><div class="cut-v137-hotkeys"><b>Barra espaciadora:</b> play/pausa. Si estás grabando seguimiento, también detiene la grabación y marca el Fin.</div><div class="cut-v125-status" id="dir_cut_track_status_v137">Movimiento guardado · 0 puntos</div><textarea class="cut-v125-cmd" id="dir_cut_cmd_v125" readonly></textarea></div>';
+    box.innerHTML='<summary>✂️ Cortes Director</summary><div class="cut-v125-body"><div class="cut-v125-grid"><div class="field"><label>Tipo salida</label><select id="dir_cut_tipo_v125"><option value="normal">Normal 16:9</option><option value="vertical">Vertical 9:16 historia/reel</option><option value="cuadrado">Cuadrado 1:1</option></select></div><div class="field"><label>Rotación</label><select id="dir_cut_rot_v125"><option value="0">Sin rotar</option><option value="90">90° derecha</option><option value="-90">90° izquierda</option><option value="180">180°</option></select></div><div class="span2 cut-v125-time-row"><div class="field"><label>Inicio</label><input id="dir_cut_start_v125" value="'+safeEsc(fmtTimeV126(start))+'" placeholder="01:20"></div><div class="field"><label>Fin</label><input id="dir_cut_end_v125" value="'+safeEsc(fmtTimeV126(end))+'" placeholder="02:00"></div></div><div class="span2"><label>Barra para ubicar momento</label><div class="cut-v125-current"><input type="range" id="dir_cut_current_v125" min="0" max="'+safeEsc(Math.max(end+60,Number(state.cutVideoDurationV126||0)||end+60))+'" step="1" value="'+safeEsc(cur)+'"><input type="text" id="dir_cut_current_time_v126" value="'+safeEsc(fmtTimeV126(cur))+'"><button class="btn gray small" id="dir_cut_go_v125" type="button">Ir</button></div><div class="cut-v125-duration-line"><div class="cut-v125-help">La barra se limita por duración real de YouTube cuando está disponible.</div><div class="field"><label>Duración video</label><input id="dir_cut_total_v126" value="'+safeEsc(fmtTimeV126(Number(state.cutVideoDurationV126||0)||Math.max(end+60,cur+60)))+'" placeholder="45:00"></div></div></div><div class="cut-v125-pan-grid"><div class="field"><label>Mover recorte horizontal</label><input type="range" id="dir_cut_pan_x_v135" min="-45" max="45" step="1" value="0"></div><div class="field"><label>Mover recorte vertical</label><input type="range" id="dir_cut_pan_y_v135" min="-30" max="30" step="1" value="0"></div><div class="field"><label>Zoom recorte</label><input type="range" id="dir_cut_zoom_v136" min="0" max="2" step="0.05" value="0"></div><div class="field"><label>Archivo original local</label><input id="dir_cut_file_v136" placeholder="Ej: FADA_2026_BLOQUE_01.mp4"></div><div class="span2 cut-v125-pan-note">Arrastrá el cuadro rojo. Archivo original local: nombre exacto del MP4 cuando uses BAT lote en una carpeta.</div></div></div><div class="cut-v125-actions"><button class="btn gray small" id="dir_cut_mark_start_v125" type="button">✂ Marcar inicio</button><button class="btn gray small" id="dir_cut_mark_end_v125" type="button">✂ Marcar fin</button><button class="btn gray small" id="dir_cut_view_start_v125" type="button">▶ Ir inicio</button><button class="btn gray small" id="dir_cut_view_end_v125" type="button">▶ Ir fin</button><button class="btn gray small" id="dir_cut_play_v137" type="button">▶/⏸ Play</button><button class="btn gray small" id="dir_cut_track_v137" type="button">● Iniciar seguimiento</button><button class="btn red small main-cut" id="dir_cut_create_v125" type="button">✂ Crear tarjeta</button><button class="btn gray small open-original" id="dir_cut_open_drive_v126" type="button">📁 Abrir original</button><button class="btn gray small" id="dir_cut_copy_v125" type="button">📋 FFmpeg</button><button class="btn gray small" id="dir_cut_bat_v125" type="button">⬇ BAT actual</button><button class="btn gray small ffmpeg-btn" id="dir_cut_ffmpeg_v136" type="button">⬇ Descargar FFmpeg</button><button class="btn gray small batch-main" id="dir_cut_batch_add_v136" type="button">➕ Agregar a lote BAT</button><button class="btn gray small batch-main" id="dir_cut_batch_down_v136" type="button">📦 Descargar BAT lote</button><button class="btn gray small" id="dir_cut_batch_reset_v136" type="button">🧹 Reset lote</button><span class="cut-batch-counter" id="dir_cut_batch_count_v136">0 cortes en lote</span></div><div class="cut-v125-status" id="dir_cut_info_v125"></div><div class="cut-v137-hotkeys"><b>Seguimiento:</b> Iniciar seguimiento marca Inicio y reproduce. Parar seguimiento pausa y marca Fin. Flechas ← → mueven el cuadro; ↑ ↓ hacen zoom.</div><div class="cut-v125-status" id="dir_cut_track_status_v137">Movimiento guardado · 0 puntos</div><textarea class="cut-v125-cmd" id="dir_cut_cmd_v125" readonly></textarea></div>';
     anchor.parentNode.insertBefore(box, anchor);
     ['dir_cut_tipo_v125','dir_cut_rot_v125','dir_cut_start_v125','dir_cut_end_v125','dir_cut_pan_x_v135','dir_cut_pan_y_v135','dir_cut_zoom_v136','dir_cut_file_v136'].forEach(function(id){var x=el(id); if(x){x.oninput=cutUpdateV126;x.onchange=cutUpdateV126;}});
     var r=el('dir_cut_current_v125'),t=el('dir_cut_current_time_v126'),total=el('dir_cut_total_v126');
@@ -2585,13 +2659,28 @@ openDirectorFullscreen=function(){
   var _adminDirectorCutsV126=adminDirector;
   adminDirector=function(){_adminDirectorCutsV126();setTimeout(function(){if(el('dir_frame'))installCutsV126();},0);};
   document.addEventListener('keydown',function(ev){
-    if(ev.code!=='Space')return;
     if(!el('dir_cut_v125')||!el('dir_frame'))return;
     var tag=(ev.target&&ev.target.tagName||'').toLowerCase();
     if(tag==='input'||tag==='textarea'||tag==='select')return;
-    ev.preventDefault();
-    if(state.cutTrackingActiveV137)cutTrackStopV137(true); else cutPlayPauseV137();
-  });
+    if(ev.code==='Space'){
+      ev.preventDefault();ev.stopPropagation();
+      if(state.cutTrackingActiveV137)cutTrackStopV137(true); else cutPlayPauseV137();
+      return;
+    }
+    if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].indexOf(ev.code)>-1){
+      ev.preventDefault();ev.stopPropagation();
+      var c=cutReadV126(), step=ev.shiftKey?5:1;
+      if(ev.code==='ArrowLeft')c.panX-=step;
+      if(ev.code==='ArrowRight')c.panX+=step;
+      if(ev.code==='ArrowUp')c.zoom=Math.min(2,(Number(c.zoom||0)||0)+0.05);
+      if(ev.code==='ArrowDown')c.zoom=Math.max(0,(Number(c.zoom||0)||0)-0.05);
+      var g=cutFrameGeometryV137(c);
+      var sx=el('dir_cut_pan_x_v135'),sy=el('dir_cut_pan_y_v135'),zz=el('dir_cut_zoom_v136');
+      if(sx)sx.value=String(Math.round(g.panX)); if(sy)sy.value=String(Math.round(g.panY)); if(zz)zz.value=String(Number(c.zoom||0).toFixed(2));
+      state.cutPanXV136=Math.round(g.panX);state.cutPanYV136=Math.round(g.panY);state.cutZoomV136=Number(c.zoom||0)||0;
+      cutTrackPushV137();cutUpdateV126();
+    }
+  },true);
   window.addEventListener('message',function(ev){
     var data=ev&&ev.data;
     try{ if(typeof data==='string')data=JSON.parse(data); }catch(_e){}
@@ -2600,7 +2689,7 @@ openDirectorFullscreen=function(){
     if(Number(data.info.currentTime)>=0)cutSyncCurrentV126(Number(data.info.currentTime));
   });
   setInterval(function(){var fr=el('dir_frame'); if(fr&&fr.contentWindow){try{fr.contentWindow.postMessage(JSON.stringify({event:'listening',id:'dir_frame'}),'*');fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'getCurrentTime',args:[]}),'*');fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'getDuration',args:[]}),'*');}catch(_e){}}},800);
-  console.log('TOMAUNO VIDEOS v137 Cortes Director límites, play/pausa y tracking manual');
+  console.log('TOMAUNO VIDEOS v138 Cortes Director tracking publicado y teclas');
 })();
 </script>
 </body></html>
