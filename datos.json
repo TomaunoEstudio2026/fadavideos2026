@@ -2084,7 +2084,8 @@
           "corteTipo": "vertical",
           "corteInicio": 89,
           "corteFin": 108,
-          "corteRotacion": "0"
+          "corteRotacion": "0",
+          "oculto": true
         }
       ],
       "titulo": "🌿 Selvática Fashion Show 🌿",
