@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v131 CORTES DIRECTOR FORMATO UNIFICADO - base v126 -->
+<!-- TOMAUNO VIDEOS - VERSION v134 DRIVE LIMPIO + MINIATURAS CORTES - base v131 -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1185,10 +1185,32 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
   .modal.video-preview.preview-mobile .video-wrap.cut-preview-square .video-frame{position:absolute!important;left:50%!important;top:50%!important;height:100%!important;width:177.78%!important;min-width:177.78%!important;min-height:100%!important;max-width:none!important;max-height:none!important;transform:translate(-50%,-50%)!important;aspect-ratio:16/9!important;}
 }
 
+
+/* v134: miniaturas de cortes sin barras negras visibles.
+   La fuente sigue siendo thumbnail 16:9 de YouTube/Drive; en cortes verticales/cuadrados hacemos zoom visual para llenar el contenedor. */
+.video-card.cut-card-vertical .thumb{
+  aspect-ratio:9/16!important;
+  background-size:auto 135%!important;
+  background-position:var(--director-card-bg-position,center center)!important;
+  background-repeat:no-repeat!important;
+}
+.video-card.cut-card-square .thumb{
+  aspect-ratio:1/1!important;
+  background-size:auto 118%!important;
+  background-position:var(--director-card-bg-position,center center)!important;
+  background-repeat:no-repeat!important;
+}
+.video-card.cut-card-normal .thumb{
+  aspect-ratio:16/9!important;
+  background-size:cover!important;
+}
+/* Botón único del Director para llegar al archivo original en Drive. */
+.cut-v125-actions .open-original{border-color:rgba(255,208,77,.42)!important;color:#ffd04d!important;}
+
 </style>
 </head>
 <body>
-<div class="bggrid"></div><div class="version-mini">v131</div>
+<div class="bggrid"></div><div class="version-mini">v134</div>
 <header>
   <div class="brand" id="adminTrigger"><img id="logoImg" alt="Tomauno"><div class="wordmark"><strong>TOMA<span>UNO</span></strong><small>VIDEOS</small></div></div>
   <div class="nav"><button class="pill" id="btnEvents">Eventos</button><button class="pill" id="btnVideos">Videos</button><span class="status"><i class="dot" id="statusDot"></i><span id="statusText">Conectando</span></span></div>
@@ -1471,7 +1493,7 @@ function iniciarDescarga(driveId){
   },4000);
 }
 function triggerDriveDownload(driveId){iniciarDescarga(driveId);}
-function downloadVideo(id){let e=state.currentEvent;let v=findVideo(id);if(!v)return;if(!v.driveId){toast('Descarga pendiente','Todavía no está cargado el archivo final.');return;}openModal('Acceso privado','<p>Ingresá el código que recibiste después del pago.</p><div class="field"><input id="downCode" placeholder="Ej: MARTA24"></div><div class="modal-actions" style="padding-top:14px"><button class="btn red" id="downOk">Descargar</button></div>');$('downCode').addEventListener('keydown',ev=>{if(ev.key==='Enter')$('downOk').click();});$('downCode').focus();$('downOk').onclick=async()=>{let ok=await validateCodeForVideo($('downCode').value,e,v);if(!ok){toast('Código incorrecto','Revisá el código recibido por WhatsApp.');return;}await fbTrack('descarga_video',{eventoId:e.id,eventoTitulo:e.titulo,videoId:v.id,titulo:v.titulo});openModal('Iniciando descarga','<p>La descarga puede demorar unos minutos si el archivo es muy grande.</p><p class="muted">Si no comienza automáticamente, se abrirá Drive en una pestaña nueva para descargar desde allí.</p><div class="modal-actions"><button class="btn red" id="retryDown">Intentar nuevamente</button></div>');$('retryDown').onclick=()=>iniciarDescarga(v.driveId);setTimeout(()=>iniciarDescarga(v.driveId),300);};}
+function downloadVideo(id){let e=state.currentEvent;let v=findVideo(id);if(!v)return;if(!v.driveId){toast('Descarga pendiente','Todavía no está cargado el archivo final.');return;}openModal('Acceso privado','<p>Ingresá el código que recibiste después del pago.</p><div class="field"><input id="downCode" placeholder="Ej: MARTA24"></div><div class="modal-actions" style="padding-top:14px"><button class="btn red" id="downOk">Descargar</button></div>');$('downCode').addEventListener('keydown',ev=>{if(ev.key==='Enter')$('downOk').click();});$('downCode').focus();$('downOk').onclick=async()=>{let ok=await validateCodeForVideo($('downCode').value,e,v);if(!ok){toast('Código incorrecto','Revisá el código recibido por WhatsApp.');return;}await fbTrack('descarga_video',{eventoId:e.id,eventoTitulo:e.titulo,videoId:v.id,titulo:v.titulo});let direct=driveDownloadUrl(v.driveId);let view=driveViewUrl(v.driveId);openModal('Descarga del video','<p>Vamos a intentar iniciar la descarga directa desde Google Drive.</p><p class="muted">En archivos grandes Drive puede mostrar una pantalla intermedia de confirmación. Si pasa eso, usá el botón de Drive en la pestaña que se abre.</p><div class="modal-actions"><button class="btn red" id="directDown">Descargar ahora</button><button class="btn gray" id="openDriveDown">Abrir Drive</button></div>');$('directDown').onclick=()=>{window.open(direct,'_blank');};$('openDriveDown').onclick=()=>{window.open(view,'_blank');};setTimeout(()=>{try{window.open(direct,'_blank');}catch(_e){}},250);};}
 function eventUrl(ev){return location.origin+location.pathname+'?evento='+encodeURIComponent(ev.numero||ev.id);}function videoUrl(ev,id){return location.origin+location.pathname+'?evento='+encodeURIComponent(ev.numero||ev.id)+'&video='+encodeURIComponent(id);}function shareVideo(id){let ev=state.currentEvent;if(!ev)return;let url=videoUrl(ev,id);let text='Mirá este video de '+(ev.titulo||'Tomauno')+': '+url;if(navigator.share){navigator.share({title:'Tomauno Videos',text:text,url:url}).catch(()=>{});}else if(navigator.clipboard){navigator.clipboard.writeText(url);toast('Link copiado','Ya podés pegarlo y compartirlo por WhatsApp.');}else openModal('Compartir video','<p>Copiá este link:</p><div class="field"><input value="'+esc(url)+'" readonly></div>');}
 function focusVideoByHash(hash){let p=hash.split(',');focusVideoById(p[1]||p[0]);}
 function focusVideoById(vid){let el=document.querySelector('[data-card-video="'+String(vid).replace(/[^a-zA-Z0-9_-]/g,'')+'"]');if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.boxShadow='0 0 0 2px rgba(255,0,0,.8),0 30px 90px rgba(0,0,0,.55)';setTimeout(()=>el.style.boxShadow='',2300);}}
