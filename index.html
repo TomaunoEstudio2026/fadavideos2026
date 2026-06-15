@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v148 BASE REAL v139 + MEJORAS DIRECTOR SEGURAS -->
+<!-- TOMAUNO VIDEOS - VERSION v149 DIRECTOR ZOOM/ETIQUETA LIMPIO - base real v139 -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1315,6 +1315,34 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .cut-cover-ok{border-color:rgba(0,212,106,.5)!important;color:#92ffbf!important}
 .cut-cover-note{font-size:11px;color:#aaa;line-height:1.35}
 
+
+/* v149: limpieza puntual Director/Cortes sin tocar PLAY de grilla */
+/* Evita doble etiqueta roja: queda una sola etiqueta externa, corta y no tapa la bailarina. */
+.director-story-frame.cut-show:before{display:none!important;content:none!important;}
+.director-story-frame.cut-show:after{
+  content:attr(data-label)!important;
+  position:absolute!important;
+  left:calc(100% + 8px)!important;
+  top:0!important;
+  background:rgba(224,0,0,.88)!important;
+  border-radius:999px!important;
+  padding:4px 7px!important;
+  font-size:9px!important;
+  font-weight:900!important;
+  color:#fff!important;
+  white-space:nowrap!important;
+  box-shadow:0 6px 18px rgba(0,0,0,.45)!important;
+}
+/* El recuadro de corte trabaja con variables reales; zoom extra 0 = sin acercamiento extra. */
+.director-story-frame.cut-normal,.director-story-frame.cut-vertical,.director-story-frame.cut-square{
+  left:var(--cut-left,3%)!important;
+  top:var(--cut-top,3%)!important;
+  width:var(--cut-width,94%)!important;
+  height:var(--cut-height,94%)!important;
+  transform:none!important;
+}
+#dir_cut_zoom_v136{accent-color:#e00000;}
+
 </style>
 </head>
 <body>
@@ -2342,6 +2370,7 @@ openDirectorFullscreen=function(){
     var zoom=zEl?Number(zEl.value||0):(Number(state.cutZoomV136||0)||0);
     panX=Number.isFinite(panX)?panX:0; panY=Number.isFinite(panY)?panY:0;
     zoom=Math.max(0,Math.min(2,Number.isFinite(zoom)?zoom:0));
+    if(zoom<0.001)zoom=0;
     return {start:start,end:end,duration:Math.max(0,end-start),tipo:(el('dir_cut_tipo_v125')&&el('dir_cut_tipo_v125').value)||'normal',rotacion:(el('dir_cut_rot_v125')&&el('dir_cut_rot_v125').value)||'0',panX:panX,panY:panY,zoom:zoom,archivoOriginal:(el('dir_cut_file_v136')&&el('dir_cut_file_v136').value.trim())||''};
   }
   function cutSetDurationV126(sec){
@@ -2359,7 +2388,7 @@ openDirectorFullscreen=function(){
     if(t && !state.cutTimeEditingV126) t.value=fmtTimeV126(sec);
   }
   function cutLabelV126(c){return c.tipo==='vertical'?'9:16':(c.tipo==='cuadrado'?'1:1':'16:9');}
-  function cutZoomScaleV139(z){return Math.max(1,Math.min(3,1+(Number(z||0)||0)));}
+  function cutZoomScaleV139(z){z=Number(z||0); if(!Number.isFinite(z)||z<0.001)z=0; return Math.max(1,Math.min(3,1+z));}
   function cutClampPanForPreviewV139(tipo,panX,panY,zoom){
     tipo=String(tipo||'normal');
     var scale=cutZoomScaleV139(zoom);
@@ -2471,7 +2500,7 @@ openDirectorFullscreen=function(){
   function cutUpdateV126(){
     var c=cutReadV126();
     var info=el('dir_cut_info_v125');
-    if(info)info.innerHTML='Inicio: <b>'+fmtTimeV126(c.start)+'</b> &nbsp; Fin: <b>'+fmtTimeV126(c.end)+'</b> &nbsp; Duración: <b>'+fmtTimeV126(c.duration)+'</b><br>Tipo: <b>'+(c.tipo==='normal'?'Normal 16:9':c.tipo==='vertical'?'Vertical 9:16':'Cuadrado 1:1')+'</b> · Rotación: <b>'+(c.rotacion==='0'?'sin rotar':c.rotacion+'°')+'</b> · Encuadre X: <b>'+Math.round(c.panX)+'%</b> Y: <b>'+Math.round(c.panY)+'%</b> · Zoom extra: <b>+'+(Number(c.zoom||0)).toFixed(2)+'</b>'+(state.cutCoverV139?'<br><span class="cut-cover-note">📸 Portada marcada en '+fmtTimeV126(state.cutCoverV139.tiempo||0)+'</span>':'')+(c.end<=c.start?'<br><span style="color:#ffd04d;font-weight:900">El fin debe ser mayor que el inicio.</span>':'');
+    if(info)info.innerHTML='Inicio: <b>'+fmtTimeV126(c.start)+'</b> &nbsp; Fin: <b>'+fmtTimeV126(c.end)+'</b> &nbsp; Duración: <b>'+fmtTimeV126(c.duration)+'</b><br>Tipo: <b>'+(c.tipo==='normal'?'Normal 16:9':c.tipo==='vertical'?'Vertical 9:16':'Cuadrado 1:1')+'</b> · Rotación: <b>'+(c.rotacion==='0'?'sin rotar':c.rotacion+'°')+'</b> · Encuadre X: <b>'+Math.round(c.panX)+'%</b> Y: <b>'+Math.round(c.panY)+'%</b> · Zoom extra: <b>'+(Number(c.zoom||0)).toFixed(2)+'</b>'+(state.cutCoverV139?'<br><span class="cut-cover-note">📸 Portada marcada en '+fmtTimeV126(state.cutCoverV139.tiempo||0)+'</span>':'')+(c.end<=c.start?'<br><span style="color:#ffd04d;font-weight:900">El fin debe ser mayor que el inicio.</span>':'');
     var ta=el('dir_cut_cmd_v125'); if(ta)ta.value=cutCommandV126();
     cutUpdateFrameV126(c);
   }
@@ -2766,7 +2795,7 @@ openDirectorFullscreen=function(){
     if(Number(data.info.currentTime)>=0){cutSyncCurrentV126(Number(data.info.currentTime));cutApplySavedTrackingV148();}
   });
   setInterval(function(){var fr=el('dir_frame'); if(fr&&fr.contentWindow){try{fr.contentWindow.postMessage(JSON.stringify({event:'listening',id:'dir_frame'}),'*');fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'getCurrentTime',args:[]}),'*');fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'getDuration',args:[]}),'*');}catch(_e){}}},800);
-  console.log('TOMAUNO VIDEOS v148 desde base real v139; play base intacto + mejoras Director seguras');
+  console.log('TOMAUNO VIDEOS v149 desde base real v139; PLAY intacto; Director zoom/etiqueta limpio');
 })();
 </script>
 </body></html>
