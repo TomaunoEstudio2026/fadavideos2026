@@ -2979,5 +2979,78 @@ openDirectorFullscreen=function(){
   });
 })();
 
+
+
+/* v145: PLAY de grilla blindado y recuperación de YouTube para cortes */
+(function(){
+  function findEventAndVideoV145(id){
+    id=String(id||'');
+    var evs=(window.state&&state.data&&state.data.eventos)||[];
+    var current=window.state&&state.currentEvent;
+    if(current){
+      var vv=(current.videos||[]).find(function(x){return String(x.id)===id;});
+      if(vv)return {ev:current,v:vv};
+    }
+    for(var i=0;i<evs.length;i++){
+      var v=(evs[i].videos||[]).find(function(x){return String(x.id)===id;});
+      if(v)return {ev:evs[i],v:v};
+    }
+    return {ev:null,v:null};
+  }
+  function ytFromAnyV145(v,ev){
+    if(!v)return '';
+    var raw=v.youtubeId||v.youtubeUrl||v.youtubeURL||v.youtube||v.yt||v.urlYoutube||v.linkYoutube||v.previewYoutube||v.youtube_id||v.ytid||'';
+    var id='';
+    try{id=cleanYouTube(raw);}catch(_e){id=String(raw||'').trim();}
+    if(id)return id;
+    var baseId=v.corteDe||v.videoOriginalId||v.origenVideoId||v.originalVideoId||'';
+    if(baseId&&ev){
+      var base=(ev.videos||[]).find(function(x){return String(x.id)===String(baseId);});
+      if(base){
+        raw=base.youtubeId||base.youtubeUrl||base.youtubeURL||base.youtube||base.yt||base.urlYoutube||base.linkYoutube||base.previewYoutube||'';
+        try{id=cleanYouTube(raw);}catch(_e){id=String(raw||'').trim();}
+        if(id){
+          try{v.youtubeId=id;}catch(_e){}
+          return id;
+        }
+      }
+    }
+    return '';
+  }
+  var oldPlay=window.playVideo;
+  window.playVideo=function(id){
+    var found=findEventAndVideoV145(id);
+    if(found.ev && window.state && state.currentEvent!==found.ev)state.currentEvent=found.ev;
+    if(found.v){
+      var yt=ytFromAnyV145(found.v,found.ev);
+      if(yt && !found.v.youtubeId)found.v.youtubeId=yt;
+    }
+    if(typeof oldPlay==='function')return oldPlay(id);
+  };
+  function forcePlayV145(ev){
+    var t=ev&&ev.target;
+    if(!t||!t.closest)return;
+    if(t.closest('button,a,input,select,textarea'))return;
+    var th=t.closest('.thumb[data-play]');
+    if(!th)return;
+    var id=th.getAttribute('data-play')||'';
+    if(!id)return;
+    ev.preventDefault&&ev.preventDefault();
+    ev.stopImmediatePropagation&&ev.stopImmediatePropagation();
+    ev.stopPropagation&&ev.stopPropagation();
+    try{window.playVideo(id);}catch(err){
+      console.error('PLAY v145',err);
+      try{toast('No se pudo reproducir','El video tiene datos incompletos de YouTube.');}catch(_e){}
+    }
+    return false;
+  }
+  document.addEventListener('pointerdown',function(ev){
+    if(ev.pointerType==='mouse' && ev.button!==0)return;
+    forcePlayV145(ev);
+  },true);
+  document.addEventListener('click',forcePlayV145,true);
+  console.log('TOMAUNO v145: PLAY blindado instalado');
+})();
+
 </script>
 </body></html>
