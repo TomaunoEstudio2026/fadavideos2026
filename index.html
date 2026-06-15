@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- TOMAUNO VIDEOS - VERSION v141 CLICK GRILLA + DIRECTOR CORTES RECUPERA AJUSTES - base v140 -->
+<!-- TOMAUNO VIDEOS - VERSION v139 ZOOM LIMPIO + TRACKING SUAVE + PORTADA FRAME - base v138 -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -1302,62 +1302,23 @@ body:before{opacity:.46!important;filter:blur(52px)!important;background:radial-
 .modal.video-preview .video-wrap.cut-preview-square .video-frame{
   transform:translate(calc(-50% + var(--cut-pan-x,0%)),calc(-50% + var(--cut-pan-y,0%))) scale(var(--cut-scale,1))!important;
   transform-origin:center center!important;
-  transition:transform .06s linear!important;
+  transition:transform .18s linear!important;
 }
 @media(max-width:720px){
   .modal.video-preview.preview-mobile .video-wrap.cut-preview-vertical .video-frame,
   .modal.video-preview.preview-mobile .video-wrap.cut-preview-square .video-frame{
     transform:translate(calc(-50% + var(--cut-pan-x,0%)),calc(-50% + var(--cut-pan-y,0%))) scale(var(--cut-scale,1))!important;
     transform-origin:center center!important;
-    transition:transform .06s linear!important;
+    transition:transform .18s linear!important;
   }
 }
 .cut-cover-ok{border-color:rgba(0,212,106,.5)!important;color:#92ffbf!important}
 .cut-cover-note{font-size:11px;color:#aaa;line-height:1.35}
 
-
-/* v141: grilla clickeable y Director abre cortes conservando datos */
-.video-card{cursor:pointer!important;}
-.video-card button,.video-card a,.video-card input,.video-card select,.video-card textarea{cursor:pointer!important;}
-.video-card .thumb{pointer-events:auto!important;}
-.video-card .body{pointer-events:auto!important;}
-.video-card .admin-cut-marker{pointer-events:none!important;}
-.video-card .cut-frame-ref{position:absolute;left:9px;top:9px;z-index:7;border:1px solid rgba(255,208,77,.45);background:rgba(0,0,0,.72);color:#ffe08a;border-radius:999px;padding:5px 8px;font-size:9px;font-weight:950;letter-spacing:.3px;pointer-events:none;}
-
-
-/* v142: play grilla robusto + etiqueta de recorte chica fuera del cuadro */
-.director-story-frame.cut-show:after{
-  content:attr(data-label)!important;
-  position:absolute!important;
-  left:auto!important;
-  right:-44px!important;
-  top:-4px!important;
-  background:rgba(224,0,0,.86)!important;
-  border:1px solid rgba(255,255,255,.22)!important;
-  border-radius:999px!important;
-  padding:3px 6px!important;
-  font-size:9px!important;
-  line-height:1!important;
-  font-weight:950!important;
-  color:#fff!important;
-  white-space:nowrap!important;
-  pointer-events:none!important;
-}
-.video-card .thumb{cursor:pointer!important;}
-.video-card .thumb:before{pointer-events:none!important;}
-
-
-/* v143: play fix + director cut UI cleanup */
-.cut-frame-label-v143{position:absolute;z-index:9;left:calc(100% + 8px);top:0;background:rgba(224,0,0,.9);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:3px 7px;font-size:10px;font-weight:900;color:#fff;white-space:nowrap;pointer-events:none;}
-.cut-v125-box-label,.cut-red-label,.cut-frame-label{font-size:10px!important;padding:3px 7px!important;line-height:1!important;}
-#dir_cut_file_v136[type="hidden"]{display:none!important;}
-.video-card .thumb,.video-card .thumb *{pointer-events:auto;}
-.video-card .thumb:before{pointer-events:none!important;}
-
 </style>
 </head>
 <body>
-<div class="bggrid"></div><div class="version-mini">v142</div>
+<div class="bggrid"></div><div class="version-mini">v138</div>
 <header>
   <div class="brand" id="adminTrigger"><img id="logoImg" alt="Tomauno"><div class="wordmark"><strong>TOMA<span>UNO</span></strong><small>VIDEOS</small></div></div>
   <div class="nav"><button class="pill" id="btnEvents">Eventos</button><button class="pill" id="btnVideos">Videos</button><span class="status"><i class="dot" id="statusDot"></i><span id="statusText">Conectando</span></span></div>
@@ -1499,59 +1460,10 @@ function checkVideoDuplicateWarning(){
 }
 
 function renderVideos(){let e=state.currentEvent;if(!e){renderEvents();return;}state.directorEventId=e.id;try{applyDirectorPresetToView();}catch(_e){}let q=state.query.toLowerCase();let visibleEvents=state.data.eventos.filter(x=>x.visibilidad!=='oculto');let isAdm=sessionStorage.getItem(SS_ADMIN)==='1';let vids=(e.videos||[]).filter(v=>isAdm||!v.oculto).filter(v=>!q||[v.titulo,v.subtitulo,v.bailarina,v.categoria,v.escuela,v.localidad].join(' ').toLowerCase().indexOf(q)>-1);if(isAdm){let vf=state.videoSaleFilter||'todos';if(vf!=='todos')vids=vids.filter(v=>{let sold=videoHasOrder(e.id,v.id);return vf==='vendidos'?sold:!sold;});}let h='<div class="section-head"><div><h2>'+esc(e.titulo)+'</h2><div class="muted">'+esc(e.subtitulo||'')+'</div></div><button class="btn gray" id="backEvents">Ver eventos</button></div>'+eventIntroHtml(e)+'<div class="toolbar"><input class="search" id="searchBox" placeholder="Buscar por título, participante, categoría o escuela..." value="'+esc(state.query)+'"><span class="view-count">'+vids.length+' visibles</span></div>';if(isAdm){let vf=state.videoSaleFilter||'todos';h+='<div class="video-sale-filters"><button class="btn '+(vf==='todos'?'active':'')+'" data-vfilter="todos">Todos</button><button class="btn '+(vf==='vendidos'?'active':'')+'" data-vfilter="vendidos">Comprados</button><button class="btn '+(vf==='sincomprar'?'active':'')+'" data-vfilter="sincomprar">Sin comprar</button></div>';}h+='<div class="event-pills">';visibleEvents.forEach(x=>{let count=(x.videos||[]).filter(v=>isAdm||!v.oculto).length;h+='<button class="pill '+(x.id===e.id?'active':'')+'" data-open-event="'+esc(x.id)+'">#'+esc(x.numero)+' '+esc(x.titulo)+' <small>· '+count+' videos</small></button>';});h+='<button class="pill family-pill" id="familyPrivacyBtnInline" type="button">👨‍👩‍👧 Familias</button>';h+='</div><div style="height:20px"></div>';if(!vids.length)h+='<div class="empty">No hay videos para este filtro.</div>';else{h+='<div class="video-grid">';vids.forEach(v=>h+=videoCard(e,v));h+='</div>';}$('app').innerHTML=h;$('backEvents').onclick=renderEvents;let sb=$('searchBox');let searchTimer=null;sb.oninput=function(){let val=this.value;clearTimeout(searchTimer);searchTimer=setTimeout(()=>{state.query=val;renderVideos();setTimeout(()=>{let n=$('searchBox');if(n){n.focus();n.setSelectionRange(n.value.length,n.value.length);}},0);},450);};document.querySelectorAll('[data-vfilter]').forEach(b=>b.onclick=()=>{state.videoSaleFilter=b.getAttribute('data-vfilter')||'todos';renderVideos();});bindEventButtons();bindVideoButtons();let fpi=$('familyPrivacyBtnInline');if(fpi)fpi.onclick=openFamilyPrivacy;renderCart();}
-function videoYouTubeValue(v){
-  if(!v)return '';
-  return v.youtubeId||v.youtubeUrl||v.youtubeURL||v.youtube||v.yt||v.urlYoutube||v.linkYoutube||v.previewYoutube||'';
-}
-function videoYouTubeId(v){return cleanYouTube(videoYouTubeValue(v));}
 function ytThumb(id){id=cleanYouTube(id);return id?'https://img.youtube.com/vi/'+encodeURIComponent(id)+'/maxresdefault.jpg':'';}
-function videoCard(e,v){let thumb=v.imagen||ytThumb(videoYouTubeId(v));let corteTipo=String(v.corteTipo||v.corte&&v.corte.tipo||'').toLowerCase();let cutClass=corteTipo==='vertical'?'cut-card-vertical':(corteTipo==='cuadrado'||corteTipo==='square'?'cut-card-square':'');let bg=thumb?' style="background-image:url('+esc(thumb)+')"':'';let sub=v.subtitulo||v.bailarina||'';let preview=v.previewInicio?('Vista previa '+formatTime(v.previewInicio)+' / '+(v.previewSegundos||20)+'s'):'Completo libre';let cartKey=e.id+'|'+v.id;let inCart=!!state.cart[cartKey];let isAdm=sessionStorage.getItem(SS_ADMIN)==='1';let sold=isAdm&&videoHasOrder(e.id,v.id);let cardFilter=directorCardFilter(e,v);let cardBgSize=directorCardBgSize(e,v);let cardBgPos=directorCardBgPosition(e,v);let coverCrop=v.portadaCrop||null;let cutPanX=Number((coverCrop&&coverCrop.panX)!=null?coverCrop.panX:(v.cortePanX||v.corteX||0))||0, cutPanY=Number((coverCrop&&coverCrop.panY)!=null?coverCrop.panY:(v.cortePanY||v.corteY||0))||0;let cutThumbPos=(50+cutPanX)+'% '+(50+cutPanY)+'%';let cssVars='--cut-pan-x:'+cutPanX+'%;--cut-pan-y:'+cutPanY+'%;--cut-thumb-position:'+cutThumbPos+';';if(cardFilter){cssVars+='--director-card-filter:'+cardFilter+';--director-card-bg-size:'+cardBgSize+';--director-card-bg-position:'+cardBgPos+';'}let cardStyle=' style="'+esc(cssVars)+'"';let hasInd=hasDirectorVideoPreset(e,v);let corteChip=corteTipo?'<span class="chip cut-format-chip">Corte '+(corteTipo==='vertical'?'9:16':(corteTipo==='cuadrado'||corteTipo==='square'?'1:1':'16:9'))+'</span>':'';let h='<article class="card video-card '+esc(cutClass)+' '+(inCart?'selected ':'')+(v.oculto?'hidden-video ':'')+(sold?'sold-video ':'unsold-admin ')+'" data-card-video="'+esc(v.id)+'" data-has-individual="'+(isAdm&&hasInd?'1':'0')+'"'+cardStyle+'>';if(isAdm){h+='<button class="admin-edit-mini" title="Editar video" data-adminedit="'+esc(v.id)+'">✎</button>';h+='<button class="director-video-adjust-mini" title="Ajustar en Director" data-directorvideo="'+esc(v.id)+'">🎛</button>';h+='<button class="admin-delete-mini" title="Eliminar video" data-admincarddel="'+esc(v.id)+'">🗑</button>';if(corteTipo)h+='<span class="admin-cut-marker" title="Video creado desde Director">✂ EDITADO</span>';}h+='<div class="thumb" data-play="'+esc(v.id)+'"'+bg+'>'+(v.portadaFrame!=null?'<span class="cut-frame-ref" title="Frame de portada guardado como referencia para FFmpeg">📸 '+esc(formatTime(Number(v.portadaFrame)||0))+'</span>':'')+'<span class="badge">'+esc(preview)+'</span></div><div class="body"><h3>'+esc(v.titulo)+'</h3><p>'+esc(sub||'Video Tomauno')+'</p><div class="meta"><span class="chip">'+(v.driveId?'🔐 Descarga':'🎬 Preview')+'</span>'+corteChip+'<span class="chip">Ref: '+esc((e.numero||1)+','+v.id)+'</span>'+(sold?'<span class="chip">✅ Comprado</span>':'')+(v.oculto?'<span class="chip">Oculto</span>':'')+'</div>'+reactionHtml(e,v)+'<div class="price">'+money(v.precio)+'</div><div class="actions">';if(v.driveId)h+='<button class="btn code-btn" data-download="'+esc(v.id)+'">Descargar</button>';else h+='<button class="btn code-btn" disabled>Sin descarga</button>';h+='<button class="btn red buy-main" data-buy="'+esc(v.id)+'">Comprar</button><button class="btn select-dot '+(inCart?'selected-cart':'')+'" title="Agregar al pedido" data-cart="'+esc(v.id)+'">'+(inCart?'🛒✓':'🛒')+'</button><button class="btn share-action" title="Compartir video" data-share="'+esc(v.id)+'">🔗</button></div></div></article>';return h;}
+function videoCard(e,v){let thumb=v.imagen||ytThumb(v.youtubeId);let corteTipo=String(v.corteTipo||v.corte&&v.corte.tipo||'').toLowerCase();let cutClass=corteTipo==='vertical'?'cut-card-vertical':(corteTipo==='cuadrado'||corteTipo==='square'?'cut-card-square':'');let bg=thumb?' style="background-image:url('+esc(thumb)+')"':'';let sub=v.subtitulo||v.bailarina||'';let preview=v.previewInicio?('Vista previa '+formatTime(v.previewInicio)+' / '+(v.previewSegundos||20)+'s'):'Completo libre';let cartKey=e.id+'|'+v.id;let inCart=!!state.cart[cartKey];let isAdm=sessionStorage.getItem(SS_ADMIN)==='1';let sold=isAdm&&videoHasOrder(e.id,v.id);let cardFilter=directorCardFilter(e,v);let cardBgSize=directorCardBgSize(e,v);let cardBgPos=directorCardBgPosition(e,v);let cutPanX=Number(v.cortePanX||v.corteX||0)||0, cutPanY=Number(v.cortePanY||v.corteY||0)||0;let cutThumbPos=(50+cutPanX)+'% '+(50+cutPanY)+'%';let cssVars='--cut-pan-x:'+cutPanX+'%;--cut-pan-y:'+cutPanY+'%;--cut-thumb-position:'+cutThumbPos+';';if(cardFilter){cssVars+='--director-card-filter:'+cardFilter+';--director-card-bg-size:'+cardBgSize+';--director-card-bg-position:'+cardBgPos+';'}let cardStyle=' style="'+esc(cssVars)+'"';let hasInd=hasDirectorVideoPreset(e,v);let corteChip=corteTipo?'<span class="chip cut-format-chip">Corte '+(corteTipo==='vertical'?'9:16':(corteTipo==='cuadrado'||corteTipo==='square'?'1:1':'16:9'))+'</span>':'';let h='<article class="card video-card '+esc(cutClass)+' '+(inCart?'selected ':'')+(v.oculto?'hidden-video ':'')+(sold?'sold-video ':'unsold-admin ')+'" data-card-video="'+esc(v.id)+'" data-has-individual="'+(isAdm&&hasInd?'1':'0')+'"'+cardStyle+'>';if(isAdm){h+='<button class="admin-edit-mini" title="Editar video" data-adminedit="'+esc(v.id)+'">✎</button>';h+='<button class="director-video-adjust-mini" title="Ajustar en Director" data-directorvideo="'+esc(v.id)+'">🎛</button>';h+='<button class="admin-delete-mini" title="Eliminar video" data-admincarddel="'+esc(v.id)+'">🗑</button>';if(corteTipo)h+='<span class="admin-cut-marker" title="Video creado desde Director">✂ EDITADO</span>';}h+='<div class="thumb" data-play="'+esc(v.id)+'"'+bg+'><span class="badge">'+esc(preview)+'</span></div><div class="body"><h3>'+esc(v.titulo)+'</h3><p>'+esc(sub||'Video Tomauno')+'</p><div class="meta"><span class="chip">'+(v.driveId?'🔐 Descarga':'🎬 Preview')+'</span>'+corteChip+'<span class="chip">Ref: '+esc((e.numero||1)+','+v.id)+'</span>'+(sold?'<span class="chip">✅ Comprado</span>':'')+(v.oculto?'<span class="chip">Oculto</span>':'')+'</div>'+reactionHtml(e,v)+'<div class="price">'+money(v.precio)+'</div><div class="actions">';if(v.driveId)h+='<button class="btn code-btn" data-download="'+esc(v.id)+'">Descargar</button>';else h+='<button class="btn code-btn" disabled>Sin descarga</button>';h+='<button class="btn red buy-main" data-buy="'+esc(v.id)+'">Comprar</button><button class="btn select-dot '+(inCart?'selected-cart':'')+'" title="Agregar al pedido" data-cart="'+esc(v.id)+'">'+(inCart?'🛒✓':'🛒')+'</button><button class="btn share-action" title="Compartir video" data-share="'+esc(v.id)+'">🔗</button></div></div></article>';return h;}
 function reactionHtml(e,v){let k=reactionKey(e.id,v.id);let c=reactionCounts(e.id,v.id);let opts=[['❤️','me encanta'],['👏','aplausos'],['🔥','tremendo']];let h='<div class="reaction-row">';opts.forEach(o=>{let em=o[0],lbl=o[1],n=Number(c[em]||0);let done=localStorage.getItem(reactionStorageKey(k,em))==='1';h+='<button class="react-btn '+(done?'done':'')+'" title="'+esc(lbl)+'" data-react="'+esc(v.id)+'" data-emoji="'+esc(em)+'">'+em+' <small>'+n+'</small></button>';});h+='</div>';return h;}
-
-function hardPlayFromCardV142(id,ev){
-  try{
-    if(ev){ev.preventDefault&&ev.preventDefault();ev.stopPropagation&&ev.stopPropagation();}
-    if(!id)return;
-    playVideo(id);
-  }catch(err){
-    console.error('play grilla v142',err);
-    try{toast('No se pudo reproducir','Revisá que el video tenga YouTube cargado.');}catch(_e){}
-  }
-}
-function bindThumbPlayHardV142(){
-  document.querySelectorAll('.video-card .thumb[data-play]').forEach(function(th){
-    if(th._v142PlayBound)return; th._v142PlayBound=true;
-    th.addEventListener('click',function(ev){hardPlayFromCardV142(th.getAttribute('data-play'),ev);},true);
-    th.addEventListener('pointerup',function(ev){
-      if(ev.pointerType==='mouse' && ev.button!==0)return;
-      hardPlayFromCardV142(th.getAttribute('data-play'),ev);
-    },true);
-  });
-}
-
-function bindVideoButtons(){
-  document.querySelectorAll('[data-play]').forEach(b=>b.onclick=(ev)=>{ev&&ev.stopPropagation&&ev.stopPropagation();playVideo(b.getAttribute('data-play'));});
-  document.querySelectorAll('[data-buy]').forEach(b=>b.onclick=(ev)=>{ev&&ev.stopPropagation&&ev.stopPropagation();buySingle(b.getAttribute('data-buy'));});
-  document.querySelectorAll('[data-download]').forEach(b=>b.onclick=(ev)=>{ev&&ev.stopPropagation&&ev.stopPropagation();downloadVideo(b.getAttribute('data-download'));});
-  document.querySelectorAll('[data-share]').forEach(b=>b.onclick=e=>{e.stopPropagation();shareVideo(b.getAttribute('data-share'));});
-  document.querySelectorAll('[data-cart]').forEach(b=>b.onclick=(ev)=>{ev&&ev.stopPropagation&&ev.stopPropagation();toggleCart(b.getAttribute('data-cart'));});
-  document.querySelectorAll('[data-react]').forEach(b=>b.onclick=e=>{e.stopPropagation();reactVideo(state.currentEvent.id,b.getAttribute('data-react'),b.getAttribute('data-emoji'));});
-  document.querySelectorAll('[data-adminedit]').forEach(b=>b.onclick=e=>{e.stopPropagation();openAdminEditVideo(state.currentEvent.id,b.getAttribute('data-adminedit'));});
-  document.querySelectorAll('[data-directorvideo]').forEach(b=>b.onclick=e=>{e.stopPropagation();openDirectorForVideo(state.currentEvent.id,b.getAttribute('data-directorvideo'));});
-  document.querySelectorAll('[data-admincarddel]').forEach(b=>b.onclick=e=>{e.stopPropagation();confirmDeleteVideoFromGrid(b.getAttribute('data-admincarddel'));});
-  // v141: si un overlay o el texto de tarjeta intercepta el click, igualmente abrimos vista previa.
-  document.querySelectorAll('[data-card-video]').forEach(card=>{
-    if(card._v141Click)return; card._v141Click=true;
-    card.addEventListener('click',function(ev){
-      if(ev.defaultPrevented)return;
-      if(ev.target&&ev.target.closest&&ev.target.closest('button,a,input,select,textarea,.admin-edit-mini,.director-video-adjust-mini,.admin-delete-mini,.react-btn'))return;
-      let th=ev.target&&ev.target.closest&&ev.target.closest('.thumb[data-play]');
-      let id=(th&&th.getAttribute('data-play'))||this.getAttribute('data-card-video');
-      if(id)hardPlayFromCardV142(id,ev);
-    },true);
-  });
-  bindThumbPlayHardV142();
-}
+function bindVideoButtons(){document.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>playVideo(b.getAttribute('data-play')));document.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buySingle(b.getAttribute('data-buy')));document.querySelectorAll('[data-download]').forEach(b=>b.onclick=()=>downloadVideo(b.getAttribute('data-download')));document.querySelectorAll('[data-share]').forEach(b=>b.onclick=e=>{e.stopPropagation();shareVideo(b.getAttribute('data-share'));});document.querySelectorAll('[data-cart]').forEach(b=>b.onclick=()=>toggleCart(b.getAttribute('data-cart')));document.querySelectorAll('[data-react]').forEach(b=>b.onclick=e=>{e.stopPropagation();reactVideo(state.currentEvent.id,b.getAttribute('data-react'),b.getAttribute('data-emoji'));});document.querySelectorAll('[data-adminedit]').forEach(b=>b.onclick=e=>{e.stopPropagation();openAdminEditVideo(state.currentEvent.id,b.getAttribute('data-adminedit'));});document.querySelectorAll('[data-directorvideo]').forEach(b=>b.onclick=e=>{e.stopPropagation();openDirectorForVideo(state.currentEvent.id,b.getAttribute('data-directorvideo'));});document.querySelectorAll('[data-admincarddel]').forEach(b=>b.onclick=e=>{e.stopPropagation();confirmDeleteVideoFromGrid(b.getAttribute('data-admincarddel'));});}
 function toggleCart(id){let e=state.currentEvent;if(!e)return;let k=e.id+'|'+id;if(state.cart[k])delete state.cart[k];else state.cart[k]={eventoId:e.id,eventoNumero:e.numero,eventoTitulo:e.titulo,videoId:id};renderVideos();}
 function cartItems(){let items=[];Object.keys(state.cart).forEach(k=>{let c=state.cart[k];let e=state.data.eventos.find(x=>x.id===c.eventoId);let v=e&&(e.videos||[]).find(x=>String(x.id)===String(c.videoId));if(e&&v)items.push({eventoId:e.id,eventoNumero:e.numero,eventoTitulo:e.titulo,videoId:v.id,titulo:v.titulo,subtitulo:v.subtitulo||v.bailarina||'',precio:Number(v.precio||0),driveId:v.driveId||''});});return items;}
 function renderCart(){let items=cartItems();let total=items.reduce((a,x)=>a+x.precio,0);$('cartBar').className=items.length?'cartbar show':'cartbar';$('cartText').textContent=items.length+' seleccionado'+(items.length===1?'':'s')+' · '+money(total);}
@@ -1594,7 +1506,7 @@ function buyCart(){let items=cartItems();if(!items.length){toast('Sin selección
 function findVideo(id){let e=state.currentEvent;return e?(e.videos||[]).find(v=>String(v.id)===String(id)):null;}
 function playVideo(id){
   let v=findVideo(id);let e=state.currentEvent;
-  if(!v||!videoYouTubeId(v)){toast('Video pendiente','Este video todavía no tiene YouTube cargado.');return;}
+  if(!v||!cleanYouTube(v.youtubeId)){toast('Video pendiente','Este video todavía no tiene YouTube cargado.');return;}
   let isTouch=matchMedia('(pointer:coarse)').matches||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   state.previewIsTouch=!!isTouch;
   if(!isTouch){startPreviewWithMode(id,'normal');return;}
@@ -1621,7 +1533,7 @@ function startPreviewWithMode(id,mode){
   let cutBaseClamp=cutClampPanForPreviewV139(corteTipoForPreview,cutBasePanX,cutBasePanY,cutBaseZoom); cutBasePanX=cutBaseClamp.panX; cutBasePanY=cutBaseClamp.panY;
   let playStyle=' style="--tomauno-event-filter:'+esc(playFilter)+';--director-video-transform:'+esc(playTransform)+';--director-bg-size:'+(100+Number(playPreset.zoom||0))+'% auto;--director-bg-position:'+(50+Number(playPreset.posX||0))+'% '+(50+Number(playPreset.posY||0))+'%;--cut-pan-x:'+cutBasePanX+'%;--cut-pan-y:'+cutBasePanY+'%;--cut-scale:'+cutBaseClamp.scale+'"';
   let frameId='ytFrame_'+String(Date.now());
-  let base='https://www.youtube.com/embed/'+encodeURIComponent(videoYouTubeId(v));
+  let base='https://www.youtube.com/embed/'+encodeURIComponent(cleanYouTube(v.youtubeId));
   function buildSrc(){let src=base+'?autoplay=1&mute=0&playsinline=1&rel=0&modestbranding=1&controls=0&disablekb=1&fs=0&iv_load_policy=3&enablejsapi=1&origin='+encodeURIComponent(location.origin)+'&vq=hd1080&hd=1';if(start>0)src+='&start='+start;return src;}
   let corteTipo=corteTipoForPreview;
   let cutPreviewClass=corteTipo==='vertical'?' cut-preview-vertical':((corteTipo==='cuadrado'||corteTipo==='square')?' cut-preview-square':'');
@@ -1658,26 +1570,10 @@ function startPreviewWithMode(id,mode){
   let cutTrackingV138=Array.isArray(v.corteTracking)?v.corteTracking.slice().filter(p=>p&&Number(p.t)>=0):[];
   if(previewWrap && cutTrackingV138.length){
     cutTrackingV138.sort((a,b)=>Number(a.t)-Number(b.t));
+    let trackStartClock=Date.now();
     clearInterval(state.previewTrackingTimerV138);
-    // v144: el tracking publicado usa el tiempo REAL del iframe de YouTube.
-    // Antes usaba reloj desde que se abría el modal; si YouTube tardaba en cargar, pausaba, o arrancaba en otro segundo, el encuadre quedaba atrasado/corrido.
-    state.previewTrackingAbsTimeV144=start;
-    state.previewTrackingFallbackClockV144=Date.now();
-    state.previewTrackingMsgHandlerV144=function(msgEv){
-      var d=msgEv&&msgEv.data;
-      try{ if(typeof d==='string')d=JSON.parse(d); }catch(_e){}
-      if(!d||d.event!=='infoDelivery'||!d.info)return;
-      if(frame&&frame.contentWindow&&msgEv.source!==frame.contentWindow)return;
-      if(Number(d.info.currentTime)>=0)state.previewTrackingAbsTimeV144=Number(d.info.currentTime);
-    };
-    window.addEventListener('message',state.previewTrackingMsgHandlerV144);
     state.previewTrackingTimerV138=setInterval(function(){
-      try{ if(frame&&frame.contentWindow){
-        frame.contentWindow.postMessage(JSON.stringify({event:'listening',id:frameId}),'*');
-        frame.contentWindow.postMessage(JSON.stringify({event:'command',func:'getCurrentTime',args:[]}),'*');
-      }}catch(_e){}
-      var abs=Number(state.previewTrackingAbsTimeV144);
-      var elapsed=Number.isFinite(abs)?Math.max(0,abs-start):Math.max(0,(Date.now()-state.previewTrackingFallbackClockV144)/1000);
+      let elapsed=(Date.now()-trackStartClock)/1000;
       let a=cutTrackingV138[0],b=cutTrackingV138[cutTrackingV138.length-1];
       for(let i=0;i<cutTrackingV138.length-1;i++){let p=cutTrackingV138[i],n=cutTrackingV138[i+1];if(elapsed>=Number(p.t)&&elapsed<=Number(n.t)){a=p;b=n;break;}}
       let at=Number(a.t)||0,bt=Number(b.t)||at,ratio=bt>at?Math.max(0,Math.min(1,(elapsed-at)/(bt-at))):0;
@@ -1688,7 +1584,8 @@ function startPreviewWithMode(id,mode){
       previewWrap.style.setProperty('--cut-pan-x',cl.panX.toFixed(2)+'%');
       previewWrap.style.setProperty('--cut-pan-y',cl.panY.toFixed(2)+'%');
       previewWrap.style.setProperty('--cut-scale',String(cl.scale));
-    },80);  }
+    },120);
+  }
   function ytCommand(func){try{frame.contentWindow.postMessage('{"event":"command","func":"'+func+'","args":""}','*');}catch(err){}}
   function protect(){if(shield)shield.classList.remove('off');}
   setTimeout(()=>ytCommand('playVideo'),250);setTimeout(()=>ytCommand('playVideo'),850);setTimeout(protect,450);
@@ -1701,7 +1598,6 @@ function startPreviewWithMode(id,mode){
   if($('previewLiveBack'))$('previewLiveBack').onclick=closeModal;
   if($('modalClose2'))$('modalClose2').onclick=closeModal;let cine=$('modalCinema');if(cine&&!state.previewIsTouch){cine.style.display='inline-flex';cine.onclick=()=>{let mb=document.querySelector('#modal .modal-box');if(mb)mb.classList.toggle('cinema-pc');cine.textContent=(mb&&mb.classList.contains('cinema-pc'))?'Vista normal':'Pantalla amplia';};}if($('modalBuy'))$('modalBuy').onclick=()=>{closeModal();buySingle(id);};
 }
-try{window.playVideo=playVideo;}catch(_e){}
 async function validateCodeForVideo(code,e,v){let c=String(code||'').trim().toUpperCase();if(!c)return false;let base=String(v.codigo||'').trim().toUpperCase();if(base&&c===base)return true;let orders=state.orders.length?state.orders:await fbGetOrders();return orders.some(p=>String(p.estado||'').toLowerCase()==='desbloqueado'&&String(p.clave||'').trim().toUpperCase()===c&&(p.items||[]).some(it=>String(it.eventoId||'')===String(e.id)&&String(it.videoId||'')===String(v.id)));}
 function cleanDriveId(value){
   var v=String(value||'').trim();
@@ -1734,7 +1630,7 @@ function focusVideoByHash(hash){let p=hash.split(',');focusVideoById(p[1]||p[0])
 function focusVideoById(vid){let el=document.querySelector('[data-card-video="'+String(vid).replace(/[^a-zA-Z0-9_-]/g,'')+'"]');if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.boxShadow='0 0 0 2px rgba(255,0,0,.8),0 30px 90px rgba(0,0,0,.55)';setTimeout(()=>el.style.boxShadow='',2300);}}
 function openModal(t,h,extraClass){$('modalTitle').textContent=t;$('modalContent').innerHTML=h;let m=$('modal');m.className='modal'+(extraClass?' '+extraClass:'');m.style.display='flex';setTimeout(()=>{let pin=$('adminPin')||$('buyerName')||$('privPass');if(pin){pin.focus();pin.select&&pin.select();}},40);}
 function stopDirectorPlayback(){try{let fr=$('dir_frame');if(fr&&fr.contentWindow){fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}),'*');}if(fr&&fr.src){state.directorLastSrc=fr.src;fr.src='about:blank';}}catch(_e){}}
-function closeModal(){if(state.previewTimer){clearTimeout(state.previewTimer);state.previewTimer=null;}if(state.previewTrackingTimerV138){clearInterval(state.previewTrackingTimerV138);state.previewTrackingTimerV138=null;}if(state.previewTrackingMsgHandlerV144){try{window.removeEventListener('message',state.previewTrackingMsgHandlerV144);}catch(_e){}state.previewTrackingMsgHandlerV144=null;}try{document.querySelectorAll('#modal iframe').forEach(f=>f.src='about:blank');}catch(_e){}if(state.directorPausedSrc){try{let fr=$('dir_frame');if(fr)fr.src=state.directorPausedSrc;}catch(_e){}state.directorPausedSrc='';}$('modal').style.display='none';$('modal').className='modal';$('modalContent').innerHTML='';}
+function closeModal(){if(state.previewTimer){clearTimeout(state.previewTimer);state.previewTimer=null;}if(state.previewTrackingTimerV138){clearInterval(state.previewTrackingTimerV138);state.previewTrackingTimerV138=null;}try{document.querySelectorAll('#modal iframe').forEach(f=>f.src='about:blank');}catch(_e){}if(state.directorPausedSrc){try{let fr=$('dir_frame');if(fr)fr.src=state.directorPausedSrc;}catch(_e){}state.directorPausedSrc='';}$('modal').style.display='none';$('modal').className='modal';$('modalContent').innerHTML='';}
 function familyReviewMessage(){return 'Hola Tomauno.%0A%0AQuiero solicitar la revisión de un contenido publicado.%0A%0AEvento:%0ANúmero de video o coreografía:%0AMotivo:%0A%0ANombre:%0ARelación con la persona que aparece:%0A%0AGracias.';}
 function openFamilyPrivacy(){
   let html='';
@@ -2012,7 +1908,7 @@ function loadEv(){let e=state.data.eventos.find(x=>x.id===$('ev_id').value)||{};
 function saveEv(){let id=$('ev_id').value;let e=state.data.eventos.find(x=>x.id===id);if(!e){e={id:'ev_'+Date.now(),numero:nextEvNum(),videos:[]};state.data.eventos.push(e);}e.titulo=$('ev_titulo').value.trim();e.subtitulo=$('ev_sub').value.trim();e.imagen=$('ev_img').value.trim();if($('ev_logo1'))e.logoUrl1=$('ev_logo1').value.trim();if($('ev_logo2'))e.logoUrl2=$('ev_logo2').value.trim();if($('ev_logo3'))e.logoUrl3=$('ev_logo3').value.trim();if($('ev_show_logos'))e.mostrarLogo=$('ev_show_logos').checked;e.visibilidad=$('ev_vis').value;e.password=$('ev_pass').value.trim();e.descripcionPortada=$('ev_desc')?$('ev_desc').value.trim():'';e.mostrarTituloFlyer=$('ev_show_title')?$('ev_show_title').checked:true;ghSave('Guardar evento '+e.titulo).then(ok=>{if(ok){state.currentEvent=e;renderAdmin();renderVideos();}});}
 function delEv(id){openModal('Eliminar evento','<p>¿Seguro que querés eliminar este evento completo?</p><button class="btn red" id="confirmDelEv">Eliminar</button>');$('confirmDelEv').onclick=()=>{closeModal();state.data.eventos=state.data.eventos.filter(e=>e.id!==id);ghSave('Eliminar evento').then(ok=>{if(ok){afterLoad();renderAdmin();}});};}
 function openAdminEditVideo(evId,vidId){sessionStorage.setItem(SS_ADMIN,'1');state.tab='videos';state.pendingEdit={eventoId:evId,videoId:String(vidId)};openAdmin();setTimeout(()=>{let box=document.querySelector('.admin-box');if(box)box.scrollTop=0;},250);}
-function openDirectorForVideo(evId,vidId){sessionStorage.setItem(SS_ADMIN,'1');state.tab='director';state.directorMode='dock';state._directorFromGrid=true;state.directorScope='video';state.directorEventId=evId;state.directorVideoId=String(vidId);let ev=(state.data.eventos||[]).find(e=>e.id===evId);let vv=ev&&(ev.videos||[]).find(v=>String(v.id)===String(vidId));state.directorSample=cleanYouTube(vv&&vv.youtubeId||'');state.directorEditingCutV141=!!(vv&&(vv.corteTipo||vv.corteDe));state.cutCurrentV126=Number((vv&&(vv.corteInicio!=null?vv.corteInicio:vv.previewInicio))||0)||0;openAdmin();}
+function openDirectorForVideo(evId,vidId){sessionStorage.setItem(SS_ADMIN,'1');state.tab='director';state.directorMode='dock';state._directorFromGrid=true;state.directorScope='video';state.directorEventId=evId;state.directorVideoId=String(vidId);let ev=(state.data.eventos||[]).find(e=>e.id===evId);let vv=ev&&(ev.videos||[]).find(v=>String(v.id)===String(vidId));state.directorSample=cleanYouTube(vv&&vv.youtubeId||'');openAdmin();}
 function adminVideos(){let ev=(state.pendingEdit&&state.data.eventos.find(x=>x.id===state.pendingEdit.eventoId))||state.currentEvent||state.data.eventos[0];let h='<h3>Videos</h3><div class="admin-search-row"><input id="adminVideoSearch" placeholder="Buscar video para editar..." value="'+esc(state.adminVideoQuery||'')+'"><span class="view-count" id="adminVideoCount"></span></div><div class="form-grid"><div class="field"><label>Evento</label><select id="v_event">'+optionsEvents(ev?ev.id:'')+'</select></div><div class="field"><label>Editar</label><select id="v_id"><option value="">Nuevo</option></select></div><div class="field"><label>Título</label><input id="v_titulo"></div><div class="field"><label>Subtítulo/detalle</label><input id="v_subtitulo"></div><div class="field"><label>YouTube</label><input id="v_yt"></div><div class="field"><label>Inicio min</label><div class="admin-video-inline"><input id="v_ini_min" type="number" value="2"><button class="btn gray small apply-all-mini" id="applyTimeAll" title="Aplicar inicio y duración a todos los videos de este evento" type="button">⏱</button></div></div><div class="field"><label>Inicio seg</label><input id="v_ini_sec" type="number" value="0"></div><div class="field"><label>Duración preview</label><input id="v_dur" type="number" value="20"></div><div class="field"><label>Precio ARS</label><div class="admin-video-inline"><input id="v_precio" type="number" value="15000"><button class="btn gray small apply-all-mini" id="applyPriceAll" title="Aplicar precio a todos los videos de este evento" type="button">💲</button></div></div><div class="field"><label>Drive ID</label><input id="v_drive"><div id="dupWarn" class="duplicate-note"></div></div><div class="field"><label>Imagen portada URL</label><input id="v_img" placeholder="Opcional: portada propia"></div><div class="field"><label>Código base</label><input id="v_code"></div><div class="field"><label>&nbsp;</label><button class="btn red save-dirty" id="v_save" disabled>Guardar video</button></div><div class="field span4"><label>Carga masiva</label><textarea id="bulk_titles" placeholder="Un video por línea: Título - Subtítulo - YouTube - Drive. Si no hay subtítulo: Título -  - YouTube - Drive"></textarea><div id="bulkDupWarn" class="duplicate-note"></div></div><div class="field span4"><button class="btn gray" id="bulk_add">Crear videos desde texto</button></div></div><div id="v_table"></div>';$('tabBody').innerHTML=h;$('v_event').onchange=()=>{fillVideoSelect();renderVideoTable();markVideoClean();};$('v_id').onchange=loadVid;$('v_save').onclick=saveVid;$('v_yt').onblur=function(){this.value=cleanYouTube(this.value);checkVideoDuplicateWarning();};$('v_drive').onblur=function(){this.value=cleanDriveId(this.value);checkVideoDuplicateWarning();};$('bulk_add').onclick=()=>bulkAdd(false);$('applyTimeAll').onclick=applyPreviewTimeToAll;$('applyPriceAll').onclick=applyPriceToAll;fillVideoSelect();if(state.pendingEdit){$('v_id').value=state.pendingEdit.videoId;loadVid();state.pendingEdit=null;}else{markVideoClean();}['v_titulo','v_subtitulo','v_yt','v_ini_min','v_ini_sec','v_dur','v_precio','v_drive','v_img','v_code'].forEach(id=>{let el=$(id);if(el)el.addEventListener('input',function(){markVideoDirty();if(id==='v_yt'||id==='v_drive')checkVideoDuplicateWarning();});});renderVideoTable();let bt=$('bulk_titles');if(bt){bt.addEventListener('input',()=>{let bw=$('bulkDupWarn');if(bw)bw.innerHTML='';});}let avs=$('adminVideoSearch');if(avs){avs.oninput=function(){state.adminVideoQuery=this.value;renderVideoTable();};}}
 function markVideoDirty(){let b=$('v_save');if(b){b.disabled=false;b.classList.add('enabled');}}function markVideoClean(){let b=$('v_save');if(b){b.disabled=true;b.classList.remove('enabled');}}
 function adminEvent(){return state.data.eventos.find(e=>e.id===$('v_event').value);}
@@ -2143,7 +2039,7 @@ function directorCommandForEvent(ev,p){let vf=directorFfmpegFilters(p),af=direct
 function directorCurrentVideo(ev){let vids=(ev&&ev.videos)||[];return vids.find(v=>String(v.id)===String(state.directorVideoId))||vids.find(v=>v.youtubeId)||vids[0]||null;}
 function directorRange(id,label,val,min,max,suf){return '<div class="director-row"><label ondblclick="directorResetRange(\''+id+'\')" title="Doble clic para volver a normal">'+label+'</label><input type="range" id="dir_'+id+'" min="'+min+'" max="'+max+'" value="'+esc(val)+'" ondblclick="directorResetRange(\''+id+'\')" title="Doble clic para volver a normal"><span class="director-val" id="dir_'+id+'_val">'+esc(val)+suf+'</span></div>';}
 function directorResetRange(id){let def=directorDefaultPreset();let el=$('dir_'+id);if(!el)return;el.value=(def[id]!=null?def[id]:0);updateDirectorPreview();}
-function adminDirector(){let events=state.data.eventos||[];let ev=events.find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||events[0];if(!ev){$('tabBody').innerHTML='<div class="empty">No hay eventos.</div>';return;}state.directorEventId=ev.id;if(!state.directorScope)state.directorScope='event';let p=directorActivePreset(ev);let vids=(ev.videos||[]).filter(v=>v.youtubeId);let sample=vids.find(v=>String(v.id)===String(state.directorVideoId))||vids[0]||{};let yt=cleanYouTube(state.directorSample||sample.youtubeId||'');let opts=events.map(e=>'<option value="'+esc(e.id)+'" '+(e.id===ev.id?'selected':'')+'>'+esc((e.numero?'#'+e.numero+' ':'')+e.titulo)+'</option>').join('');let vopts=vids.map(v=>'<option value="'+esc(v.id)+'" '+(String(v.id)===String(sample.id)?'selected':'')+'>'+esc((v.id?('#'+v.id+' - '):'')+(v.titulo||'Sin título')+(v.subtitulo?(' · '+v.subtitulo):''))+'</option>').join('');let html='<div class="director-mode-switch"><button class="btn small '+(state.directorMode==='full'?'active':'')+'" id="dir_mode_full">⛶ Director completo</button><button class="btn small '+(state.directorMode==='dock'||!state.directorMode?'active':'')+'" id="dir_mode_dock">⇲ Ver grilla al lado</button></div><div class="director-panel v84"><div class="director-card director-preview-sticky"><h3>Vista Director</h3><p class="director-note">Ajustá un video de referencia. La imagen se aplica en vivo a la grilla del evento abierto. Audio y exportación quedan preparados para FFmpeg local. En v89 los deslizantes visuales están suavizados para calibrar con más precisión.</p><div class="director-live-badge">● Vista web activa</div><div class="field"><label>Evento</label><select id="dir_event">'+opts+'</select></div><div class="director-select-row"><div class="field"><label>Video de referencia</label><select id="dir_video_select">'+(vopts||'<option value="">Sin videos YouTube</option>')+'</select></div><div class="field"><label>YouTube / ID manual</label><input id="dir_sample" value="'+esc(yt)+'" placeholder="Pegar link o ID de YouTube"></div></div><div class="director-scope-switch"><button class="btn small '+(state.directorScope==='video'?'':'active')+'" id="dir_scope_event" type="button">Evento completo</button><button class="btn small '+(state.directorScope==='video'?'active':'')+'" id="dir_scope_video" type="button">Solo este video</button>'+(state.directorScope==='video'?'<button class="btn small warn" id="dir_use_event" type="button">↩ Usar ajuste evento</button>':'')+'</div><div class="director-preview-wrap" style="margin-top:12px"><iframe id="dir_frame" allow="autoplay; encrypted-media" src="'+(yt?'https://www.youtube.com/embed/'+esc(yt)+'?rel=0&modestbranding=1&enablejsapi=1&origin='+encodeURIComponent(location.origin)+'&vq=hd1080'+(Number(sample.corteInicio!=null?sample.corteInicio:sample.previewInicio)>0?'&start='+encodeURIComponent(Number(sample.corteInicio!=null?sample.corteInicio:sample.previewInicio)||0):''):'about:blank')+'"></iframe><img id="dir_logo_overlay" class="director-logo-overlay pos-'+esc(p.logoPos||'br')+'" alt="logo"><div id="dir_story_frame" class="director-story-frame"></div></div><div class="director-actions"><button class="btn gray small" id="dir_big">⛶ Ver grande</button><button class="btn gray small" id="dir_natural">Natural</button><button class="btn gray small" id="dir_oscuro">Escenario oscuro</button><button class="btn gray small" id="dir_color">Color potente</button><button class="btn gray small" id="dir_reset">Reset</button></div><div class="director-memories"><small>Memorias:</small><button class="btn gray small director-memory-btn" id="dir_mem_1" type="button">M1</button><button class="btn gray small director-memory-btn" id="dir_mem_2" type="button">M2</button><button class="btn gray small director-memory-btn" id="dir_mem_3" type="button">M3</button><small>clic aplica · doble clic guarda</small></div><div class="director-source-note"><b>Base futura:</b> Director queda preparado para fuente YouTube, Drive o archivo local. Para desfiles/galas largas después sumamos biblioteca de fuentes y cortes vendibles.</div></div><div class="director-card"><h3>Controles</h3><details class="director-details" open><summary>Imagen</summary><div class="director-details-body">'+directorRange('exposicion','Exposición suave',p.exposicion,-70,120,'%')+directorRange('sombras','Sombras / zonas oscuras',p.sombras,-50,180,'%')+directorRange('brillo','Brillo fino',p.brillo,-50,90,'%')+directorRange('contraste','Contraste',p.contraste,-40,90,'%')+directorRange('saturacion','Saturación',p.saturacion,-50,110,'%')+directorRange('calidez','Frío ❄️ / Cálido 🔥',p.calidez,-70,100,'')+directorRange('nitidez','Nitidez',p.nitidez,0,70,'')+directorRange('ruidoImagen','Reducir ruido imagen',p.ruidoImagen||0,0,100,'%')+'</div></details><details class="director-details"><summary>Audio para exportar</summary><div class="director-details-body">'+directorRange('volumen','Volumen exportación',p.volumen,40,280,'%')+directorRange('graves','Graves exportación',p.graves,-18,18,'dB')+directorRange('agudos','Agudos exportación',p.agudos,-18,18,'dB')+directorRange('ruidoAudio','Reducción de ruido audio',p.ruidoAudio,0,100,'%')+'<div class="director-help-warn">El audio no se escucha modificado en YouTube. Se aplica al procesar con FFmpeg.</div></div></details><details class="director-details" open><summary>Encuadre</summary><div class="director-details-body">'+directorRange('zoom','Zoom / acercar',p.zoom,0,100,'%')+directorRange('posX','Mover horizontal',p.posX,-50,50,'%')+directorRange('posY','Mover vertical',p.posY,-50,50,'%')+'<div class="field"><label>Rotación</label><select id="dir_rotacion"><option value="0">Sin rotar</option><option value="90">↻ 90° derecha</option><option value="-90">↺ 90° izquierda</option><option value="180">180°</option></select></div></div></details><details class="director-details"><summary>Logo / Outro</summary><div class="director-details-body"><div class="director-file-row v83"><div class="field"><label>Elegir logo PNG/JPG para vista previa</label><input type="file" id="dir_logoFile" accept="image/png,image/webp,image/jpeg"></div></div><div class="director-logo-preview-line"><img id="dir_logo_preview" class="director-logo-preview" alt="logo"><small class="muted">El logo seleccionado se ve en pantalla, pero para FFmpeg debe estar junto al BAT con el mismo nombre.</small></div>'+directorRange('logoSize','Tamaño logo',p.logoSize||16,5,45,'%')+directorRange('logoOpacity','Opacidad logo',p.logoOpacity||78,10,100,'%')+directorRange('logoMargin','Margen logo',p.logoMargin||18,0,80,'px')+'<div class="field"><label>Posición logo</label><select id="dir_logoPos"><option value="br">Abajo derecha</option><option value="bl">Abajo izquierda</option><option value="tr">Arriba derecha</option><option value="tl">Arriba izquierda</option></select></div><div class="director-checks"><label><input type="checkbox" id="dir_logoDurante"> Logo discreto durante video</label><label><input type="checkbox" id="dir_logoFinal"> Outro final</label></div></div></details><details class="director-details"><summary>Historias / cortes 9:16</summary><div class="director-details-body"><label class="director-checks" style="display:block"><span><input type="checkbox" id="dir_historia"> Generar versión historia vertical 9:16</span></label><div class="director-history-grid"><div class="field"><label>Inicio historia</label><input id="dir_histInicio" value="'+esc(p.histInicio||'00:00')+'" placeholder="00:35"></div><div class="field"><label>Fin historia</label><input id="dir_histFin" value="'+esc(p.histFin||'00:15')+'" placeholder="01:02"></div></div>'+directorRange('histZoom','Zoom historia',p.histZoom||0,0,160,'%')+directorRange('histPosX','Mover historia horizontal',p.histPosX||0,-80,80,'%')+directorRange('histPosY','Mover historia vertical',p.histPosY||0,-80,80,'%')+'<div class="director-help-warn">Este bloque prepara cortes para historias/reels. Después lo conectamos al exportador por lote.</div></div></details><details class="director-details"><summary>Exportación / futuro</summary><div class="director-details-body"><div class="director-checks"><label><input type="checkbox" id="dir_normalizarLuz"> Normalizar luz experimental</label><label><input type="checkbox" id="dir_normalizarAudio"> Normalizar audio</label></div><div class="field" style="margin-top:10px"><label>Carpeta salida local</label><input id="dir_outDir" value="'+esc(p.outDir||'C:\\TOMAUNO\\ENTREGAS')+'"></div><div class="director-source-note">Procesar desde web queda como prueba futura. Para archivos grandes conviene FFmpeg local o BAT por lote.</div></div></details><div class="director-actions"><button class="btn red" id="dir_save">'+(state.directorScope==='video'?'Guardar ajuste video':'Guardar preset evento')+'</button><span id="dir_saved_msg" class="director-saved-msg">✅ Preset guardado</span><button class="btn gray" id="dir_copycmd">Copiar comando FFmpeg</button><button class="btn gray director-btn-disabled" disabled>Procesar web próximamente</button></div></div></div><details class="director-details command-details" style="margin-top:16px"><summary>Comando local / avanzado</summary><div class="director-details-body"><textarea id="dir_cmd" class="director-cmd" readonly></textarea><p class="director-note">Usá el comando como base local. Después generamos BAT para carpeta completa y cortes desde archivos largos.</p></div></details>';$('tabBody').innerHTML=html;$('dir_rotacion').value=String(p.rotacion||'0');$('dir_logoPos').value=String(p.logoPos||'br');$('dir_normalizarLuz').checked=!!p.normalizarLuz;$('dir_normalizarAudio').checked=p.normalizarAudio!==false;$('dir_logoDurante').checked=!!p.logoDurante;$('dir_logoFinal').checked=!!p.logoFinal;if($('dir_historia'))$('dir_historia').checked=!!p.historia;if($('dir_histInicio'))$('dir_histInicio').value=p.histInicio||'00:00';if($('dir_histFin'))$('dir_histFin').value=p.histFin||'00:15';bindDirector(ev);updateDirectorPreview();}
+function adminDirector(){let events=state.data.eventos||[];let ev=events.find(e=>String(e.id)===String(state.directorEventId))||state.currentEvent||events[0];if(!ev){$('tabBody').innerHTML='<div class="empty">No hay eventos.</div>';return;}state.directorEventId=ev.id;if(!state.directorScope)state.directorScope='event';let p=directorActivePreset(ev);let vids=(ev.videos||[]).filter(v=>v.youtubeId);let sample=vids.find(v=>String(v.id)===String(state.directorVideoId))||vids[0]||{};let yt=cleanYouTube(state.directorSample||sample.youtubeId||'');let opts=events.map(e=>'<option value="'+esc(e.id)+'" '+(e.id===ev.id?'selected':'')+'>'+esc((e.numero?'#'+e.numero+' ':'')+e.titulo)+'</option>').join('');let vopts=vids.map(v=>'<option value="'+esc(v.id)+'" '+(String(v.id)===String(sample.id)?'selected':'')+'>'+esc((v.id?('#'+v.id+' - '):'')+(v.titulo||'Sin título')+(v.subtitulo?(' · '+v.subtitulo):''))+'</option>').join('');let html='<div class="director-mode-switch"><button class="btn small '+(state.directorMode==='full'?'active':'')+'" id="dir_mode_full">⛶ Director completo</button><button class="btn small '+(state.directorMode==='dock'||!state.directorMode?'active':'')+'" id="dir_mode_dock">⇲ Ver grilla al lado</button></div><div class="director-panel v84"><div class="director-card director-preview-sticky"><h3>Vista Director</h3><p class="director-note">Ajustá un video de referencia. La imagen se aplica en vivo a la grilla del evento abierto. Audio y exportación quedan preparados para FFmpeg local. En v89 los deslizantes visuales están suavizados para calibrar con más precisión.</p><div class="director-live-badge">● Vista web activa</div><div class="field"><label>Evento</label><select id="dir_event">'+opts+'</select></div><div class="director-select-row"><div class="field"><label>Video de referencia</label><select id="dir_video_select">'+(vopts||'<option value="">Sin videos YouTube</option>')+'</select></div><div class="field"><label>YouTube / ID manual</label><input id="dir_sample" value="'+esc(yt)+'" placeholder="Pegar link o ID de YouTube"></div></div><div class="director-scope-switch"><button class="btn small '+(state.directorScope==='video'?'':'active')+'" id="dir_scope_event" type="button">Evento completo</button><button class="btn small '+(state.directorScope==='video'?'active':'')+'" id="dir_scope_video" type="button">Solo este video</button>'+(state.directorScope==='video'?'<button class="btn small warn" id="dir_use_event" type="button">↩ Usar ajuste evento</button>':'')+'</div><div class="director-preview-wrap" style="margin-top:12px"><iframe id="dir_frame" allow="autoplay; encrypted-media" src="'+(yt?'https://www.youtube.com/embed/'+esc(yt)+'?rel=0&modestbranding=1&enablejsapi=1&origin='+encodeURIComponent(location.origin)+'&vq=hd1080':'about:blank')+'"></iframe><img id="dir_logo_overlay" class="director-logo-overlay pos-'+esc(p.logoPos||'br')+'" alt="logo"><div id="dir_story_frame" class="director-story-frame"></div></div><div class="director-actions"><button class="btn gray small" id="dir_big">⛶ Ver grande</button><button class="btn gray small" id="dir_natural">Natural</button><button class="btn gray small" id="dir_oscuro">Escenario oscuro</button><button class="btn gray small" id="dir_color">Color potente</button><button class="btn gray small" id="dir_reset">Reset</button></div><div class="director-memories"><small>Memorias:</small><button class="btn gray small director-memory-btn" id="dir_mem_1" type="button">M1</button><button class="btn gray small director-memory-btn" id="dir_mem_2" type="button">M2</button><button class="btn gray small director-memory-btn" id="dir_mem_3" type="button">M3</button><small>clic aplica · doble clic guarda</small></div><div class="director-source-note"><b>Base futura:</b> Director queda preparado para fuente YouTube, Drive o archivo local. Para desfiles/galas largas después sumamos biblioteca de fuentes y cortes vendibles.</div></div><div class="director-card"><h3>Controles</h3><details class="director-details" open><summary>Imagen</summary><div class="director-details-body">'+directorRange('exposicion','Exposición suave',p.exposicion,-70,120,'%')+directorRange('sombras','Sombras / zonas oscuras',p.sombras,-50,180,'%')+directorRange('brillo','Brillo fino',p.brillo,-50,90,'%')+directorRange('contraste','Contraste',p.contraste,-40,90,'%')+directorRange('saturacion','Saturación',p.saturacion,-50,110,'%')+directorRange('calidez','Frío ❄️ / Cálido 🔥',p.calidez,-70,100,'')+directorRange('nitidez','Nitidez',p.nitidez,0,70,'')+directorRange('ruidoImagen','Reducir ruido imagen',p.ruidoImagen||0,0,100,'%')+'</div></details><details class="director-details"><summary>Audio para exportar</summary><div class="director-details-body">'+directorRange('volumen','Volumen exportación',p.volumen,40,280,'%')+directorRange('graves','Graves exportación',p.graves,-18,18,'dB')+directorRange('agudos','Agudos exportación',p.agudos,-18,18,'dB')+directorRange('ruidoAudio','Reducción de ruido audio',p.ruidoAudio,0,100,'%')+'<div class="director-help-warn">El audio no se escucha modificado en YouTube. Se aplica al procesar con FFmpeg.</div></div></details><details class="director-details" open><summary>Encuadre</summary><div class="director-details-body">'+directorRange('zoom','Zoom / acercar',p.zoom,0,100,'%')+directorRange('posX','Mover horizontal',p.posX,-50,50,'%')+directorRange('posY','Mover vertical',p.posY,-50,50,'%')+'<div class="field"><label>Rotación</label><select id="dir_rotacion"><option value="0">Sin rotar</option><option value="90">↻ 90° derecha</option><option value="-90">↺ 90° izquierda</option><option value="180">180°</option></select></div></div></details><details class="director-details"><summary>Logo / Outro</summary><div class="director-details-body"><div class="director-file-row v83"><div class="field"><label>Elegir logo PNG/JPG para vista previa</label><input type="file" id="dir_logoFile" accept="image/png,image/webp,image/jpeg"></div></div><div class="director-logo-preview-line"><img id="dir_logo_preview" class="director-logo-preview" alt="logo"><small class="muted">El logo seleccionado se ve en pantalla, pero para FFmpeg debe estar junto al BAT con el mismo nombre.</small></div>'+directorRange('logoSize','Tamaño logo',p.logoSize||16,5,45,'%')+directorRange('logoOpacity','Opacidad logo',p.logoOpacity||78,10,100,'%')+directorRange('logoMargin','Margen logo',p.logoMargin||18,0,80,'px')+'<div class="field"><label>Posición logo</label><select id="dir_logoPos"><option value="br">Abajo derecha</option><option value="bl">Abajo izquierda</option><option value="tr">Arriba derecha</option><option value="tl">Arriba izquierda</option></select></div><div class="director-checks"><label><input type="checkbox" id="dir_logoDurante"> Logo discreto durante video</label><label><input type="checkbox" id="dir_logoFinal"> Outro final</label></div></div></details><details class="director-details"><summary>Historias / cortes 9:16</summary><div class="director-details-body"><label class="director-checks" style="display:block"><span><input type="checkbox" id="dir_historia"> Generar versión historia vertical 9:16</span></label><div class="director-history-grid"><div class="field"><label>Inicio historia</label><input id="dir_histInicio" value="'+esc(p.histInicio||'00:00')+'" placeholder="00:35"></div><div class="field"><label>Fin historia</label><input id="dir_histFin" value="'+esc(p.histFin||'00:15')+'" placeholder="01:02"></div></div>'+directorRange('histZoom','Zoom historia',p.histZoom||0,0,160,'%')+directorRange('histPosX','Mover historia horizontal',p.histPosX||0,-80,80,'%')+directorRange('histPosY','Mover historia vertical',p.histPosY||0,-80,80,'%')+'<div class="director-help-warn">Este bloque prepara cortes para historias/reels. Después lo conectamos al exportador por lote.</div></div></details><details class="director-details"><summary>Exportación / futuro</summary><div class="director-details-body"><div class="director-checks"><label><input type="checkbox" id="dir_normalizarLuz"> Normalizar luz experimental</label><label><input type="checkbox" id="dir_normalizarAudio"> Normalizar audio</label></div><div class="field" style="margin-top:10px"><label>Carpeta salida local</label><input id="dir_outDir" value="'+esc(p.outDir||'C:\\TOMAUNO\\ENTREGAS')+'"></div><div class="director-source-note">Procesar desde web queda como prueba futura. Para archivos grandes conviene FFmpeg local o BAT por lote.</div></div></details><div class="director-actions"><button class="btn red" id="dir_save">'+(state.directorScope==='video'?'Guardar ajuste video':'Guardar preset evento')+'</button><span id="dir_saved_msg" class="director-saved-msg">✅ Preset guardado</span><button class="btn gray" id="dir_copycmd">Copiar comando FFmpeg</button><button class="btn gray director-btn-disabled" disabled>Procesar web próximamente</button></div></div></div><details class="director-details command-details" style="margin-top:16px"><summary>Comando local / avanzado</summary><div class="director-details-body"><textarea id="dir_cmd" class="director-cmd" readonly></textarea><p class="director-note">Usá el comando como base local. Después generamos BAT para carpeta completa y cortes desde archivos largos.</p></div></details>';$('tabBody').innerHTML=html;$('dir_rotacion').value=String(p.rotacion||'0');$('dir_logoPos').value=String(p.logoPos||'br');$('dir_normalizarLuz').checked=!!p.normalizarLuz;$('dir_normalizarAudio').checked=p.normalizarAudio!==false;$('dir_logoDurante').checked=!!p.logoDurante;$('dir_logoFinal').checked=!!p.logoFinal;if($('dir_historia'))$('dir_historia').checked=!!p.historia;if($('dir_histInicio'))$('dir_histInicio').value=p.histInicio||'00:00';if($('dir_histFin'))$('dir_histFin').value=p.histFin||'00:15';bindDirector(ev);updateDirectorPreview();}
 function readDirectorPreset(){let ids=['brillo','exposicion','sombras','contraste','saturacion','calidez','nitidez','ruidoImagen','volumen','graves','agudos','ruidoAudio','zoom','posX','posY','logoSize','logoOpacity','logoMargin','histZoom','histPosX','histPosY'];let p={};ids.forEach(id=>{let el=$('dir_'+id);p[id]=Number(el&&el.value||0);});p.rotacion=$('dir_rotacion').value;p.normalizarLuz=$('dir_normalizarLuz').checked;p.normalizarAudio=$('dir_normalizarAudio').checked;p.logoDurante=$('dir_logoDurante').checked;p.logoFinal=$('dir_logoFinal').checked;p.logoPos=$('dir_logoPos').value;p.logoPath=state.directorLogoName||'logo_tomauno.png';p.historia=$('dir_historia')?$('dir_historia').checked:false;p.histInicio=$('dir_histInicio')?$('dir_histInicio').value:'00:00';p.histFin=$('dir_histFin')?$('dir_histFin').value:'00:15';p.outDir=$('dir_outDir').value;p.fuenteTipo='youtube';return p;}
 function directorMemoryKey(n){return 'tomauno_director_memory_'+String(n||1);}
 function refreshDirectorMemoryButtons(){[1,2,3].forEach(n=>{let b=$('dir_mem_'+n);if(b)b.classList.toggle('saved',!!localStorage.getItem(directorMemoryKey(n)));});}
@@ -2462,7 +2358,7 @@ openDirectorFullscreen=function(){
     if(r && !state.cutDraggingV126) r.value=String(Math.min(sec,Number(r.max||sec)||sec));
     if(t && !state.cutTimeEditingV126) t.value=fmtTimeV126(sec);
   }
-  function cutLabelV126(c){return c.tipo==='vertical'?'9:16':(c.tipo==='cuadrado'?'1:1':'16:9');}
+  function cutLabelV126(c){return c.tipo==='vertical'?'9:16 HISTORIA':(c.tipo==='cuadrado'?'1:1 CUADRADO':'CORTE NORMAL');}
   function cutZoomScaleV139(z){return Math.max(1,Math.min(3,1+(Number(z||0)||0)));}
   function cutClampPanForPreviewV139(tipo,panX,panY,zoom){
     tipo=String(tipo||'normal');
@@ -2473,44 +2369,16 @@ openDirectorFullscreen=function(){
     panY=Math.max(-maxY,Math.min(maxY,Number(panY||0)||0));
     return {panX:panX,panY:panY,scale:scale};
   }
-  function cutNumV140(n,d){n=Number(n); if(!Number.isFinite(n))n=Number(d||0)||0; return Number(n.toFixed(3));}
-  function cutTrackNormalizeV140(c,tracking){
-    var arr=Array.isArray(tracking)?tracking.slice().filter(function(p){return p&&Number(p.t)>=0;}):[];
-    arr.sort(function(a,b){return Number(a.t)-Number(b.t);});
-    var dur=Math.max(0,Number(c.duration||((Number(c.end)||0)-(Number(c.start)||0)))||0);
-    var first={t:0,panX:Number(c.panX||0)||0,panY:Number(c.panY||0)||0,zoom:Number(c.zoom||0)||0};
-    if(!arr.length || Number(arr[0].t)>0.05)arr.unshift(first);
-    arr=arr.map(function(p){return {t:Math.max(0,Math.min(dur||99999,cutNumV140(p.t,0))),panX:cutNumV140(p.panX,c.panX),panY:cutNumV140(p.panY,c.panY),zoom:Math.max(0,Math.min(2,cutNumV140(p.zoom,c.zoom)))};});
-    if(dur>0){var last=arr[arr.length-1]; if(Math.abs(Number(last.t)-dur)>0.05)arr.push({t:dur,panX:last.panX,panY:last.panY,zoom:last.zoom});}
-    var out=[]; arr.forEach(function(p){var prev=out[out.length-1]; if(!prev || Math.abs(prev.t-p.t)>0.03 || prev.panX!==p.panX || prev.panY!==p.panY || prev.zoom!==p.zoom)out.push(p);});
-    return out;
-  }
-  function cutLerpExprV140(arr,field){
-    if(!arr.length)return '0';
-    function seg(a,b){var at=cutNumV140(a.t,0),bt=cutNumV140(b.t,at),av=cutNumV140(a[field],0),bv=cutNumV140(b[field],av); if(bt<=at)return String(bv); return '('+av+'+('+bv+'-'+av+')*((t-'+at+')/'+cutNumV140(bt-at,1)+'))';}
-    var expr=String(cutNumV140(arr[arr.length-1][field],0));
-    for(var i=arr.length-2;i>=0;i--){var b=arr[i+1];expr='if(lte(t\\,'+cutNumV140(b.t,0)+')\\,'+seg(arr[i],b)+'\\,'+expr+')';}
-    return expr;
-  }
-  function cutFiltersV126(c,tracking){
+  window.cutClampPanForPreviewV139=cutClampPanForPreviewV139;
+  window.cutZoomScaleV139=cutZoomScaleV139;
+  function cutFiltersV126(c){
     var vf=[];
     if(c.rotacion==='90')vf.push('transpose=1');
     if(c.rotacion==='-90')vf.push('transpose=2');
     if(c.rotacion==='180')vf.push('transpose=1,transpose=1');
-    var hasTrack=Array.isArray(tracking)&&tracking.length>1;
-    var arr=cutTrackNormalizeV140(c,hasTrack?tracking:[{t:0,panX:c.panX,panY:c.panY,zoom:c.zoom}]);
-    if(c.tipo==='vertical'||c.tipo==='cuadrado'){
-      var outW=1080, outH=c.tipo==='vertical'?1920:1080;
-      var maxZoom=arr.reduce(function(m,p){return Math.max(m,Number(p.zoom||0)||0);},Number(c.zoom||0)||0);
-      var scale=cutZoomScaleV139(maxZoom);
-      var sw=Math.round(outW*scale), sh=Math.round(outH*scale);
-      vf.push('setpts=PTS-STARTPTS');
-      vf.push('scale='+sw+':'+sh+':force_original_aspect_ratio=increase');
-      var xExpr=cutLerpExprV140(arr,'panX'), yExpr=cutLerpExprV140(arr,'panY');
-      var x='min(max(iw*(0.5+('+xExpr+')/100)-ow/2\\,0)\\,iw-ow)';
-      var y='min(max(ih*(0.5+('+yExpr+')/100)-oh/2\\,0)\\,ih-oh)';
-      vf.push('crop='+outW+':'+outH+':'+x+':'+y);
-    }
+    var zoom=cutZoomScaleV139(c.zoom);
+    if(c.tipo==='vertical'){var sw=Math.round(1080*zoom),sh=Math.round(1920*zoom);var px=Math.round((Number(c.panX||0))*1080/100);var py=Math.round((Number(c.panY||0))*1920/100);vf.push('scale='+sw+':'+sh+':force_original_aspect_ratio=increase,crop=1080:1920:(iw-ow)/2+'+px+':(ih-oh)/2+'+py);}
+    if(c.tipo==='cuadrado'){var ss=Math.round(1080*zoom);var sx=Math.round((Number(c.panX||0))*1080/100);var sy=Math.round((Number(c.panY||0))*1080/100);vf.push('scale='+ss+':'+ss+':force_original_aspect_ratio=increase,crop=1080:1080:(iw-ow)/2+'+sx+':(ih-oh)/2+'+sy);}
     return vf.join(',');
   }
   function cutOutputNameV126(v,c){
@@ -2521,14 +2389,14 @@ openDirectorFullscreen=function(){
     var ev=cutEventV126(),v=cutVideoV126(ev),c=cutReadV126();
     var name=cutOutputNameV126(v,c);
     var cmd='ffmpeg -y -ss '+fmtTimeV126(c.start)+' -to '+fmtTimeV126(c.end)+' -i "%INPUT%"';
-    var vf=cutFiltersV126(c,state.cutTrackingPointsV137||[]); if(vf)cmd+=' -vf "'+vf+'"';
-    cmd+=' -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -c:a aac -b:a 192k "tomauno_entregas\\'+name+'_TOMAUNO.mp4"';
+    var vf=cutFiltersV126(c); if(vf)cmd+=' -vf "'+vf+'"';
+    cmd+=' -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -c:a aac -b:a 192k "C:\\TOMAUNO\\ENTREGAS\\'+name+'_TOMAUNO.mp4"';
     return cmd;
   }
   function cutBatV126(){
     var ev=cutEventV126(),v=cutVideoV126(ev),c=cutReadV126();
     var name=cutOutputNameV126(v,c)+'_TOMAUNO.mp4';
-    var vf=cutFiltersV126(c,state.cutTrackingPointsV137||[]);
+    var vf=cutFiltersV126(c);
     var lines=[];
     lines.push('@echo off');
     lines.push('REM TOMAUNO - Corte Director');
@@ -2536,6 +2404,7 @@ openDirectorFullscreen=function(){
     lines.push('set "INPUT=%~1"');
     lines.push('if "%INPUT%"=="" (');
     lines.push('  echo Arrastra el archivo MP4 original encima de este BAT.');
+    lines.push('  pause');
     lines.push('  exit /b');
     lines.push(')');
     lines.push('set "OUTDIR=%USERPROFILE%\\Downloads\\TOMAUNO_ENTREGAS"');
@@ -2546,6 +2415,7 @@ openDirectorFullscreen=function(){
     lines.push(cmd);
     lines.push('echo.');
     lines.push('echo Archivo listo en: %OUTDIR%');
+    lines.push('pause');
     return lines.join('\r\n');
   }
   function cutSeekFrameV126(sec){
@@ -2627,7 +2497,7 @@ openDirectorFullscreen=function(){
       var sub=(el('cutSubV125')&&el('cutSubV125').value.trim())||('Corte '+fmtTimeV126(c.start)+' a '+fmtTimeV126(c.end)+' · '+(c.tipo==='vertical'?'Vertical 9:16':c.tipo==='cuadrado'?'Cuadrado 1:1':'Normal'));
       var newId=(typeof nextVid==='function')?String(nextVid(ev)):String(Date.now());
       var cover=state.cutCoverV139||null;
-      var nv=Object.assign({},base,{id:newId,titulo:title,subtitulo:sub,bailarina:sub,previewInicio:c.start,previewSegundos:c.duration,descargas:0,plays:0,corteDe:String(base.id||''),corteTipo:c.tipo,corteInicio:c.start,corteFin:c.end,corteRotacion:c.rotacion,cortePanX:c.panX,cortePanY:c.panY,corteZoom:c.zoom,corteTracking:(state.cutTrackingPointsV137||[]),portadaFrame:cover?cover.tiempo:null,portadaCrop:cover?{tipo:cover.tipo,panX:cover.panX,panY:cover.panY,zoom:cover.zoom}:null,archivoOriginal:c.archivoOriginal||base.archivoOriginal||base.nombreArchivo||'',codigo:(typeof randCode==='function'?randCode():String(Math.floor(1000+Math.random()*9000)))});
+      var nv=Object.assign({},base,{id:newId,titulo:title,subtitulo:sub,bailarina:sub,previewInicio:c.start,previewSegundos:c.duration,descargas:0,plays:0,corteDe:String(base.id||''),corteTipo:c.tipo,corteInicio:c.start,corteFin:c.end,corteRotacion:c.rotacion,cortePanX:c.panX,cortePanY:c.panY,corteZoom:c.zoom,corteTracking:(state.cutTrackingPointsV137||[]),portadaFrame:cover?cover.tiempo:null,portadaCrop:cover?{tipo:cover.tipo,panX:cover.panX,panY:cover.panY,zoom:cover.zoom}:null,codigo:(typeof randCode==='function'?randCode():String(Math.floor(1000+Math.random()*9000)))});
       ev.videos=ev.videos||[]; ev.videos.push(nv); closeModal();
       var saved=false; try{saved=await ghSave('Crear corte '+title,true);}catch(_e){}
       state.currentEvent=ev; if(typeof renderVideos==='function')renderVideos(); toast(saved?'Tarjeta creada':'Tarjeta local','Corte agregado al final de la grilla.');
@@ -2668,13 +2538,13 @@ openDirectorFullscreen=function(){
     lines.push('@echo off');
     lines.push('setlocal enabledelayedexpansion');
     lines.push('REM TOMAUNO - Lote de cortes. Ejecutar este BAT en la misma carpeta de los videos originales.');
-    lines.push('set "OUTDIR=%~dp0tomauno_entregas"');
+    lines.push('set "OUTDIR=SALIDA_HISTORIAS_TOMAUNO"');
     lines.push('if not exist "%OUTDIR%" mkdir "%OUTDIR%"');
     lines.push('set "LOG=%OUTDIR%\\resultado_lote.txt"');
     lines.push('echo Inicio lote TOMAUNO %date% %time% > "%LOG%"');
     arr.forEach(function(it,idx){
       var c={start:it.inicio,end:it.fin,tipo:it.tipo,rotacion:it.rotacion,panX:it.panX,panY:it.panY,zoom:it.zoom};
-      var vf=cutFiltersV126(c,it.tracking||[]);
+      var vf=cutFiltersV126(c);
       var input=cutSafeFileV136(it.archivoOriginal);
       var out=String(it.salida||('corte_'+(idx+1)+'.mp4')).replace(/[\\/:*?"<>|]+/g,'_');
       lines.push('echo Procesando '+(idx+1)+'/'+arr.length+': '+out+' >> "%LOG%"');
@@ -2692,63 +2562,11 @@ openDirectorFullscreen=function(){
     var blob=new Blob([lines.join('\r\n')],{type:'application/x-msdos-program'}),a=document.createElement('a');
     a.href=URL.createObjectURL(blob);a.download='tomauno_lote_cortes.bat';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},700);
   }
-  function cutTrackPointAtV142(rel){
-    var arr=Array.isArray(state.cutTrackingPointsV137)?state.cutTrackingPointsV137.slice().filter(function(p){return p&&Number(p.t)>=0;}):[];
-    if(!arr.length)return null;
-    arr.sort(function(a,b){return Number(a.t)-Number(b.t);});
-    var a=arr[0],b=arr[arr.length-1];
-    for(var i=0;i<arr.length-1;i++){var p=arr[i],n=arr[i+1];if(rel>=Number(p.t)&&rel<=Number(n.t)){a=p;b=n;break;}}
-    var at=Number(a.t)||0,bt=Number(b.t)||at,ratio=bt>at?Math.max(0,Math.min(1,(rel-at)/(bt-at))):0;
-    return {
-      t:rel,
-      panX:(Number(a.panX||0)+(Number(b.panX||0)-Number(a.panX||0))*ratio),
-      panY:(Number(a.panY||0)+(Number(b.panY||0)-Number(a.panY||0))*ratio),
-      zoom:(Number(a.zoom||0)+(Number(b.zoom||0)-Number(a.zoom||0))*ratio)
-    };
-  }
-  function cutApplyTrackPointV142(pt){
-    if(!pt)return;
-    var sx=el('dir_cut_pan_x_v135'),sy=el('dir_cut_pan_y_v135'),zz=el('dir_cut_zoom_v136');
-    if(sx)sx.value=String(Math.round(Number(pt.panX||0)));
-    if(sy)sy.value=String(Math.round(Number(pt.panY||0)));
-    if(zz)zz.value=String(Math.max(0,Math.min(2,Number(pt.zoom||0))).toFixed(2));
-    state.cutPanXV136=Number(pt.panX||0)||0; state.cutPanYV136=Number(pt.panY||0)||0; state.cutZoomV136=Number(pt.zoom||0)||0;
-    cutUpdateV126();
-  }
-  function cutPlaybackStopV142(){
-    clearInterval(state.cutPlaybackTimerV142); state.cutPlaybackTimerV142=null; state.cutPlaybackActiveV142=false;
-  }
-  function cutPlaybackStartV142(){
-    var arr=Array.isArray(state.cutTrackingPointsV137)?state.cutTrackingPointsV137:[];
-    if(!arr.length)return false;
-    var c=cutReadV126();
-    var start=Number(c.start||0)||0;
-    state.cutPlaybackActiveV142=true;
-    state.cutPlaybackClockV142=performance.now();
-    cutSeekFrameV126(start);
-    clearInterval(state.cutPlaybackTimerV142);
-    state.cutPlaybackTimerV142=setInterval(function(){
-      var rel=(performance.now()-Number(state.cutPlaybackClockV142||performance.now()))/1000;
-      var dur=Number(c.duration||0)||0;
-      if(dur>0 && rel>=dur){rel=dur;cutPlaybackStopV142();cutPlayPauseV137('pause');}
-      var abs=start+rel;
-      var r=el('dir_cut_current_v125'),t=el('dir_cut_current_time_v126');
-      if(r)r.value=String(Math.round(abs)); if(t)t.value=fmtTimeV126(abs); state.cutCurrentV126=abs;
-      cutApplyTrackPointV142(cutTrackPointAtV142(rel));
-    },80);
-    return true;
-  }
   function cutPlayPauseV137(force){
     var fr=el('dir_frame'); if(!fr||!fr.contentWindow)return;
     try{
-      var willPlay=force==='play' || (force!=='pause' && !state.cutIsPlayingV137);
-      if(force==='pause' || (!willPlay)){cutPlaybackStopV142();}
       var func=force==='pause'?'pauseVideo':(force==='play'?'playVideo':(state.cutIsPlayingV137?'pauseVideo':'playVideo'));
-      if(func==='playVideo' && !state.cutTrackingActiveV137 && Array.isArray(state.cutTrackingPointsV137) && state.cutTrackingPointsV137.length>1){
-        cutPlaybackStartV142();
-      }else{
-        fr.contentWindow.postMessage(JSON.stringify({event:'command',func:func,args:[]}),'*');
-      }
+      fr.contentWindow.postMessage(JSON.stringify({event:'command',func:func,args:[]}),'*');
       state.cutIsPlayingV137=(func==='playVideo');
     }catch(_e){}
   }
@@ -2761,17 +2579,12 @@ openDirectorFullscreen=function(){
   function cutTrackPushV137(){
     if(!state.cutTrackingActiveV137)return;
     var c=cutReadV126();
-    var start=Number(state.cutTrackingStartV137||0)||0;
-    var rel=Math.max(0,((performance.now()-(Number(state.cutTrackingClockStartV140||performance.now())))/1000));
-    var abs=start+rel;
-    state.cutCurrentV126=abs;
-    var r=el('dir_cut_current_v125'),t=el('dir_cut_current_time_v126');
-    if(r&&!state.cutDraggingV126)r.value=String(Math.round(abs));
-    if(t&&!state.cutTimeEditingV126)t.value=fmtTimeV126(abs);
+    var now=Number(state.cutCurrentV126||0)||0;
+    var start=Number(state.cutTrackingStartV137||now)||now;
     var arr=state.cutTrackingPointsV137||[];
     var last=arr[arr.length-1];
-    if(!last || Math.abs(last.t-rel)>=0.12 || Math.abs((last.panX||0)-c.panX)>=0.4 || Math.abs((last.panY||0)-c.panY)>=0.4 || Math.abs((last.zoom||0)-c.zoom)>=0.02){
-      arr.push({t:Math.max(0,Number(rel.toFixed(2))),abs:Number(abs.toFixed(2)),panX:c.panX,panY:c.panY,zoom:c.zoom});
+    if(!last || Math.abs(last.t-(now-start))>=0.25 || last.panX!==c.panX || last.panY!==c.panY || last.zoom!==c.zoom){
+      arr.push({t:Math.max(0,Number((now-start).toFixed(2))),abs:now,panX:c.panX,panY:c.panY,zoom:c.zoom});
       state.cutTrackingPointsV137=arr;
       cutTrackingStatusV137();
     }
@@ -2783,30 +2596,24 @@ openDirectorFullscreen=function(){
     return Math.max(0,sec||0);
   }
   function cutTrackStartV137(){
-    cutPlaybackStopV142();
     var cur=cutCurrentFromUIV138();
     state.cutCurrentV126=cur;
     state.cutTrackingActiveV137=true;
     state.cutTrackingStartV137=cur;
-    state.cutTrackingClockStartV140=performance.now();
     state.cutTrackingPointsV137=[];
     var s=el('dir_cut_start_v125'); if(s)s.value=fmtTimeV126(cur);
-    var r=el('dir_cut_current_v125'),t=el('dir_cut_current_time_v126'); if(r)r.value=String(Math.round(cur)); if(t)t.value=fmtTimeV126(cur);
-    cutSeekFrameV126(cur);
-    setTimeout(function(){cutPlayPauseV137('play');},220);
+    var r=el('dir_cut_current_v125'),t=el('dir_cut_current_time_v126'); if(r)r.value=String(cur); if(t)t.value=fmtTimeV126(cur);
+    cutPlayPauseV137('play');
     clearInterval(state.cutTrackingTimerV137);
-    state.cutTrackingTimerV137=setInterval(cutTrackPushV137,120);
-    setTimeout(function(){cutTrackPushV137(); cutTrackingStatusV137(); cutUpdateV126();},260);
+    state.cutTrackingTimerV137=setInterval(cutTrackPushV137,250);
+    cutTrackPushV137(); cutTrackingStatusV137(); cutUpdateV126();
   }
   function cutTrackStopV137(markEnd){
     if(!state.cutTrackingActiveV137)return;
     cutTrackPushV137();
     state.cutTrackingActiveV137=false;
     clearInterval(state.cutTrackingTimerV137);
-    var rel=Math.max(0,((performance.now()-(Number(state.cutTrackingClockStartV140||performance.now())))/1000));
-    var endSec=(Number(state.cutTrackingStartV137||0)||0)+rel;
-    state.cutCurrentV126=endSec;
-    if(markEnd!==false){var e=el('dir_cut_end_v125'); if(e)e.value=fmtTimeV126(endSec);}
+    if(markEnd!==false){var e=el('dir_cut_end_v125'); if(e)e.value=fmtTimeV126(Number(state.cutCurrentV126||0)||0);}
     cutPlayPauseV137('pause');
     cutTrackingStatusV137(); cutUpdateV126();
   }
@@ -2865,33 +2672,12 @@ openDirectorFullscreen=function(){
     var anchor=oldDetails || el('dir_cmd') || el('dir_save'); if(!anchor||!anchor.parentNode)return;
     if(oldDetails)oldDetails.style.display='none';
     var p=(typeof readDirectorPreset==='function')?readDirectorPreset():{};
-    var evInit=cutEventV126(), baseInit=cutVideoV126(evInit)||{};
-    var initialTipo=String(baseInit.corteTipo||baseInit.corte&&baseInit.corte.tipo||'normal').toLowerCase();
-    if(initialTipo==='square')initialTipo='cuadrado';
-    var start=Number(baseInit.corteInicio!=null?baseInit.corteInicio:NaN);
-    if(!Number.isFinite(start))start=parseTimeV126(p.histInicio||'00:00');
-    var end=Number(baseInit.corteFin!=null?baseInit.corteFin:NaN);
-    if(!Number.isFinite(end))end=Number(baseInit.previewInicio||0)+Number(baseInit.previewSegundos||0);
-    if(!Number.isFinite(end)||end<=start)end=parseTimeV126(p.histFin||'00:15');
-    if(end<=start)end=start+15;
-    var initialPanX=Number(baseInit.cortePanX||baseInit.corteX||0)||0;
-    var initialPanY=Number(baseInit.cortePanY||baseInit.corteY||0)||0;
-    var initialZoom=Math.max(0,Math.min(2,Number(baseInit.corteZoom||0)||0));
-    var initialRot=String(baseInit.corteRotacion||'0');
+    var start=parseTimeV126(p.histInicio||'00:00'), end=parseTimeV126(p.histFin||'00:15'); if(end<=start)end=start+15;
     var cur=Number(state.cutCurrentV126||state.directorBigStart||start||0)||0;
-    state.cutPanXV136=initialPanX; state.cutPanYV136=initialPanY; state.cutZoomV136=initialZoom;
-    state.cutTrackingPointsV137=Array.isArray(baseInit.corteTracking)?baseInit.corteTracking.slice():[];
-    state.cutCoverV139=baseInit.portadaFrame!=null?{tiempo:Number(baseInit.portadaFrame)||start,tipo:initialTipo,panX:initialPanX,panY:initialPanY,zoom:initialZoom}:null;
+    state.cutPanXV136=0; state.cutPanYV136=0; state.cutZoomV136=0; state.cutCoverV139=null;
     var box=document.createElement('details'); box.className='cut-v125-card'; box.id='dir_cut_v125'; box.open=true;
-    box.innerHTML='<summary>✂️ Cortes Director</summary><div class="cut-v125-body"><div class="cut-v125-grid"><div class="field"><label>Tipo salida</label><select id="dir_cut_tipo_v125"><option value="normal">Normal 16:9</option><option value="vertical">Vertical 9:16 historia/reel</option><option value="cuadrado">Cuadrado 1:1</option></select></div><div class="field"><label>Rotación</label><select id="dir_cut_rot_v125"><option value="0">Sin rotar</option><option value="90">90° derecha</option><option value="-90">90° izquierda</option><option value="180">180°</option></select></div><div class="span2 cut-v125-time-row"><div class="field"><label>Inicio</label><input id="dir_cut_start_v125" value="'+safeEsc(fmtTimeV126(start))+'" placeholder="01:20"></div><div class="field"><label>Fin</label><input id="dir_cut_end_v125" value="'+safeEsc(fmtTimeV126(end))+'" placeholder="02:00"></div></div><div class="span2"><label>Barra para ubicar momento</label><div class="cut-v125-current"><input type="range" id="dir_cut_current_v125" min="0" max="'+safeEsc(Math.max(end+60,Number(state.cutVideoDurationV126||0)||end+60))+'" step="1" value="'+safeEsc(cur)+'"><input type="text" id="dir_cut_current_time_v126" value="'+safeEsc(fmtTimeV126(cur))+'"><button class="btn gray small" id="dir_cut_go_v125" type="button">Ir</button></div><div class="cut-v125-duration-line"><div class="cut-v125-help">La barra se limita por duración real de YouTube cuando está disponible.</div><div class="field"><label>Duración video</label><input id="dir_cut_total_v126" value="'+safeEsc(fmtTimeV126(Number(state.cutVideoDurationV126||0)||Math.max(end+60,cur+60)))+'" placeholder="45:00"></div></div></div><div class="cut-v125-pan-grid"><div class="field"><label>Mover recorte horizontal</label><input type="range" id="dir_cut_pan_x_v135" min="-75" max="75" step="1" value="0"></div><div class="field"><label>Mover recorte vertical</label><input type="range" id="dir_cut_pan_y_v135" min="-55" max="55" step="1" value="0"></div><div class="field"><label>Zoom extra recorte</label><input type="range" id="dir_cut_zoom_v136" min="0" max="2" step="0.05" value="0"></div><input type="hidden" id="dir_cut_file_v136" value=""><div class="span2 cut-v125-pan-note">Arrastrá el cuadro rojo. Para BAT lote, el sistema usará el nombre interno/título del video si está disponible; no tenés que escribir nombres ahora.</div></div></div><div class="cut-v125-actions"><button class="btn gray small" id="dir_cut_mark_start_v125" type="button">✂ Marcar inicio</button><button class="btn gray small" id="dir_cut_mark_end_v125" type="button">✂ Marcar fin</button><button class="btn gray small" id="dir_cut_view_start_v125" type="button">▶ Ir inicio</button><button class="btn gray small" id="dir_cut_view_end_v125" type="button">▶ Ir fin</button><button class="btn gray small" id="dir_cut_play_v137" type="button">▶/⏸ Play</button><button class="btn gray small" id="dir_cut_track_v137" type="button">● Iniciar seguimiento</button><button class="btn gray small" id="dir_cut_cover_v139" type="button">📸 Usar frame portada</button><button class="btn red small main-cut" id="dir_cut_create_v125" type="button">✂ Crear tarjeta</button><button class="btn gray small open-original" id="dir_cut_open_drive_v126" type="button">📁 Abrir original</button><button class="btn gray small" id="dir_cut_copy_v125" type="button">📋 Copiar FFmpeg</button><button class="btn gray small" id="dir_cut_bat_v125" type="button">⬇ BAT actual</button><button class="btn gray small ffmpeg-btn" id="dir_cut_ffmpeg_v136" type="button">⬇ Descargar programa FFmpeg</button><button class="btn gray small batch-main" id="dir_cut_batch_add_v136" type="button">➕ Agregar a lote BAT</button><button class="btn gray small batch-main" id="dir_cut_batch_down_v136" type="button">📦 Descargar BAT lote</button><button class="btn gray small" id="dir_cut_batch_reset_v136" type="button">🧹 Reset lote</button><span class="cut-batch-counter" id="dir_cut_batch_count_v136">0 cortes en lote</span></div><div class="cut-v125-status" id="dir_cut_info_v125"></div><div class="cut-v137-hotkeys"><b>Seguimiento:</b> Iniciar seguimiento marca Inicio y reproduce. Parar seguimiento pausa y marca Fin. Flechas ← → mueven el cuadro; ↑ ↓ hacen zoom.</div><div class="cut-v125-status" id="dir_cut_track_status_v137">Movimiento guardado · 0 puntos</div><textarea class="cut-v125-cmd" id="dir_cut_cmd_v125" readonly></textarea></div>';
+    box.innerHTML='<summary>✂️ Cortes Director</summary><div class="cut-v125-body"><div class="cut-v125-grid"><div class="field"><label>Tipo salida</label><select id="dir_cut_tipo_v125"><option value="normal">Normal 16:9</option><option value="vertical">Vertical 9:16 historia/reel</option><option value="cuadrado">Cuadrado 1:1</option></select></div><div class="field"><label>Rotación</label><select id="dir_cut_rot_v125"><option value="0">Sin rotar</option><option value="90">90° derecha</option><option value="-90">90° izquierda</option><option value="180">180°</option></select></div><div class="span2 cut-v125-time-row"><div class="field"><label>Inicio</label><input id="dir_cut_start_v125" value="'+safeEsc(fmtTimeV126(start))+'" placeholder="01:20"></div><div class="field"><label>Fin</label><input id="dir_cut_end_v125" value="'+safeEsc(fmtTimeV126(end))+'" placeholder="02:00"></div></div><div class="span2"><label>Barra para ubicar momento</label><div class="cut-v125-current"><input type="range" id="dir_cut_current_v125" min="0" max="'+safeEsc(Math.max(end+60,Number(state.cutVideoDurationV126||0)||end+60))+'" step="1" value="'+safeEsc(cur)+'"><input type="text" id="dir_cut_current_time_v126" value="'+safeEsc(fmtTimeV126(cur))+'"><button class="btn gray small" id="dir_cut_go_v125" type="button">Ir</button></div><div class="cut-v125-duration-line"><div class="cut-v125-help">La barra se limita por duración real de YouTube cuando está disponible.</div><div class="field"><label>Duración video</label><input id="dir_cut_total_v126" value="'+safeEsc(fmtTimeV126(Number(state.cutVideoDurationV126||0)||Math.max(end+60,cur+60)))+'" placeholder="45:00"></div></div></div><div class="cut-v125-pan-grid"><div class="field"><label>Mover recorte horizontal</label><input type="range" id="dir_cut_pan_x_v135" min="-75" max="75" step="1" value="0"></div><div class="field"><label>Mover recorte vertical</label><input type="range" id="dir_cut_pan_y_v135" min="-55" max="55" step="1" value="0"></div><div class="field"><label>Zoom recorte</label><input type="range" id="dir_cut_zoom_v136" min="0" max="2" step="0.05" value="0"></div><div class="field"><label>Archivo original local</label><input id="dir_cut_file_v136" placeholder="Ej: FADA_2026_BLOQUE_01.mp4"></div><div class="span2 cut-v125-pan-note">Arrastrá el cuadro rojo. Archivo original local: nombre exacto del MP4 cuando uses BAT lote en una carpeta.</div></div></div><div class="cut-v125-actions"><button class="btn gray small" id="dir_cut_mark_start_v125" type="button">✂ Marcar inicio</button><button class="btn gray small" id="dir_cut_mark_end_v125" type="button">✂ Marcar fin</button><button class="btn gray small" id="dir_cut_view_start_v125" type="button">▶ Ir inicio</button><button class="btn gray small" id="dir_cut_view_end_v125" type="button">▶ Ir fin</button><button class="btn gray small" id="dir_cut_play_v137" type="button">▶/⏸ Play</button><button class="btn gray small" id="dir_cut_track_v137" type="button">● Iniciar seguimiento</button><button class="btn gray small" id="dir_cut_cover_v139" type="button">📸 Usar frame portada</button><button class="btn red small main-cut" id="dir_cut_create_v125" type="button">✂ Crear tarjeta</button><button class="btn gray small open-original" id="dir_cut_open_drive_v126" type="button">📁 Abrir original</button><button class="btn gray small" id="dir_cut_copy_v125" type="button">📋 FFmpeg</button><button class="btn gray small" id="dir_cut_bat_v125" type="button">⬇ BAT actual</button><button class="btn gray small ffmpeg-btn" id="dir_cut_ffmpeg_v136" type="button">⬇ Descargar FFmpeg</button><button class="btn gray small batch-main" id="dir_cut_batch_add_v136" type="button">➕ Agregar a lote BAT</button><button class="btn gray small batch-main" id="dir_cut_batch_down_v136" type="button">📦 Descargar BAT lote</button><button class="btn gray small" id="dir_cut_batch_reset_v136" type="button">🧹 Reset lote</button><span class="cut-batch-counter" id="dir_cut_batch_count_v136">0 cortes en lote</span></div><div class="cut-v125-status" id="dir_cut_info_v125"></div><div class="cut-v137-hotkeys"><b>Seguimiento:</b> Iniciar seguimiento marca Inicio y reproduce. Parar seguimiento pausa y marca Fin. Flechas ← → mueven el cuadro; ↑ ↓ hacen zoom.</div><div class="cut-v125-status" id="dir_cut_track_status_v137">Movimiento guardado · 0 puntos</div><textarea class="cut-v125-cmd" id="dir_cut_cmd_v125" readonly></textarea></div>';
     anchor.parentNode.insertBefore(box, anchor);
-    if(el('dir_cut_tipo_v125'))el('dir_cut_tipo_v125').value=initialTipo;
-    if(el('dir_cut_rot_v125'))el('dir_cut_rot_v125').value=initialRot;
-    if(el('dir_cut_pan_x_v135'))el('dir_cut_pan_x_v135').value=String(Math.round(initialPanX));
-    if(el('dir_cut_pan_y_v135'))el('dir_cut_pan_y_v135').value=String(Math.round(initialPanY));
-    if(el('dir_cut_zoom_v136'))el('dir_cut_zoom_v136').value=String(initialZoom.toFixed(2));
-    if(el('dir_cut_file_v136')&&baseInit.archivoOriginal)el('dir_cut_file_v136').value=baseInit.archivoOriginal;
-    if(state.cutCoverV139&&el('dir_cut_cover_v139')){el('dir_cut_cover_v139').classList.add('cut-cover-ok');el('dir_cut_cover_v139').textContent='📸 Portada '+fmtTimeV126(state.cutCoverV139.tiempo);}    
     ['dir_cut_tipo_v125','dir_cut_rot_v125','dir_cut_start_v125','dir_cut_end_v125','dir_cut_pan_x_v135','dir_cut_pan_y_v135','dir_cut_zoom_v136','dir_cut_file_v136'].forEach(function(id){var x=el(id); if(x){x.oninput=cutUpdateV126;x.onchange=cutUpdateV126;}});
     var r=el('dir_cut_current_v125'),t=el('dir_cut_current_time_v126'),total=el('dir_cut_total_v126');
     if(r){r.onpointerdown=function(){state.cutDraggingV126=true;};r.onpointerup=function(){state.cutDraggingV126=false;};r.oninput=function(){state.cutCurrentV126=Number(r.value)||0;if(t)t.value=fmtTimeV126(state.cutCurrentV126);cutSeekFrameV126(state.cutCurrentV126);};}
@@ -2952,105 +2738,7 @@ openDirectorFullscreen=function(){
     if(Number(data.info.currentTime)>=0)cutSyncCurrentV126(Number(data.info.currentTime));
   });
   setInterval(function(){var fr=el('dir_frame'); if(fr&&fr.contentWindow){try{fr.contentWindow.postMessage(JSON.stringify({event:'listening',id:'dir_frame'}),'*');fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'getCurrentTime',args:[]}),'*');fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'getDuration',args:[]}),'*');}catch(_e){}}},800);
-  console.log('TOMAUNO VIDEOS v144 play recuperado + tracking publicado por tiempo real');
+  console.log('TOMAUNO VIDEOS v139 Cortes Director zoom limpio, tracking suave y portada frame');
 })();
-
-
-/* v143: recuperación robusta del PLAY en carátulas y soporte youtubeUrl/youtubeId */
-(function(){
-  function getPlayIdFromEvent(ev){
-    var t=ev.target;
-    if(!t || !t.closest)return '';
-    if(t.closest('button,a,input,select,textarea'))return '';
-    var th=t.closest('.thumb[data-play]');
-    if(th)return th.getAttribute('data-play')||'';
-    return '';
-  }
-  ['click','pointerup'].forEach(function(evtName){
-    document.addEventListener(evtName,function(ev){
-      var id=getPlayIdFromEvent(ev);
-      if(!id)return;
-      if(evtName==='pointerup' && ev.pointerType==='mouse' && ev.button!==0)return;
-      ev.preventDefault();
-      ev.stopPropagation();
-      try{ window.playVideo(id); }
-      catch(err){ console.error('play delegado v143',err); try{toast('No se pudo reproducir','Revisá que el video tenga YouTube cargado.');}catch(_e){} }
-    },true);
-  });
-})();
-
-
-
-/* v145: PLAY de grilla blindado y recuperación de YouTube para cortes */
-(function(){
-  function findEventAndVideoV145(id){
-    id=String(id||'');
-    var evs=(window.state&&state.data&&state.data.eventos)||[];
-    var current=window.state&&state.currentEvent;
-    if(current){
-      var vv=(current.videos||[]).find(function(x){return String(x.id)===id;});
-      if(vv)return {ev:current,v:vv};
-    }
-    for(var i=0;i<evs.length;i++){
-      var v=(evs[i].videos||[]).find(function(x){return String(x.id)===id;});
-      if(v)return {ev:evs[i],v:v};
-    }
-    return {ev:null,v:null};
-  }
-  function ytFromAnyV145(v,ev){
-    if(!v)return '';
-    var raw=v.youtubeId||v.youtubeUrl||v.youtubeURL||v.youtube||v.yt||v.urlYoutube||v.linkYoutube||v.previewYoutube||v.youtube_id||v.ytid||'';
-    var id='';
-    try{id=cleanYouTube(raw);}catch(_e){id=String(raw||'').trim();}
-    if(id)return id;
-    var baseId=v.corteDe||v.videoOriginalId||v.origenVideoId||v.originalVideoId||'';
-    if(baseId&&ev){
-      var base=(ev.videos||[]).find(function(x){return String(x.id)===String(baseId);});
-      if(base){
-        raw=base.youtubeId||base.youtubeUrl||base.youtubeURL||base.youtube||base.yt||base.urlYoutube||base.linkYoutube||base.previewYoutube||'';
-        try{id=cleanYouTube(raw);}catch(_e){id=String(raw||'').trim();}
-        if(id){
-          try{v.youtubeId=id;}catch(_e){}
-          return id;
-        }
-      }
-    }
-    return '';
-  }
-  var oldPlay=window.playVideo;
-  window.playVideo=function(id){
-    var found=findEventAndVideoV145(id);
-    if(found.ev && window.state && state.currentEvent!==found.ev)state.currentEvent=found.ev;
-    if(found.v){
-      var yt=ytFromAnyV145(found.v,found.ev);
-      if(yt && !found.v.youtubeId)found.v.youtubeId=yt;
-    }
-    if(typeof oldPlay==='function')return oldPlay(id);
-  };
-  function forcePlayV145(ev){
-    var t=ev&&ev.target;
-    if(!t||!t.closest)return;
-    if(t.closest('button,a,input,select,textarea'))return;
-    var th=t.closest('.thumb[data-play]');
-    if(!th)return;
-    var id=th.getAttribute('data-play')||'';
-    if(!id)return;
-    ev.preventDefault&&ev.preventDefault();
-    ev.stopImmediatePropagation&&ev.stopImmediatePropagation();
-    ev.stopPropagation&&ev.stopPropagation();
-    try{window.playVideo(id);}catch(err){
-      console.error('PLAY v145',err);
-      try{toast('No se pudo reproducir','El video tiene datos incompletos de YouTube.');}catch(_e){}
-    }
-    return false;
-  }
-  document.addEventListener('pointerdown',function(ev){
-    if(ev.pointerType==='mouse' && ev.button!==0)return;
-    forcePlayV145(ev);
-  },true);
-  document.addEventListener('click',forcePlayV145,true);
-  console.log('TOMAUNO v145: PLAY blindado instalado');
-})();
-
 </script>
 </body></html>
