@@ -51514,6 +51514,22 @@
       "logoUrl3": "",
       "mostrarLogo": true,
       "logoUrl1": "https://i.imgur.com/A885uwa.png"
+    },
+    {
+      "id": "ev_1782101335267",
+      "numero": 3,
+      "videos": [],
+      "titulo": "Inst. San Miguel",
+      "subtitulo": "Juramento a la Bandera",
+      "imagen": "https://i.imgur.com/z6vYNxu.png",
+      "logoUrl1": "https://i.imgur.com/vPCsTb7.jpeg",
+      "logoUrl2": "",
+      "logoUrl3": "",
+      "mostrarLogo": false,
+      "visibilidad": "publico",
+      "password": "",
+      "descripcionPortada": "",
+      "mostrarTituloFlyer": true
     }
   ],
   "meta": {
