@@ -51626,6 +51626,21 @@
           "precio": 15000,
           "driveId": "",
           "imagen": ""
+        },
+        {
+          "id": "6",
+          "descargas": 0,
+          "plays": 0,
+          "codigo": "6149",
+          "titulo": "Recibiendo el Diploma",
+          "subtitulo": "Inst. San Miguel",
+          "bailarina": "Inst. San Miguel",
+          "youtubeId": "QjLU7Dk9jUA",
+          "previewInicio": 0,
+          "previewSegundos": 20,
+          "precio": 15000,
+          "driveId": "",
+          "imagen": ""
         }
       ],
       "titulo": "Inst. San Miguel",
