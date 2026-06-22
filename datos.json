@@ -51518,7 +51518,23 @@
     {
       "id": "ev_1782101335267",
       "numero": 3,
-      "videos": [],
+      "videos": [
+        {
+          "id": "1",
+          "descargas": 0,
+          "plays": 0,
+          "codigo": "5827",
+          "titulo": "Cantando",
+          "subtitulo": "Inst. San Miguel",
+          "bailarina": "Inst. San Miguel",
+          "youtubeId": "Jx8nc5k2vIw",
+          "previewInicio": 0,
+          "previewSegundos": 20,
+          "precio": 15000,
+          "driveId": "",
+          "imagen": ""
+        }
+      ],
       "titulo": "Inst. San Miguel",
       "subtitulo": "Juramento a la Bandera",
       "imagen": "https://i.imgur.com/z6vYNxu.png",
