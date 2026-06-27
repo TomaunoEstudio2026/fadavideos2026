@@ -51754,6 +51754,22 @@
       "password": "",
       "descripcionPortada": "",
       "mostrarTituloFlyer": true
+    },
+    {
+      "id": "ev_1782538471780",
+      "numero": 4,
+      "videos": [],
+      "titulo": "Expressarte Danza",
+      "subtitulo": "Gala",
+      "imagen": "",
+      "logoUrl1": "",
+      "logoUrl2": "",
+      "logoUrl3": "",
+      "mostrarLogo": true,
+      "visibilidad": "publico",
+      "password": "",
+      "descripcionPortada": "",
+      "mostrarTituloFlyer": true
     }
   ],
   "meta": {
