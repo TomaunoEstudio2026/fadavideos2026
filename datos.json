@@ -51758,7 +51758,23 @@
     {
       "id": "ev_1782538471780",
       "numero": 4,
-      "videos": [],
+      "videos": [
+        {
+          "id": "1",
+          "descargas": 0,
+          "plays": 0,
+          "codigo": "9196",
+          "titulo": "Expressarte Video Final",
+          "subtitulo": "",
+          "bailarina": "",
+          "youtubeId": "xOGZrXunjo8",
+          "previewInicio": 0,
+          "previewSegundos": 20,
+          "precio": 15000,
+          "driveId": "",
+          "imagen": ""
+        }
+      ],
       "titulo": "Expressarte Danza",
       "subtitulo": "Gala",
       "imagen": "",
