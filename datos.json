@@ -52040,6 +52040,22 @@
       "password": "",
       "descripcionPortada": "",
       "mostrarTituloFlyer": true
+    },
+    {
+      "id": "ev_1782612430728",
+      "numero": 5,
+      "videos": [],
+      "titulo": "Mundial 2026",
+      "subtitulo": "Argentina 2026",
+      "imagen": "",
+      "logoUrl1": "",
+      "logoUrl2": "",
+      "logoUrl3": "",
+      "mostrarLogo": false,
+      "visibilidad": "publico",
+      "password": "",
+      "descripcionPortada": "",
+      "mostrarTituloFlyer": true
     }
   ],
   "meta": {
